@@ -10,18 +10,28 @@ def testGetModelInfo(model_owner, model_name):
 
 # Model Downloading
 # This function downloads the README from the selected model repo and stores it to the cache
-def modelDownload(model_owner, model_name):
+def partialDownload(model_owner, model_name, filename):
     full_name = model_owner + "/" + model_name # contains full model name: owner/model_name
     model_path = hf_hub_download(repo_id = full_name, filename = "README.md")
 
     print(f"Model downloaded to: {model_path}")
    
-    
-    
+
+# downloads the entire model repository and stores it in the cache
+def fullDownload(model_owner, model_name):
+    full_name = model_owner + "/" + model_name # contains full model name: owner/model_name
+    model_path = snapshot_download(full_name)
+
+    print(f"Model downloaded to: {model_path}")
+
 if __name__ == "__main__":
-    owner = "tencent"
-    model = "SRPO"
+    owner = "LLM360"
+    model = "K2-Think"
+    file = "README.md"
     
     testGetModelInfo(model_owner=owner, model_name=model)
-    modelDownload(model_owner=owner, model_name=model)
+    partialDownload(model_owner=owner, model_name=model, filename=file)
+    
+    # NO SPACE TO DOWNLOAD FULL MODEL ON ECEPROG
+    # fullDownload(model_owner=owner, model_name=model)
     
