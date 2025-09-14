@@ -11,12 +11,11 @@ def testGetModelInfo(model_owner, model_name):
 # Model Downloading
 # This function downloads the README from the selected model repo and stores it to the cache
 def modelDownload(model_owner, model_name):
-    ###  WARNING CODE FROM CHAT GPT, REQUIRES FURTHER TESTING
     full_name = model_owner + "/" + model_name # contains full model name: owner/model_name
     model_path = hf_hub_download(repo_id = full_name, filename = "README.md")
 
     print(f"Model downloaded to: {model_path}")
-    ###
+   
     
     
 if __name__ == "__main__":
