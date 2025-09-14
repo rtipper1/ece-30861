@@ -5,9 +5,9 @@ fsspec==2025.9.0
 hf-xet==1.1.9
 huggingface-hub==0.34.4
 idna==3.10
-mypy==1.18.1
+mypy==1.16.1
 mypy_extensions==1.1.0
-numpy==2.3.3
+numpy==2.2.3
 packaging==25.0
 pathspec==0.12.1
 PyYAML==6.0.2

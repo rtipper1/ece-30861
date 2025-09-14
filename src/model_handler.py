@@ -1,20 +1,28 @@
-from huggingface_hub import HfApi, ModelCard, snapshot_download
+from huggingface_hub import HfApi, ModelCard, snapshot_download, hf_hub_download
 
-api = HfApi()
-# or:
-info = api.model_info("LLM360/K2-Think")
-print(info.id, info.sha, info.cardData)
+# This function gets a models info from the Model Card
+def testGetModelInfo(model_owner, model_name):
+    api = HfApi()
+    # or:
+    full_name = model_owner + "/" + model_name # contains full model name: owner/model_name
+    info = api.model_info(full_name)
+    print(info.id, info.sha, info.cardData)
 
 # Model Downloading
-
-def modelDownload(id):
+# This function downloads the README from the selected model repo and stores it to the cache
+def modelDownload(model_owner, model_name):
     ###  WARNING CODE FROM CHAT GPT, REQUIRES FURTHER TESTING
-    model_path = snapshot_download(repo_id="distilbert-base-uncased")
+    full_name = model_owner + "/" + model_name # contains full model name: owner/model_name
+    model_path = hf_hub_download(repo_id = full_name, filename = "README.md")
 
     print(f"Model downloaded to: {model_path}")
     ###
     
     
 if __name__ == "__main__":
-    modelPath = "LLM360/K2-Think"
-    modelDownload(id = modelPath)
+    owner = "tencent"
+    model = "SRPO"
+    
+    testGetModelInfo(model_owner=owner, model_name=model)
+    modelDownload(model_owner=owner, model_name=model)
+    
