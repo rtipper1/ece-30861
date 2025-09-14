@@ -15,6 +15,8 @@ def partialDownload(model_owner, model_name, filename):
     model_path = hf_hub_download(repo_id = full_name, filename = "README.md")
 
     print(f"Model downloaded to: {model_path}")
+    
+    return model_path
    
 
 # downloads the entire model repository and stores it in the cache
@@ -23,6 +25,8 @@ def fullDownload(model_owner, model_name):
     model_path = snapshot_download(full_name)
 
     print(f"Model downloaded to: {model_path}")
+    
+    return model_path
 
 if __name__ == "__main__":
     owner = "LLM360"
