@@ -15,18 +15,39 @@ Rules (aligned to your spec):
 - 1 = proprietary/closed
 - 2 = fallback when license string exists but is unknown
 """
+from huggingface_hub import HfApi, ModelCard
 
-def license_score(card: dict | None) -> int:
-    if not card or not card.get("license"):
+def license_score(model_owner, model_name) -> int:
+    
+    api = HfApi() # make huggingface api connection
+    full_name = model_owner + "/" + model_name # contains full model name: owner/model_name
+    info = api.model_info(full_name)
+    
+    print(info.cardData)
+    
+    if "license_name" in info.cardData:
+        lic = info.cardData.license_name
+        print("bong")
+    else:
+        lic = info.cardData.license
+    
+    print('license: ', lic)
+    if lic == None:
         return 0
-    lic = str(card["license"]).lower()
-    if any(x in lic for x in ("apache-2", "apache 2", "mit", "bsd")):
+    elif any(x in lic for x in ("apache-2", "apache 2", "mit", "bsd")):
         return 5
-    if "lgpl" in lic or "cc-by" in lic:
+    elif "lgpl" in lic or "cc-by" in lic:
         return 4
-    if "research" in lic or "non-commercial" in lic or "evaluation" in lic:
+    elif "research" in lic or "non-commercial" in lic or "evaluation" in lic:
         return 3
-    if "proprietary" in lic or "closed" in lic:
+    elif "proprietary" in lic or "closed" in lic:
+        return 2
+    else:
         return 1
-    return 2
 
+# Main file for testing
+if __name__ == "__main__":
+    owner = "fcdalgic"
+    model = "demooo"
+    score = license_score(model_owner=owner, model_name=model)
+    print('Score: ', score)

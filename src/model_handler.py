@@ -14,7 +14,7 @@ def partialDownload(model_owner, model_name, filename):
     full_name = model_owner + "/" + model_name # contains full model name: owner/model_name
     model_path = hf_hub_download(repo_id = full_name, filename = "README.md")
 
-    print(f"Model downloaded to: {model_path}")
+    print(f"File downloaded to: {model_path}")
     
     return model_path
    
@@ -29,12 +29,12 @@ def fullDownload(model_owner, model_name):
     return model_path
 
 if __name__ == "__main__":
-    owner = "LLM360"
-    model = "K2-Think"
+    owner = "raidium"
+    model = "curia"
     file = "README.md"
     
     testGetModelInfo(model_owner=owner, model_name=model)
-    partialDownload(model_owner=owner, model_name=model, filename=file)
+    # partialDownload(model_owner=owner, model_name=model, filename=file)
     
     # NO SPACE TO DOWNLOAD FULL MODEL ON ECEPROG
     # fullDownload(model_owner=owner, model_name=model)
