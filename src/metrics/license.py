@@ -17,6 +17,13 @@ Rules (aligned to your spec):
 """
 from huggingface_hub import HfApi, ModelCard
 
+level_5_licenses = []
+level_4_licenses = []
+level_3_licenses = []
+level_2_licenses = []
+level_1_licenses = []
+
+
 def license_score(model_owner, model_name) -> int:
     
     api = HfApi() # make huggingface api connection
@@ -25,9 +32,8 @@ def license_score(model_owner, model_name) -> int:
     
     print(info.cardData)
     
-    if "license_name" in info.cardData:
+    if info.cardData.license_name != None:
         lic = info.cardData.license_name
-        print("bong")
     else:
         lic = info.cardData.license
     
