@@ -53,22 +53,23 @@ def license_score(model_owner, model_name) -> int:
         lic = info.cardData.license
     
     print('license: ', lic)
-    if lic == None:
-        return 0
-    elif any(x in lic for x in ("apache-2", "apache 2", "mit", "bsd")):
+    
+    if lic in level_5_licenses:
         return 5
-    elif "lgpl" in lic or "cc-by" in lic:
+    elif lic in level_4_licenses:
         return 4
-    elif "research" in lic or "non-commercial" in lic or "evaluation" in lic:
+    elif lic in level_3_licenses:
         return 3
-    elif "proprietary" in lic or "closed" in lic:
+    elif lic in level_2_licenses:
         return 2
-    else:
+    elif lic in level_1_licenses:
         return 1
+    else:
+        return 0
 
 # Main file for testing
 if __name__ == "__main__":
-    owner = "fcdalgic"
-    model = "demooo"
+    owner = "Atiqah"
+    model = "Atiqah"
     score = license_score(model_owner=owner, model_name=model)
     print('Score: ', score)
