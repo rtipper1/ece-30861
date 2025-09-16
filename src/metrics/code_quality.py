@@ -17,12 +17,11 @@ Rubric:
 - 5 = 0–5 issues per 1000 LOC
 """
 
-import os
 from pathlib import Path
 from flake8.api import legacy as flake8
 
-def code_quality_score(repo_path: str) -> int:
-    repo = Path(repo_path)
+def code_quality_score(model_owner, model_name) -> int:
+    repo = model_owner + "/" + model_name # contains full model name: owner/model_name
     py_files = [str(p) for p in repo.rglob("*.py") if p.is_file()]
 
     if not py_files:
@@ -50,3 +49,9 @@ def code_quality_score(repo_path: str) -> int:
     if issues_per_1000 > 5:  return 4
     return 5
 
+# Main file for testing
+if __name__ == "__main__":
+    owner = "Atiqah"
+    model = "Atiqah"
+    score = code_quality_score(model_owner=owner, model_name=model)
+    print('Score: ', score)
