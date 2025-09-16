@@ -19,8 +19,9 @@ Rubric:
 
 from pathlib import Path
 from flake8.api import legacy as flake8
+from huggingface_hub import HfApi
 
-def code_quality_score(model_owner, model_name) -> int:
+def code_quality_score(model_owner: str, model_name: str) -> int:
     repo = model_owner + "/" + model_name # contains full model name: owner/model_name
     py_files = [str(p) for p in repo.rglob("*.py") if p.is_file()]
 
