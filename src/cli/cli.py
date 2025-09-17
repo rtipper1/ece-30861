@@ -12,6 +12,16 @@ Requirements
 - Validates URL, if invalid exit
 - Parses URL into model owner and model name
 - Parses URL by type (model, code, dataset) NOTE: code and dataset are not used until phase 2
+
+Output format could look something like this
+
+https://huggingface.co/Qwen/Qwen3-Next-80B-A3B-Thinking
+
+ dict = {
+	"type": "model",
+	"owner": "Qwen",
+	"name": "Qwen3-Next-80B-A3B-Thinking"
+}
 """
 
 from __future__ import annotations
