@@ -4,7 +4,7 @@ test_license.py
 Basic unit tests for LicenseMetric.
 
 Tests cover:
-- All license tiers (1–5)
+- All license tiers (1-5)
 - Unknown license string
 - Missing license field
 """
