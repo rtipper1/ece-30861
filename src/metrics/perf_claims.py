@@ -1,6 +1,13 @@
 """
+performance_claims.py
+-----------------------
 Performance Claims Metric
-=========================
+
+Summary:
+- Analyzes model card or README for reported benchmarks/evaluations.
+- Validates whether claims are supported with evidence.
+- Penalizes bold or contradictory claims without citations.
+
 Two entrypoints:
 - performance_claims_from_readme(text): score using README text.
 - performance_claims_from_api(repo_id): fetch README text via HfApi().model_card and score it.

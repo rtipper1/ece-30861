@@ -1,6 +1,13 @@
 """
-Code Quality Metric
-===================
+code_quality.py
+-----------------
+Code Quality Metric.
+
+Summary:
+- Performs static analysis on repository source code (e.g., Flake8).
+- Scores maintainability and style consistency based on issues per 1,000 LOC.
+- Runs independently of Hugging Face API, fulfilling non-API metric requirement.
+
 - Input: path to a local clone/snapshot of the model repo
 - Process: 
   1. Collect all .py files

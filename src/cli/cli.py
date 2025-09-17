@@ -1,4 +1,19 @@
-# src/cli.py
+"""
+cli.py
+--------
+Command-line interface definition and argument parsing.
+
+Summary
+- Defines subcommands: install, test, runfile.
+- Parses CLI arguments and forwards execution to main entrypoints.
+- Ensures compliance with the auto-grader interface specified in project requirements.
+
+Requirements
+- Validates URL, if invalid exit
+- Parses URL into model owner and model name
+- Parses URL by type (model, code, dataset) NOTE: code and dataset are not used until phase 2
+"""
+
 from __future__ import annotations
 import argparse
 import os

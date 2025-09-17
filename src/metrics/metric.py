@@ -1,8 +1,9 @@
 """
 metric.py
-
+---------------
 Abstract base class for project metrics.
 
+Summary
 Each metric:
 - Has a unique name.
 - Stores the raw data it needs for calculation.
@@ -66,6 +67,7 @@ class Metric():
     def as_dict(self) -> Dict[str, Any]:
         """
         Returns metric data as a dictionary, may change to NDJSON format, not sure yet
+        self.name must reflect what the exact name should be in the NDJSON format table
         """
         return {
             self.name: self.score,

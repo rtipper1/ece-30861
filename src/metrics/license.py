@@ -1,6 +1,9 @@
 """
-License Score Metric
-====================
+license.py
+------------
+License Metric.
+
+Summary:
 Input:
 - card: dict | None  (this is `info.cardData` from huggingface_hub HfApi.model_info)
 
