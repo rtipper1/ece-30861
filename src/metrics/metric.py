@@ -52,7 +52,7 @@ class Metric():
         Must be implemented by subclasses.
         Should return a float [0, 1]
         """
-        pass
+        return 0
 
     def run(self) -> None:
         """
