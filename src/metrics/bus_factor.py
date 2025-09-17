@@ -12,3 +12,12 @@ Notes
 - Determine with: git shortlog -s -n 
 - lists contributor and number of commits
 """
+
+from .metric import Metric
+
+class BusFactorMetric(Metric):
+    def __init__(self):
+        super().__init__("bus_factor")
+
+    def calculate_score(self) -> float:
+        return 0.0
