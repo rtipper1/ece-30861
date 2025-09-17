@@ -11,7 +11,7 @@ Summary
 
 Output data structure could look something like this in dictionary format
 
- self.metadata = {
+ metadata = {
             "url": self.url,
             "model_id": 234587234,
             "downloads": 400000,
