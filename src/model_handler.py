@@ -1,3 +1,28 @@
+"""
+model_handler.py
+----------------
+Model Handler for Metadata Collection.
+
+Summary
+- Given a Hugging Face model URL, fetches metadata via the API and clones the repo locally.
+- Aggregates API data (downloads, likes, last modified, file list) and repo data (README, LICENSE, weights).
+- Returns a unified data structure consumable by all metric classes.
+- Bridges CLI input to the metrics subsystem while keeping concerns separated.
+
+Output data structure could look something like this in dictionary format
+
+ metadata = {
+            "url": self.url,
+            "model_id": 234587234,
+            "downloads": 400000,
+            "likes": 250000,
+            "last_modified": "9/27/25",
+            "card_data": api_data["card_data"],
+            "files": api_data["siblings"],  # list of files in repo
+            "local_repo": local_repo,       # path to cloned repo
+        }
+"""
+
 from huggingface_hub import HfApi, ModelCard, snapshot_download, hf_hub_download
 
 # This function gets a models info from the Model Card

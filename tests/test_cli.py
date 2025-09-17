@@ -1,14 +1,28 @@
+"""
+test_metric.py
+---------------
+Basic unit tests for CLI Parser
+
+Tests cover:
+- idk
+"""
+
 import pytest
-import src as cli  # updated from src
+from cli.cli import parse_args
+
 
 def test_initial_command():
-    args = cli.parse_args(['install'])
+    args = parse_args(['install'])
     assert args.command == 'install'
     assert args.url_file is None
+
+
 def test_test_command(): 
-    args = cli.parse_args(['test'])
+    args = parse_args(['test'])
     assert args.command == "test"
     assert args.url_file is None
+
+
 def test_missing_raises(): 
     with pytest.raises(SystemExit):
-        cli.parse_args([])
+        parse_args([])

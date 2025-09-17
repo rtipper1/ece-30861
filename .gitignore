@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
@@ -214,3 +215,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+=======
+venv
+__pycache__
+>>>>>>> 0a1eae73a5e86abdad492310a310a8484b96764d

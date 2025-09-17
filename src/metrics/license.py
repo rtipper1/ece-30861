@@ -1,18 +1,42 @@
 """
 license.py
+<<<<<<< HEAD
+=======
+------------
+License Metric.
+
+Summary:
+Input:
+- card: dict | None  (this is `info.cardData` from huggingface_hub HfApi.model_info)
+>>>>>>> 0a1eae73a5e86abdad492310a310a8484b96764d
 
 Class for storage and calculation of license metric. 
 
+<<<<<<< HEAD
 Inherits from metric.py
 
 Scoring:
 - 0 = no license listed
 - 1 = fully open (Apache-2.0, MIT, BSD)
+=======
+Rubric:
+
+- 1.0 = fully open (Apache-2.0, MIT, BSD)
+>>>>>>> 0a1eae73a5e86abdad492310a310a8484b96764d
 - 0.8 = open but with some restrictions (e.g., LGPL, CC-BY)
 - 0.6 = research/evaluation-only or non-commercial
 - 0.4 = fallback when license string exists but is unknown
 - 0.2 = proprietary/closed
+<<<<<<< HEAD
 """
+=======
+- 0.0 = no license listed
+
+NOTE: Need to figure out how to handle when data is empty i.e. self.data["license"] = None
+
+"""
+from .metric import Metric
+>>>>>>> 0a1eae73a5e86abdad492310a310a8484b96764d
 
 level_5_licenses = ["apache-2.0", "mit", "bsd", "bsd-2-clause", "bsd-3-clause",
     "bsd-3-clause-clear", "isc", "zlib", "unlicense", "cc0-1.0",
@@ -39,6 +63,7 @@ level_2_licenses = ["openrail", "openrail++", "creativeml-openrail-m", "bigscien
 level_1_licenses = ["llama2", "llama3", "llama3.1", "llama3.2", "llama3.3",
     "llama4", "gemma"]
 
+<<<<<<< HEAD
 from metrics.metric import Metric
 
 class LicenseMetric(Metric):
@@ -61,3 +86,35 @@ class LicenseMetric(Metric):
                 return 0.2
             case _:
                 return 0.0
+=======
+class LicenseMetric(Metric):
+    def __init__(self):
+        super().__init__("license")
+
+    def calculate_score(self) -> float:
+        # If license does not exist give it 0 score
+        if not self.data["license"]:
+            return 0.0
+
+        # Retrieve license from metric data
+        license = self.data["license"].lower().strip()
+
+        # Score metric based on categories
+        if license in level_5_licenses:
+            return 1
+
+        elif license in level_4_licenses:
+            return 0.8
+
+        elif license in level_3_licenses:
+            return 0.6
+
+        elif license in level_2_licenses:
+            return 0.4
+
+        elif license in level_1_licenses:
+            return 0.2
+
+        else:
+            return 0.0
+>>>>>>> 0a1eae73a5e86abdad492310a310a8484b96764d
