@@ -25,13 +25,24 @@ Output data structure could look something like this in dictionary format
 
 from huggingface_hub import HfApi, ModelCard, snapshot_download, hf_hub_download
 
-# This function gets a models info from the Model Card
-def testGetModelInfo(model_owner, model_name):
-    api = HfApi()
-    # or:
-    full_name = model_owner + "/" + model_name # contains full model name: owner/model_name
-    info = api.model_info(full_name)
-    print(info.id, info.sha, info.cardData)
+class model:
+    def __init__(self, model_owner, model_name):
+        self.full_name = model_owner + "/" + model_name # Full model name
+        api = HfApi()
+        
+        self.license = self.GetModelLicense(self.full_name, api)
+        
+    # This function gets a models info from the Model Card
+    def GetModelLicense(self, full_name, api):
+        info = api.model_info(full_name)
+        # Gets license stores under either license or license_name
+        # Changes from model to model so we need to check both
+        if info.cardData.license_name != None:
+            license = info.cardData.license_name
+        else:
+            license = info.cardData.license
+        return license
+        
 
 # Model Downloading
 # This function downloads the README from the selected model repo and stores it to the cache
@@ -55,10 +66,10 @@ def fullDownload(model_owner, model_name):
 
 if __name__ == "__main__":
     owner = "raidium"
-    model = "curia"
-    file = "README.md"
-    
-    testGetModelInfo(model_owner=owner, model_name=model)
+    model_name = "curia"
+    # file = "README.md"
+    model(owner, model_name)
+    # GetModelInfo(model_owner=owner, model_name=model)
     # partialDownload(model_owner=owner, model_name=model, filename=file)
     
     # NO SPACE TO DOWNLOAD FULL MODEL ON ECEPROG
