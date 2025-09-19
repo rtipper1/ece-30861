@@ -44,25 +44,24 @@ class model:
         return license
         
 
-# Model Downloading
-# This function downloads the README from the selected model repo and stores it to the cache
-def partialDownload(model_owner, model_name, filename):
-    full_name = model_owner + "/" + model_name # contains full model name: owner/model_name
-    model_path = hf_hub_download(repo_id = full_name, filename = "README.md")
-
-    print(f"File downloaded to: {model_path}")
+    # Model Downloading
+    # This function downloads the README from the selected model repo and stores it to the cache
+    def SingleFileDownload(self, model_owner, model_name, filename):
+        full_name = model_owner + "/" + model_name # contains full model name: owner/model_name
+        model_path = hf_hub_download(repo_id = full_name, filename = filename)
+        # print(f"File downloaded to: {model_path}")
+        
+        return model_path
     
-    return model_path
-   
 
-# downloads the entire model repository and stores it in the cache
-def fullDownload(model_owner, model_name):
-    full_name = model_owner + "/" + model_name # contains full model name: owner/model_name
-    model_path = snapshot_download(full_name)
+    # downloads the entire model repository and stores it in the cache
+    def fullDownload(self, model_owner, model_name):
+        full_name = model_owner + "/" + model_name # contains full model name: owner/model_name
+        model_path = snapshot_download(full_name)
 
-    print(f"Model downloaded to: {model_path}")
-    
-    return model_path
+        print(f"Model downloaded to: {model_path}")
+        
+        return model_path
 
 if __name__ == "__main__":
     owner = "raidium"
