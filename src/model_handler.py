@@ -23,7 +23,7 @@ Output data structure could look something like this in dictionary format
         }
 """
 
-from huggingface_hub import HfApi, ModelCard, snapshot_download, hf_hub_download
+from huggingface_hub import HfApi, ModelCard, snapshot_download, hf_hub_download, RepoUrl
 
 class model:
     def __init__(self, model_owner, model_name):
@@ -43,7 +43,8 @@ class model:
         self.inference = info.inference
         self.siblings = info.siblings
         self.params = self.GetParameters(info)
-        
+        self.url = RepoUrl(self.full_name)
+        print(self.url)
         # self.printSiblings()
         
     # This function gets a models info from the Model Card
@@ -89,7 +90,7 @@ if __name__ == "__main__":
     model_name = "gemma-3-27b-it"
     # file = "README.md"
     m = model(owner, model_name)
-    print(m.base_model)
+    # print(m.base_model)
     # GetModelInfo(model_owner=owner, model_name=model)
     # partialDownload(model_owner=owner, model_name=model, filename=file)
     
