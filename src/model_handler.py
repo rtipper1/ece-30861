@@ -28,13 +28,13 @@ from huggingface_hub import HfApi, ModelCard, snapshot_download, hf_hub_download
 class model:
     def __init__(self, model_owner, model_name):
         self.full_name = model_owner + "/" + model_name # Full model name
-        api = HfApi()
+        self.api = HfApi()
         
         # Get general model information
-        info = api.model_info(self.full_name) # Contains all model information
+        info = self.api.model_info(self.full_name) # Contains all model information
         model_card = info.cardData  # Contains model metadata found at the beginning of the README.md for each model Note: IS A DICTIONARY
         
-        self.license = self.GetModelLicense(self.full_name, api)
+        self.license = self.GetModelLicense(info)
         self.sha = info.sha
         self.downloads = info.downloads
         self.likes = info.likes
@@ -42,14 +42,13 @@ class model:
         self.base_model = model_card['base_model']
         self.inference = info.inference
         self.siblings = info.siblings
-        
-        
+        self.params = self.GetParameters(info)
         
         # self.printSiblings()
         
     # This function gets a models info from the Model Card
-    def GetModelLicense(self, full_name, api):
-        info = api.model_info(full_name)
+    def GetModelLicense(self, info):
+        # info = self.api.model_info(self.full_name)
         # Gets license stores under either license or license_name
         # Changes from model to model so we need to check both
         if info.cardData.license_name != None:
@@ -57,6 +56,11 @@ class model:
         else:
             license = info.cardData.license
         return license
+    
+    # Could be changed later to get tensor type as well
+    def GetParameters(self, info):
+        st = info.safetensors
+        return st.total
     
     def printSiblings(self):
         print('Repo files for: '+self.full_name)
@@ -84,7 +88,8 @@ if __name__ == "__main__":
     owner = "google"
     model_name = "gemma-3-27b-it"
     # file = "README.md"
-    model(owner, model_name)
+    m = model(owner, model_name)
+    print(m.base_model)
     # GetModelInfo(model_owner=owner, model_name=model)
     # partialDownload(model_owner=owner, model_name=model, filename=file)
     
