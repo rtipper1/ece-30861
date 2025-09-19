@@ -39,11 +39,13 @@ class CLIArgs:
     command: Literal['install', 'test', 'process']
     url_file: Optional[str]
     output: str
-    parallelism: int 
+    parallelism: int
     log_file: Optional[str]
     log_level: int
-    author: Optional[str] = None
-    model: Optional[str] = None
+    url_type: Optional[Literal['model', 'code', 'dataset']] = None
+    owner: Optional[str] = None
+    name: Optional[str] = None
+
 
 def parse_hf_url(url: str):
     """Extract (author, model) from a Hugging Face model URL."""
@@ -51,25 +53,50 @@ def parse_hf_url(url: str):
     if not m:
         return None, None
     return m.group(1), m.group(2)
+def classify_url(url: str) -> dict[str, str | None]:
+    """Classify URL into type: model, code, or dataset."""
+    # CODE
+    if url.startswith("https://github.com/") or url.startswith("https://gitlab.com/"):
+        return {"type": "code", "owner": None, "name": None}
+    if "/spaces/" in url:
+        return {"type": "code", "owner": None, "name": None}
 
-def parse_args(argv):
+    # DATASET
+    if "/datasets/" in url:
+        parts = url.split("/datasets/")[-1].split("/")
+        if len(parts) >= 2:
+            return {"type": "dataset", "owner": parts[0], "name": parts[1]}
+        return {"type": "dataset", "owner": None, "name": None}
+    if "image-net.org" in url:
+        return {"type": "dataset", "owner": None, "name": "imagenet"}
+
+    # MODEL (default Hugging Face URL)
+    m = HF_PATTERN.match(url)
+    if m:
+        return {"type": "model", "owner": m.group(1), "name": m.group(2)}
+
+    return {"type": "unknown", "owner": None, "name": None}
+
+def parse_args(argv) -> CLIArgs:
     parser = create_parser()
     ns = parser.parse_args(list(argv) if argv is not None else None)
 
+    # Subcommands
     if ns.target == 'install':
         return CLIArgs('install', None, ns.output, ns.parallelism, ns.log_file, ns.log_level)
     if ns.target == 'test':
         return CLIArgs('test', None, ns.output, ns.parallelism, ns.log_file, ns.log_level)
     if ns.target is None:
-        parser.error('Missing positional argument: install | test | /path/to/urls.txt')
+        parser.error('Missing positional argument: install | test | /path/to/urls.txt | Hugging Face URL')
 
-    # Hugging Face URL case
-    author, model = (None, None)
+    # Process URLs
+    url_type, owner, name = None, None, None
     if ns.target.startswith("http"):
-        author, model = parse_hf_url(ns.target)
-        if author is None:
-            parser.error(f"Invalid Hugging Face URL: {ns.target}")
-        print(f"HuggingFace Author: {author}, Model: {model}")
+        classification = classify_url(ns.target)
+        url_type, owner, name = classification["type"], classification["owner"], classification["name"]
+        if url_type == "unknown":
+            parser.error(f"Invalid or unsupported URL: {ns.target}")
+        print(f"Classified URL: type={url_type}, owner={owner}, name={name}")
 
     return CLIArgs(
         'process',
@@ -78,8 +105,9 @@ def parse_args(argv):
         ns.parallelism,
         ns.log_file,
         ns.log_level,
-        author,
-        model,
+        url_type,
+        owner,
+        name,
     )
     
 def create_parser() -> argparse.ArgumentParser:
@@ -90,3 +118,8 @@ def create_parser() -> argparse.ArgumentParser:
     p.add_argument('--log-file', default=os.environ.get('LOG_FILE'))
     p.add_argument('--log-level', type=int, default=int(os.environ.get('LOG_LEVEL', '0')))
     return p
+
+if __name__ == "__main__":
+    import sys
+    args = parse_args(sys.argv[1:])
+    print(args)
