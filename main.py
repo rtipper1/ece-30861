@@ -35,6 +35,7 @@ metrics = [
 ]
 
 if __name__ == "__main__":
+    
     """
         Parse command line argumetns using parse args
             - outputs model owner, name, and URL type
