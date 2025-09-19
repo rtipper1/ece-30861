@@ -30,7 +30,22 @@ class model:
         self.full_name = model_owner + "/" + model_name # Full model name
         api = HfApi()
         
+        # Get general model information
+        info = api.model_info(self.full_name) # Contains all model information
+        model_card = info.cardData  # Contains model metadata found at the beginning of the README.md for each model Note: IS A DICTIONARY
+        
         self.license = self.GetModelLicense(self.full_name, api)
+        self.sha = info.sha
+        self.downloads = info.downloads
+        self.likes = info.likes
+        self.library = info.library_name
+        self.base_model = model_card['base_model']
+        self.inference = info.inference
+        self.siblings = info.siblings
+        
+        
+        
+        # self.printSiblings()
         
     # This function gets a models info from the Model Card
     def GetModelLicense(self, full_name, api):
@@ -42,30 +57,32 @@ class model:
         else:
             license = info.cardData.license
         return license
-        
+    
+    def printSiblings(self):
+        print('Repo files for: '+self.full_name)
+        for n in self.siblings:
+            print(n)
 
     # Model Downloading
     # This function downloads the README from the selected model repo and stores it to the cache
-    def SingleFileDownload(self, model_owner, model_name, filename):
-        full_name = model_owner + "/" + model_name # contains full model name: owner/model_name
-        model_path = hf_hub_download(repo_id = full_name, filename = filename)
-        # print(f"File downloaded to: {model_path}")
+    def SingleFileDownload(self, full_name, filename):
+        model_path = hf_hub_download(repo_id = full_name, filename = filename, local_dir = "C:/Users/noahb/OneDrive/Documents/SCHOOL/ECE 30861/DownloadedREADMEs")
+        print(f"File downloaded to: {model_path}")
         
         return model_path
     
 
     # downloads the entire model repository and stores it in the cache
-    def fullDownload(self, model_owner, model_name):
-        full_name = model_owner + "/" + model_name # contains full model name: owner/model_name
+    def fullDownload(self, full_name):
         model_path = snapshot_download(full_name)
 
-        print(f"Model downloaded to: {model_path}")
+        # print(f"Model downloaded to: {model_path}")
         
         return model_path
 
 if __name__ == "__main__":
-    owner = "raidium"
-    model_name = "curia"
+    owner = "google"
+    model_name = "gemma-3-27b-it"
     # file = "README.md"
     model(owner, model_name)
     # GetModelInfo(model_owner=owner, model_name=model)
