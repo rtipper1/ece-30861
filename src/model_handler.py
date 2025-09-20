@@ -24,6 +24,43 @@ Output data structure could look something like this in dictionary format
 """
 
 from huggingface_hub import HfApi, ModelCard, snapshot_download, hf_hub_download, RepoUrl
+from dataclasses import dataclass
+
+# Turning class into @dataclass
+# Model Data
+@dataclass
+class LicenseData:
+    license : str
+
+@dataclass
+class SizeData:
+    size : int
+    
+@dataclass
+class RampUpTimeData:
+    rampUpTime : int
+
+@dataclass
+class BusFactorData:
+    contributors : int
+
+@dataclass
+class GlueScoreData:
+    glueScore : float
+    
+@dataclass
+class DatasetQualityData:
+    readmePath : str
+    
+@dataclass
+class CodeQualityData:
+    issues : int
+    linesOfCode : int
+
+@dataclass
+class PerformanceClaimsData:
+    likes : int
+    downloads : int
 
 class model:
     def __init__(self, model_owner, model_name):
@@ -44,8 +81,8 @@ class model:
         self.siblings = info.siblings
         self.params = self.GetParameters(info)
         self.url = RepoUrl(self.full_name)
-        print(self.url)
-        # self.printSiblings()
+        # self.readmePath = self.SingleFileDownload(filename="README.md")
+        self.printSiblings()
         
     # This function gets a models info from the Model Card
     def GetModelLicense(self, info):
@@ -70,8 +107,8 @@ class model:
 
     # Model Downloading
     # This function downloads the README from the selected model repo and stores it to the cache
-    def SingleFileDownload(self, full_name, filename):
-        model_path = hf_hub_download(repo_id = full_name, filename = filename, local_dir = "C:/Users/noahb/OneDrive/Documents/SCHOOL/ECE 30861/DownloadedREADMEs")
+    def SingleFileDownload(self, filename, landingPath):
+        model_path = hf_hub_download(repo_id = self.full_name, filename = filename, local_dir = landingPath)
         print(f"File downloaded to: {model_path}")
         
         return model_path
