@@ -66,7 +66,7 @@ class PerformanceClaimsData:
 api = HfApi()
 
  # This function gets a models info from the Model Card
-def GetModelLicense(model_owner, model_name):
+def GetModelLicense(model_owner : str, model_name : str):
     full_name = model_owner + "/" + model_name # Full model name    
     info = api.model_info(full_name)
     # Gets license stores under either license or license_name
@@ -77,7 +77,13 @@ def GetModelLicense(model_owner, model_name):
         license = info.cardData.license
     return LicenseData(license)
 
-
+# Could be changed later to get tensor type as well
+def GetParameters(model_owner : str, model_name : str):
+    full_name = model_owner + "/" + model_name # Full model name    
+    info = api.model_info(full_name)
+    st = info.safetensors
+    params = st.total
+    return SizeData(size = params)
 
 '''Artifact Model Data Fetching, kept for reference:'''
 class model:
@@ -89,7 +95,7 @@ class model:
         info = self.api.model_info(self.full_name) # Contains all model information
         model_card = info.cardData  # Contains model metadata found at the beginning of the README.md for each model Note: IS A DICTIONARY
         
-        self.license = self.GetModelLicense(info)
+        # self.license = self.GetModelLicense(info)
         self.sha = info.sha
         self.downloads = info.downloads
         self.likes = info.likes
@@ -97,17 +103,14 @@ class model:
         self.base_model = model_card['base_model']
         self.inference = info.inference
         self.siblings = info.siblings
-        self.params = self.GetParameters(info)
+        # self.params = self.GetParameters(info)
         self.url = RepoUrl(self.full_name)
         # self.readmePath = self.SingleFileDownload(filename="README.md")
         self.printSiblings()
         
    
     
-    # Could be changed later to get tensor type as well
-    def GetParameters(self, info):
-        st = info.safetensors
-        return st.total
+
     
     def printSiblings(self):
         print('Repo files for: '+self.full_name)
