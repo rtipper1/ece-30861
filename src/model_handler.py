@@ -62,6 +62,24 @@ class PerformanceClaimsData:
     likes : int
     downloads : int
 
+# General HuggingFace API  connection
+api = HfApi()
+
+ # This function gets a models info from the Model Card
+def GetModelLicense(model_owner, model_name):
+    full_name = model_owner + "/" + model_name # Full model name    
+    info = api.model_info(full_name)
+    # Gets license stores under either license or license_name
+    # Changes from model to model so we need to check both
+    if info.cardData.license_name != None:
+        license = info.cardData.license_name
+    else:
+        license = info.cardData.license
+    return LicenseData(license)
+
+
+
+'''Artifact Model Data Fetching, kept for reference:'''
 class model:
     def __init__(self, model_owner, model_name):
         self.full_name = model_owner + "/" + model_name # Full model name
@@ -84,16 +102,7 @@ class model:
         # self.readmePath = self.SingleFileDownload(filename="README.md")
         self.printSiblings()
         
-    # This function gets a models info from the Model Card
-    def GetModelLicense(self, info):
-        # info = self.api.model_info(self.full_name)
-        # Gets license stores under either license or license_name
-        # Changes from model to model so we need to check both
-        if info.cardData.license_name != None:
-            license = info.cardData.license_name
-        else:
-            license = info.cardData.license
-        return license
+   
     
     # Could be changed later to get tensor type as well
     def GetParameters(self, info):
