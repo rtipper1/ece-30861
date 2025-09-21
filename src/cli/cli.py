@@ -53,6 +53,63 @@ def parse_hf_url(url: str):
     if not m:
         return None, None
     return m.group(1), m.group(2)
+def parse_url_file(path: str) -> list[dict[str, str | None]]:
+    """Parse a file of comma-separated links into structured dicts.
+
+    Each line: code_link, dataset_link, model_link
+    """
+    results = []
+    seen_datasets = set()
+
+    with open(path, "r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+
+            parts = [p.strip() for p in line.split(",")]
+            # pad missing fields so we always have 3
+            while len(parts) < 3:
+                parts.append("")
+
+            code_url, dataset_url, model_url = parts
+
+            entry = {
+                "code": classify_url(code_url) if code_url else None,
+                "dataset": None,
+                "model": None,
+            }
+
+            # Dataset handling
+            if dataset_url:
+                d = classify_url(dataset_url)
+                entry["dataset"] = d if d["type"] != "unknown" else None
+                if entry["dataset"]:
+                    seen_datasets.add((d["owner"], d["name"]))
+            else:
+                entry["dataset"] = None
+                
+            if model_url:
+                m = classify_url(model_url)
+                entry["model"] = m
+            if not entry["dataset"]:
+                entry["dataset"] = {"type": "dataset", "owner": None, "name": "inferred"}
+
+            results.append(entry)
+            # Model handling
+            # if model_url:
+            #     m = classify_url(model_url)
+            #     entry["model"] = m
+
+            #     # If no dataset was listed, see if model's README references one we already saw
+            #     # (stub for now, Phase 2 may require parsing README)
+            #     if not entry["dataset"] and seen_datasets:
+            #         entry["dataset"] = {"type": "dataset", "owner": None, "name": "inferred"}
+            # results.append(entry)
+
+    return results
+
+
 def classify_url(url: str) -> dict[str, str | None]:
     """Classify URL into type: model, code, or dataset."""
     # CODE
@@ -88,7 +145,18 @@ def parse_args(argv) -> CLIArgs:
         return CLIArgs('test', None, ns.output, ns.parallelism, ns.log_file, ns.log_level)
     if ns.target is None:
         parser.error('Missing positional argument: install | test | /path/to/urls.txt | Hugging Face URL')
-
+        
+    if os.path.isfile(ns.target):
+        url_entries = parse_url_file(ns.target)
+        return CLIArgs(
+            'process',
+            ns.target,
+            ns.output,
+            ns.parallelism,
+            ns.log_file,
+            ns.log_level,
+            None, None, None
+        )
     # Process URLs
     url_type, owner, name = None, None, None
     if ns.target.startswith("http"):
@@ -123,3 +191,4 @@ if __name__ == "__main__":
     import sys
     args = parse_args(sys.argv[1:])
     print(args)
+    
