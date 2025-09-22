@@ -49,6 +49,9 @@ def main(argv=None):
         
         for line in lines:
             code_url, dataset_url, model_url = line
+            # print(code_url)
+            # print(dataset_url)
+            # print(model_url)
 
             # If line contains a model url, process it
             if model_url:
