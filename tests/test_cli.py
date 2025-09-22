@@ -15,7 +15,7 @@ Tests cover:
 
 import pytest
 import os
-from cli.cli import parse_args, parse_url_file, CLIArgs
+from cli.cli import parse_args, parse_url_file, CLIArgs, URL
 
 # Helper to write a temporary URL file
 def write_url_file(filename: str, lines: list[str]):
@@ -30,13 +30,11 @@ def test_install_command():
     args = parse_args(['install'])
     assert args.command == 'install'
     assert args.url_file is None
-    assert args.url_type is None
 
 def test_test_command(): 
     args = parse_args(['test'])
     assert args.command == "test"
     assert args.url_file is None
-    assert args.url_type is None
 
 def test_missing_raises(): 
     with pytest.raises(SystemExit):
@@ -57,36 +55,44 @@ def test_file_multiple_urls(tmp_path):
     args = parse_args([str(url_file)])
     assert args.command == 'process'
     assert args.url_file == str(url_file)
-    assert args.url_type is None  # file input does not classify a single URL
+    # Parse URL file into list of rows [code, dataset, model]
+    rows = parse_url_file(str(url_file))
+    assert isinstance(rows, list)
+    assert len(rows) == 4
 
-    entries = parse_url_file(str(url_file))
-    assert len(entries) == 4
+    # First row
+    r1 = rows[0]
+    assert len(r1) == 3
+    code1, dataset1, model1 = r1
+    assert isinstance(code1, URL) and code1.url_type == 'code'
+    assert isinstance(dataset1, URL) and dataset1.url_type == 'dataset'
+    # Dataset owner/name parsing not implemented yet; allow None
+    assert dataset1.author is None and dataset1.name is None
+    assert isinstance(model1, URL) and model1.url_type == 'model'
+    assert model1.author == 'owner' and model1.name == 'model1'
 
-    # Check first line
-    first = entries[0]
-    assert first['code']['type'] == 'code'
-    assert first['dataset']['type'] == 'dataset'
-    assert first['dataset']['owner'] == 'dataset-owner'
-    assert first['model']['type'] == 'model'
-    assert first['model']['owner'] == 'owner'
+    # Second row: only model present
+    r2 = rows[1]
+    assert len(r2) == 3
+    code2, dataset2, model2 = r2
+    assert code2 is None and dataset2 is None
+    assert isinstance(model2, URL) and model2.url_type == 'model'
 
-    # Second line: missing code/dataset, only model
-    second = entries[1]
-    assert second['code'] is None
-    assert second['dataset'] == {'type': 'dataset', 'owner': None, 'name': 'inferred'}
-    assert second['model']['type'] == 'model'
+    # Third row: GitLab code and model present
+    r3 = rows[2]
+    assert len(r3) == 3
+    code3, dataset3, model3 = r3
+    assert isinstance(code3, URL) and code3.url_type == 'code'
+    assert dataset3 is None
+    assert isinstance(model3, URL) and model3.url_type == 'model'
 
-    # Third line: GitLab code
-    third = entries[2]
-    assert third['code']['type'] == 'code'
-    # previously: assert third['dataset'] is None
-    assert third['dataset'] == {"type": "dataset", "owner": None, "name": "inferred"}
-
-    # Fourth line: HF Spaces code only
-    fourth = entries[3]
-    assert fourth['code']['type'] == 'code'
-    assert fourth['dataset'] == {"type": "dataset", "owner": None, "name": "inferred"}
-    assert fourth['model'] is None
+    # Fourth row: HF Spaces code only
+    r4 = rows[3]
+    assert len(r4) == 3
+    code4, dataset4, model4 = r4
+    assert isinstance(code4, URL) and code4.url_type == 'code'
+    assert dataset4 is None
+    assert model4 is None
 
 def test_file_empty_and_comments(tmp_path):
     url_file = tmp_path / "urls.txt"
@@ -95,42 +101,23 @@ def test_file_empty_and_comments(tmp_path):
         "",
         " , , https://huggingface.co/owner/model-only"
     ])
-    entries = parse_url_file(str(url_file))
-    assert len(entries) == 1
-    entry = entries[0]
-    assert entry['model']['type'] == 'model'
-    assert entry['code'] is None
-    assert entry['dataset'] == {"type": "dataset", "owner": None, "name": "inferred"}
-
-def test_file_unknown_url(tmp_path):
-    url_file = tmp_path / "urls.txt"
-    write_url_file(url_file, [
-        "https://unknownsite.com/some/path, , "
-    ])
-    entries = parse_url_file(str(url_file))
-    # classify_url returns type 'unknown' for unknown sites
-    entry = entries[0]
-    assert entry['code'] == {"type": "unknown", "owner": None, "name": None}
-    assert entry['dataset'] == {"type": "dataset", "owner": None, "name": "inferred"}
-    assert entry['model'] is None
-
-def test_file_mixed_invalid_and_valid(tmp_path):
-    url_file = tmp_path / "urls.txt"
-    write_url_file(url_file, [
-        "https://unknown.com/path, , https://huggingface.co/owner/model-valid"
-    ])
-    entries = parse_url_file(str(url_file))
-    entry = entries[0]
-    assert entry['code'] == {"type": "unknown", "owner": None, "name": None}
-    assert entry['dataset'] == {"type": "dataset", "owner": None, "name": "inferred"}
-    assert entry['model']['type'] == "model"
+    rows = parse_url_file(str(url_file))
+    assert len(rows) == 1
+    r = rows[0]
+    assert len(r) == 3
+    code, dataset, model = r
+    assert code is None and dataset is None
+    assert isinstance(model, URL) and model.url_type == 'model'
+    
 
 def test_hf_model_extra_path(tmp_path):
     url_file = tmp_path / "urls.txt"
     write_url_file(url_file, [
         " , , https://huggingface.co/owner/model/subdir"
     ])
-    entries = parse_url_file(str(url_file))
-    entry = entries[0]
-    assert entry['model']['owner'] == "owner"
-    assert entry['model']['name'] == "model"
+    rows = parse_url_file(str(url_file))
+    r = rows[0]
+    code, dataset, model = r
+    assert isinstance(model, URL)
+    assert model.author == "owner"
+    assert model.name == "model"

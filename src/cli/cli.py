@@ -14,6 +14,8 @@ Spec alignment
   supports CSV rows with code,dataset,model as used by tests).
 - Direct single-URL inputs on the command line are not supported; users must
   place URLs in a file.
+
+NOTES: Needs to be updated to handle invalid URLS, i.e. URLS in which classify URL does not catch as model, code, or dataset
 """
 
 from __future__ import annotations
@@ -27,6 +29,14 @@ import re
 HF_PATTERN = re.compile(r"^https?://huggingface\.co/([^/]+)/([^/]+)")
 
 @dataclass
+class URL:
+    raw: str
+    url_type: Literal['model', 'dataset', 'code']
+    author: Optional[str]
+    name: Optional[str]
+
+
+@dataclass
 class CLIArgs:
     command: Literal['install', 'test', 'process']
     url_file: Optional[str]
@@ -34,25 +44,38 @@ class CLIArgs:
     parallelism: int
     log_file: Optional[str]
     log_level: int
-    url_type: Optional[Literal['model', 'code', 'dataset']] = None
-    owner: Optional[str] = None
-    name: Optional[str] = None
 
 
-def parse_hf_url(url: str):
+def get_model_url_author(url: str):
     """Extract (author, model) from a Hugging Face model URL."""
     m = HF_PATTERN.match(url)
     if not m:
         return None, None
-    return m.group(1), m.group(2)
+    return m.group(1)
 
-def parse_url_file(path: str) -> list[dict[str, str | None]]:
-    """Parse a file of comma-separated links into structured dicts.
+def get_model_url_name(url: str):
+    """Extract (name) from a Hugging Face model URL."""
+    m = HF_PATTERN.match(url)
+    if not m:
+        return None, None
+    return m.group(2)
 
-    Each line: code_link, dataset_link, model_link
+def parse_url_file(path: str) -> list[list[Optional[URL]]]:
     """
-    results = []
-    seen_datasets = set()
+    Parse a file of comma-separated links int URL dataclass
+    
+    input:
+    <code_link_1>, <dataset_link_1>,<model_link_1>
+    <code_link_2>, <dataset_link_2>,<model_link_2>
+    ... and so on
+
+    example:
+    https://github.com/google-research/bert, https://huggingface.co/datasets/bookcorpus/bookcorpus, https://huggingface.co/google-bert/bert-base-uncased
+    ,,https://huggingface.co/parvk11/audience_classifier_model
+    ,,https://huggingface.co/openai/whisper-tiny/tree/main
+    
+    """
+    url_lines = []
 
     with open(path, "r", encoding="utf-8") as f:
         for line in f:
@@ -61,61 +84,47 @@ def parse_url_file(path: str) -> list[dict[str, str | None]]:
                 continue
 
             parts = [p.strip() for p in line.split(",")]
-            # pad missing fields so we always have 3
-            while len(parts) < 3:
-                parts.append("")
+            new_line = []
 
-            code_url, dataset_url, model_url = parts
+            for url in parts:
+                if url == "":
+                    new_line.append(None)
+                else:
+                    raw = url
+                    url_type = classify_url(url)
+                    if url_type == 'model':
+                        author = get_model_url_author(url)
+                        name = get_model_url_name(url)
+                    else:
+                        author = None
+                        name = None
 
-            entry = {
-                "code": classify_url(code_url) if code_url else None,
-                "dataset": None,
-                "model": None,
-            }
+                    new_line.append(URL(raw, url_type, author, name))
 
-            # Dataset handling
-            if dataset_url:
-                d = classify_url(dataset_url)
-                entry["dataset"] = d if d["type"] != "unknown" else None
-                if entry["dataset"]:
-                    seen_datasets.add((d["owner"], d["name"]))
-            else:
-                entry["dataset"] = None
-                
-            if model_url:
-                m = classify_url(model_url)
-                entry["model"] = m
-            if not entry["dataset"]:
-                entry["dataset"] = {"type": "dataset", "owner": None, "name": "inferred"}
-
-            results.append(entry)
-
-    return results
+            url_lines.append(new_line)
+     
+    return url_lines
 
 
-def classify_url(url: str) -> dict[str, str | None]:
-    """Classify URL into type: model, code, or dataset."""
+def classify_url(url: str) -> Literal['model', 'code', 'dataset']:
+    """Classify URL and return only its type: 'model' | 'code' | 'dataset'."""
     # CODE
     if url.startswith("https://github.com/") or url.startswith("https://gitlab.com/"):
-        return {"type": "code", "owner": None, "name": None}
+        return 'code'
     if "/spaces/" in url:
-        return {"type": "code", "owner": None, "name": None}
+        return 'code'
 
     # DATASET
-    if "/datasets/" in url:
-        parts = url.split("/datasets/")[-1].split("/")
-        if len(parts) >= 2:
-            return {"type": "dataset", "owner": parts[0], "name": parts[1]}
-        return {"type": "dataset", "owner": None, "name": None}
-    if "image-net.org" in url:
-        return {"type": "dataset", "owner": None, "name": "imagenet"}
+    if "/datasets/" in url or "image-net.org" in url:
+        return 'dataset'
 
     # MODEL (default Hugging Face URL)
     m = HF_PATTERN.match(url)
     if m:
-        return {"type": "model", "owner": m.group(1), "name": m.group(2)}
+        return 'model'
 
-    return {"type": "unknown", "owner": None, "name": None}
+    # Fallback: treat as model by default if none matched
+    return 'model'
 
 def parse_args(argv) -> CLIArgs:
     parser = create_parser()
@@ -130,7 +139,6 @@ def parse_args(argv) -> CLIArgs:
         parser.error('Missing positional argument: install | test | URL_FILE')
         
     if os.path.isfile(ns.target):
-        url_entries = parse_url_file(ns.target)
         return CLIArgs(
             'process',
             ns.target,
@@ -138,8 +146,8 @@ def parse_args(argv) -> CLIArgs:
             ns.parallelism,
             ns.log_file,
             ns.log_level,
-            None, None, None
         )
+    
     # Any other target is invalid per spec (must be a file)
     parser.error('Target must be a path to a URL file. Direct URLs are not supported. Use: ./run URL_FILE')
     
