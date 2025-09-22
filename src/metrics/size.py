@@ -13,8 +13,29 @@ Summary
 from .metric import Metric
 
 class SizeMetric(Metric):
-    def __init__(self):
-        super().__init__("size")
+    def __init__(self, name: str = "Size"):
+        super().__init__(name)
 
     def calculate_score(self) -> float:
-        return 0.0
+        """
+        Calculate the size score based on parameter count.
+        Expects self.data to include {"params": <int>} where params is the total parameter count.
+        """
+        if not self.data or "params" not in self.data:
+            raise ValueError("SizeMetric requires 'params' field in data")
+
+        params = self.data["params"]
+
+        if params < 100_000_000:        # < 100M
+            raw_score = 1
+        elif params < 1_000_000_000:    # 100M - 1B
+            raw_score = 2
+        elif params < 10_000_000_000:   # 1B - 10B
+            raw_score = 3
+        elif params < 50_000_000_000:   # 10B - 50B
+            raw_score = 4
+        else:                           # > 50B
+            raw_score = 5
+
+        # Normalize to [0,1]
+        return raw_score / 5.0
