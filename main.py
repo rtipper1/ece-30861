@@ -13,6 +13,7 @@ Summary
 import sys
 
 from src.cli.cli import parse_args
+from src.cli.cli import parse_url_file
 from src.cli.output import build_output
 from src.metrics.license import LicenseMetric
 from src.metrics.size import SizeMetric
@@ -34,24 +35,19 @@ metrics = [
     CodeQualityMetric(),
 ]
 
-if __name__ == "__main__":
+def main(argv=None):
+    cli_args = parse_args(argv)
     
-    """
-        Parse command line argumetns using parse args
-            - outputs model owner, name, and URL type
+    if cli_args.command == 'install':
+        print("install")
 
-        
-        Make model API call to get model metadata
-        Download model codebase for relavent metrics
-            - Time these operations for accurate latency maybe, still need to check if metric latency 
-            Only includes calculation time or also needs to include time to fetch metadata/files
-            - Outputs metric data structure to be passed into metrics\
+    if cli_args.command == 'test':
+        print("test")
 
-        # Sets data and calculates score and latency for each metric. Worry about doing this concurrently later
-        for metric in metrics:
-            metric.set_data(model_metadata)
-            m.run()
+    if cli_args.command == 'process':
+        lines = parse_url_file(cli_args.url_file)
+        # print(lines)
 
-        return build_output(url_name, metrics, METRIC_WEIGHTS)
-    """
-    pass
+# Allows us to run with 'python3 main.py [args]'
+if __name__ == "__main__":
+    main(sys.argv[1:])
