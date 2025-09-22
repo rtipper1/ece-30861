@@ -24,14 +24,14 @@ from src.metrics.performance_claims import PerformanceClaimsMetric
 from src.metrics.glue_score import GlueScoreMetric
 
 metrics = [
-    SizeMetric(),
-    LicenseMetric(),
     RampUpTimeMetric(),
     BusFactorMetric(),
-    DatasetQualityMetric(),
-    GlueScoreMetric(),
-    CodeQualityMetric(),
     PerformanceClaimsMetric(),
+    LicenseMetric(),
+    SizeMetric(),
+    GlueScoreMetric(), # Dataset and code score
+    DatasetQualityMetric(),
+    CodeQualityMetric(),
 ]
 
 if __name__ == "__main__":
