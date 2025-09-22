@@ -53,6 +53,7 @@ def parse_hf_url(url: str):
     if not m:
         return None, None
     return m.group(1), m.group(2)
+
 def parse_url_file(path: str) -> list[dict[str, str | None]]:
     """Parse a file of comma-separated links into structured dicts.
 
@@ -186,9 +187,3 @@ def create_parser() -> argparse.ArgumentParser:
     p.add_argument('--log-file', default=os.environ.get('LOG_FILE'))
     p.add_argument('--log-level', type=int, default=int(os.environ.get('LOG_LEVEL', '0')))
     return p
-
-if __name__ == "__main__":
-    import sys
-    args = parse_args(sys.argv[1:])
-    print(args)
-    

@@ -15,7 +15,7 @@ Tests cover:
 
 import pytest
 import os
-from src.cli.cli import parse_args, parse_url_file, CLIArgs
+from cli.cli import parse_args, parse_url_file, CLIArgs
 
 # Helper to write a temporary URL file
 def write_url_file(filename: str, lines: list[str]):
