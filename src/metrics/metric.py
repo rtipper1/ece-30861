@@ -41,6 +41,10 @@ class Metric():
         self.score: Optional[float] = None
         self.latency: Optional[int] = None
 
+    def get_data(self) -> Dict[str, Any]:
+        """Optionally fetch data. Default is empty dict."""
+        return {}
+
     def set_data(self, data: Dict[str, Any]) -> None:
         """Attach metadata needed to calculate metric."""
         self.data = data
@@ -58,9 +62,9 @@ class Metric():
         """
         Calculates metric with latency and sets fields
         """
-        if self.data is None:
-            raise ValueError(f"No data set for metric '{self.name}'")
         start = time.time()
+        if self.data is None:
+            self.data = self.get_data()
         self.score = self.calculate_score()
         self.latency = int((time.time() - start) * 1000)
 

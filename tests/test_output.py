@@ -1,13 +1,13 @@
 import json
-from metrics.license import LicenseMetric
-from metrics.size import SizeMetric
-from metrics.ramp_up_time import RampUpTimeMetric
-from metrics.code_quality import CodeQualityMetric
-from metrics.dataset_quality import DatasetQualityMetric
-from metrics.bus_factor import BusFactorMetric
-from metrics.performance_claims import PerformanceClaimsMetric
-from metrics.glue_score import GlueScoreMetric
-from cli.output import build_output
+from src.metrics.license import LicenseMetric
+from src.metrics.size import SizeMetric
+from src.metrics.ramp_up_time import RampUpTimeMetric
+from src.metrics.code_quality import CodeQualityMetric
+from src.metrics.dataset_quality import DatasetQualityMetric
+from src.metrics.bus_factor import BusFactorMetric
+from src.metrics.performance_claims import PerformanceClaimsMetric
+from src.metrics.glue_score import GlueScoreMetric
+from src.cli.output import build_output
 
 def test_build_output():
     # Instantiate all metric classes

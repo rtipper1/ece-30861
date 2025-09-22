@@ -9,7 +9,7 @@ Tests cover:
 """
 
 import pytest
-from cli.cli import parse_url_file
+from src.cli.cli import parse_url_file
 
 def test_parse_url_file_example(tmp_path):
     url_file = tmp_path / "example.txt"

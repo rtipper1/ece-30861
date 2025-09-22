@@ -30,7 +30,7 @@ NOTE: Need to figure out how to handle when data is empty i.e. self.data["licens
 
 """
 
-from .metric import Metric
+from src.metrics.metric import Metric
 
 level_5_licenses = ["apache-2.0", "mit", "bsd", "bsd-2-clause", "bsd-3-clause",
     "bsd-3-clause-clear", "isc", "zlib", "unlicense", "cc0-1.0",

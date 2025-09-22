@@ -10,7 +10,7 @@ Tests cover:
 """
 
 import pytest
-from metrics.license import LicenseMetric
+from src.metrics.license import LicenseMetric
 
 
 def test_level_5_license():

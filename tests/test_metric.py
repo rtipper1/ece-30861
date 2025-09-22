@@ -10,7 +10,7 @@ Tests cover:
 """
 
 import pytest
-from metrics.metric import Metric
+from src.metrics.metric import Metric
 
 # A simple subclass for testing
 class DummyMetric(Metric):
@@ -37,12 +37,6 @@ def test_run_sets_score_and_latency():
     assert m.score == 0.5
     assert isinstance(m.latency, int)
     assert m.latency >= 0  # latency should be non-negative
-
-
-def test_run_without_data_raises():
-    m = DummyMetric()
-    with pytest.raises(ValueError):
-        m.run()
 
 
 def test_as_dict_format():

@@ -11,7 +11,7 @@ Note: Update to test output, log, and parallelism once those are implemented
 """
 
 import pytest
-from cli.cli import parse_args
+from src.cli.cli import parse_args
 
 def test_install():
     args = parse_args(['install'])
