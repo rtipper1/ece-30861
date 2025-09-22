@@ -4,24 +4,16 @@ cli.py
 Command-line interface definition and argument parsing.
 
 Summary
-- Defines subcommands: install, test, runfile.
+- Defines subcommands: install, test, process (via URL file).
 - Parses CLI arguments and forwards execution to main entrypoints.
-- Ensures compliance with the auto-grader interface specified in project requirements.
+- Complies with the spec: only URL files are accepted for processing.
 
-Requirements
-- Validates URL, if invalid exit
-- Parses URL into model owner and model name
-- Parses URL by type (model, code, dataset) NOTE: code and dataset are not used until phase 2
-
-Output format could look something like this
-
-https://huggingface.co/Qwen/Qwen3-Next-80B-A3B-Thinking
-
- dict = {
-	"type": "model",
-	"owner": "Qwen",
-	"name": "Qwen3-Next-80B-A3B-Thinking"
-}
+Spec alignment
+- Invocation form: ./run URL_FILE
+- URL_FILE is an ASCII-encoded, newline-delimited set of URLs (our helper also
+  supports CSV rows with code,dataset,model as used by tests).
+- Direct single-URL inputs on the command line are not supported; users must
+  place URLs in a file.
 """
 
 from __future__ import annotations
@@ -97,16 +89,6 @@ def parse_url_file(path: str) -> list[dict[str, str | None]]:
                 entry["dataset"] = {"type": "dataset", "owner": None, "name": "inferred"}
 
             results.append(entry)
-            # Model handling
-            # if model_url:
-            #     m = classify_url(model_url)
-            #     entry["model"] = m
-
-            #     # If no dataset was listed, see if model's README references one we already saw
-            #     # (stub for now, Phase 2 may require parsing README)
-            #     if not entry["dataset"] and seen_datasets:
-            #         entry["dataset"] = {"type": "dataset", "owner": None, "name": "inferred"}
-            # results.append(entry)
 
     return results
 
@@ -145,7 +127,7 @@ def parse_args(argv) -> CLIArgs:
     if ns.target == 'test':
         return CLIArgs('test', None, ns.output, ns.parallelism, ns.log_file, ns.log_level)
     if ns.target is None:
-        parser.error('Missing positional argument: install | test | /path/to/urls.txt | Hugging Face URL')
+        parser.error('Missing positional argument: install | test | URL_FILE')
         
     if os.path.isfile(ns.target):
         url_entries = parse_url_file(ns.target)
@@ -158,30 +140,12 @@ def parse_args(argv) -> CLIArgs:
             ns.log_level,
             None, None, None
         )
-    # Process URLs
-    url_type, owner, name = None, None, None
-    if ns.target.startswith("http"):
-        classification = classify_url(ns.target)
-        url_type, owner, name = classification["type"], classification["owner"], classification["name"]
-        if url_type == "unknown":
-            parser.error(f"Invalid or unsupported URL: {ns.target}")
-        print(f"Classified URL: type={url_type}, owner={owner}, name={name}")
-
-    return CLIArgs(
-        'process',
-        ns.target,
-        ns.output,
-        ns.parallelism,
-        ns.log_file,
-        ns.log_level,
-        url_type,
-        owner,
-        name,
-    )
+    # Any other target is invalid per spec (must be a file)
+    parser.error('Target must be a path to a URL file. Direct URLs are not supported. Use: ./run URL_FILE')
     
 def create_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog='run')
-    p.add_argument('target', nargs='?', help='install | test | /path/to/urls.txt | Hugging Face URL')
+    p.add_argument('target', nargs='?', help='install | test | URL_FILE')
     p.add_argument('-o','--output', default='-', help='NDJSON output path ("-" = stdout)')
     p.add_argument('-p', '--parallelism', type=int, default=4, help='parallel workers')
     p.add_argument('--log-file', default=os.environ.get('LOG_FILE'))

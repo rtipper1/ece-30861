@@ -13,7 +13,7 @@ Summary
 from .metric import Metric
 
 class SizeMetric(Metric):
-    def __init__(self, name: str = "Size"):
+    def __init__(self, name: str = "size"):
         super().__init__(name)
 
     def calculate_score(self) -> float:
