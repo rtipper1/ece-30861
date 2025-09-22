@@ -1,4 +1,3 @@
-https://github.com/org/repo1, https://huggingface.co/datasets/dataset-owner/dataset1, https://huggingface.co/owner/model1,
-, , https://huggingface.co/owner/model2,
-https://gitlab.com/org/repo2,, https://huggingface.co/owner/model3,
-https://huggingface.co/spaces/user/my-space, , 
+https://github.com/google-research/bert, https://huggingface.co/datasets/bookcorpus/bookcorpus, https://huggingface.co/google-bert/bert-base-uncased
+,,https://huggingface.co/parvk11/audience_classifier_model
+,,https://huggingface.co/openai/whisper-tiny/tree/main

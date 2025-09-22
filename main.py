@@ -46,7 +46,18 @@ def main(argv=None):
 
     if cli_args.command == 'process':
         lines = parse_url_file(cli_args.url_file)
-        # print(lines)
+        
+        for line in lines:
+            code_url, dataset_url, model_url = line
+
+            # If line contains a model url, process it
+            if model_url:
+                """
+                    - calculate metrics in parallel
+                """
+                pass
+
+            
 
 # Allows us to run with 'python3 main.py [args]'
 if __name__ == "__main__":
