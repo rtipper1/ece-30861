@@ -46,36 +46,24 @@ class CLIArgs:
     log_level: int
 
 
-def get_model_url_author(url: str):
-    """Extract (author, model) from a Hugging Face model URL."""
-    m = HF_PATTERN.match(url)
-    if not m:
-        return None, None
-    return m.group(1)
-
-def get_model_url_name(url: str):
-    """Extract (name) from a Hugging Face model URL."""
-    m = HF_PATTERN.match(url)
-    if not m:
-        return None, None
-    return m.group(2)
-
 def parse_url_file(path: str) -> list[list[Optional[URL]]]:
     """
-    Parse a file of comma-separated links int URL dataclass
-    
-    input:
-    <code_link_1>, <dataset_link_1>,<model_link_1>
-    <code_link_2>, <dataset_link_2>,<model_link_2>
-    ... and so on
+    Parse a file of comma-separated links into URL dataclasses.
 
-    example:
-    https://github.com/google-research/bert, https://huggingface.co/datasets/bookcorpus/bookcorpus, https://huggingface.co/google-bert/bert-base-uncased
-    ,,https://huggingface.co/parvk11/audience_classifier_model
-    ,,https://huggingface.co/openai/whisper-tiny/tree/main
+    Input format (CSV-style):
+        <code_link>, <dataset_link>, <model_link>
+
+    Note: URL type can be inferred from its position per spec
     
+    Example:
+        https://github.com/google-research/bert, https://huggingface.co/datasets/bookcorpus/bookcorpus, https://huggingface.co/google-bert/bert-base-uncased
+        ,,https://huggingface.co/parvk11/audience_classifier_model
+        ,,https://huggingface.co/openai/whisper-tiny/tree/main
     """
-    url_lines = []
+    url_lines: list[list[Optional[URL]]] = []
+
+    # fixed mapping of column -> type
+    url_types = {0: "code", 1: "dataset", 2: "model"}
 
     with open(path, "r", encoding="utf-8") as f:
         for line in f:
@@ -84,47 +72,26 @@ def parse_url_file(path: str) -> list[list[Optional[URL]]]:
                 continue
 
             parts = [p.strip() for p in line.split(",")]
-            new_line = []
+            new_line: list[Optional[URL]] = []
 
-            for url in parts:
-                if url == "":
+            for idx, url in enumerate(parts):
+                if not url:
                     new_line.append(None)
-                else:
-                    raw = url
-                    url_type = classify_url(url)
-                    if url_type == 'model':
-                        author = get_model_url_author(url)
-                        name = get_model_url_name(url)
-                    else:
-                        author = None
-                        name = None
+                    continue
 
-                    new_line.append(URL(raw, url_type, author, name))
+                url_type = url_types.get(idx, "model")
+                author = name = None
+
+                if url_type == "model":
+                    author = get_model_url_author(url)
+                    name = get_model_url_name(url)
+
+                new_line.append(URL(url, url_type, author, name))
 
             url_lines.append(new_line)
-     
+
     return url_lines
 
-
-def classify_url(url: str) -> Literal['model', 'code', 'dataset']:
-    """Classify URL and return only its type: 'model' | 'code' | 'dataset'."""
-    # CODE
-    if url.startswith("https://github.com/") or url.startswith("https://gitlab.com/"):
-        return 'code'
-    if "/spaces/" in url:
-        return 'code'
-
-    # DATASET
-    if "/datasets/" in url or "image-net.org" in url:
-        return 'dataset'
-
-    # MODEL (default Hugging Face URL)
-    m = HF_PATTERN.match(url)
-    if m:
-        return 'model'
-
-    # Fallback: treat as model by default if none matched
-    return 'model'
 
 def parse_args(argv) -> CLIArgs:
     parser = create_parser()
@@ -147,7 +114,7 @@ def parse_args(argv) -> CLIArgs:
             ns.log_file,
             ns.log_level,
         )
-    
+
     # Any other target is invalid per spec (must be a file)
     parser.error('Target must be a path to a URL file. Direct URLs are not supported. Use: ./run URL_FILE')
     
@@ -159,3 +126,18 @@ def create_parser() -> argparse.ArgumentParser:
     p.add_argument('--log-file', default=os.environ.get('LOG_FILE'))
     p.add_argument('--log-level', type=int, default=int(os.environ.get('LOG_LEVEL', '0')))
     return p
+
+
+def get_model_url_author(url: str):
+    """Extract (author, model) from a Hugging Face model URL."""
+    m = HF_PATTERN.match(url)
+    if not m:
+        return None, None
+    return m.group(1)
+
+def get_model_url_name(url: str):
+    """Extract (name) from a Hugging Face model URL."""
+    m = HF_PATTERN.match(url)
+    if not m:
+        return None, None
+    return m.group(2)

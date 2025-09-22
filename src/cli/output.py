@@ -66,7 +66,7 @@ print(json.dumps(d))  # one line
 
 import json
 from typing import List, Dict
-from metrics.metric import Metric
+from src.metrics.metric import Metric
 
 def build_output(model_name: str, metrics: List[Metric], weights: Dict[str, float]) -> str:
     
