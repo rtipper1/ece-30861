@@ -20,13 +20,13 @@ NOTES: potentially upgrade in future to infer number of parameters from model na
 """
 
 from src.metrics.metric import Metric
-from src.cli.cli import URL
+from src.cli.url import ModelURL
 from typing import Dict, Optional
 from huggingface_hub import HfApi
 
 
 class SizeMetric(Metric):
-    def __init__(self, model_url: URL):
+    def __init__(self, model_url: ModelURL):
         super().__init__("size")
         self.model_url = model_url
 
