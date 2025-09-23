@@ -32,7 +32,7 @@ class PerformanceClaimsMetric(Metric):
         super().__init__("performance_claims")
         self.model_url = model_url
 
-    def get_data(self) -> Dict[str, Optional[str]]:
+    def get_data(self) -> Dict[str, Optional[int]]:
         """
             Gets likes and downloads form API
         """
@@ -46,7 +46,7 @@ class PerformanceClaimsMetric(Metric):
 
     def calculate_score(self) -> float:
         # If no likes or downloads, give it a 0
-        if self.data["downloads"] == 0 or self.data["likes"] == 0:
+        if self.data["downloads"] == None or self.data["likes"] == None:
             return 0.0
             
 
