@@ -24,16 +24,14 @@ import os
 from dataclasses import dataclass
 from typing import Optional, Literal
 import re
-
-# Regex to capture Hugging Face URLs
-HF_PATTERN = re.compile(r"^https?://huggingface\.co/([^/]+)/([^/]+)")
-
-@dataclass
-class URL:
-    raw: str
-    url_type: Literal['model', 'dataset', 'code']
-    author: Optional[str]
-    name: Optional[str]
+from pathlib import Path
+from src.cli.url import (
+    ModelURL,
+    DatasetURL,
+    CodeURL,
+    URL,
+    classify_url,
+)
 
 
 @dataclass
@@ -53,8 +51,11 @@ def parse_url_file(path: str) -> list[list[Optional[URL]]]:
     Input format (CSV-style):
         <code_link>, <dataset_link>, <model_link>
 
-    Note: URL type can be inferred from its position per spec
-    
+    Each column maps to a type:
+        0 -> code
+        1 -> dataset
+        2 -> model
+
     Example:
         https://github.com/google-research/bert, https://huggingface.co/datasets/bookcorpus/bookcorpus, https://huggingface.co/google-bert/bert-base-uncased
         ,,https://huggingface.co/parvk11/audience_classifier_model
@@ -62,10 +63,11 @@ def parse_url_file(path: str) -> list[list[Optional[URL]]]:
     """
     url_lines: list[list[Optional[URL]]] = []
 
-    # fixed mapping of column -> type
-    url_types = {0: "code", 1: "dataset", 2: "model"}
+    path = Path(path)
+    if not path.exists():
+        raise FileNotFoundError(f"URL file not found: {path}")
 
-    with open(path, "r", encoding="utf-8") as f:
+    with path.open("r", encoding="utf-8") as f:
         for line in f:
             line = line.strip()
             if not line or line.startswith("#"):
@@ -74,19 +76,19 @@ def parse_url_file(path: str) -> list[list[Optional[URL]]]:
             parts = [p.strip() for p in line.split(",")]
             new_line: list[Optional[URL]] = []
 
-            for idx, url in enumerate(parts):
+            for url in parts:
                 if not url:
                     new_line.append(None)
                     continue
 
-                url_type = url_types.get(idx, "model")
-                author = name = None
-
-                if url_type == "model":
-                    author = get_model_url_author(url)
-                    name = get_model_url_name(url)
-
-                new_line.append(URL(url, url_type, author, name))
+                parsed = classify_url(url)
+                if parsed and parsed.validate():
+                    new_line.append(parsed)
+                else:
+                    # Spec requires handling invalid URLs
+                    # Here: append None (skip silently), or raise error
+                    # Raise gives stricter compliance
+                    raise ValueError(f"Invalid or unsupported URL: {url}")
 
             url_lines.append(new_line)
 
