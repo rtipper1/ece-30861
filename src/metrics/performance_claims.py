@@ -58,16 +58,16 @@ class PerformanceClaimsMetric(Metric):
         if ratio > .75:
             return 1
 
-        elif ratio < .75 and ratio > .5:
+        elif ratio <= .75 and ratio >= .5:
             return 0.8
 
-        elif ratio < .5 and ratio > .2:
+        elif ratio < .5 and ratio >= .2:
             return 0.6
 
-        elif ratio < .2 and ratio > .1:
+        elif ratio < .2 and ratio >= .1:
             return 0.4
 
-        elif ratio < .1 and ratio > .01:
+        elif ratio < .1 and ratio >= .01:
             return 0.2
 
         else:
