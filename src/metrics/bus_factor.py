@@ -7,7 +7,7 @@ Summary
 - Calculates contributor redundancy relative to project size.
 - Uses number of contributors per parameter scale as described in the rubric.
 - Gets number of paramenters from model_info.safetensors
-- Gets conitrubutors from github status json
+- Gets contributors from github status json
 
 """
 
@@ -36,7 +36,7 @@ class BusFactorMetric(Metric):
         """
             Gets number of parameters from model_info.safetensors
 
-            Gets contributrs from api.list_of_contributors
+            Gets contributrs from github api
         """
         api = HfApi()
         info = api.model_info(f"{self.model_url.author}/{self.model_url.name}")
@@ -55,5 +55,32 @@ class BusFactorMetric(Metric):
     
 
     def calculate_score(self) -> float:
-        return 0.0
+            """
+            Calculate bus factor score based on contributors per billion parameters.
+            Normalized to [0,1].
+            """
+            params = self.data.get("params")
+            num_contributors = self.data.get("num_contributors")
+
+            # Defensive: missing or invalid data
+            if not params or num_contributors is None:
+                return 0.0
+
+            # Convert to billions to match rubric scale
+            params_in_billions = params / 1e9 if params > 0 else 1
+            ratio = num_contributors / params_in_billions
+
+            # Map rubric → raw score 1–5
+            if num_contributors == 0:
+                raw_score = 0.2
+            elif ratio < 1:
+                raw_score = .4
+            elif 1 <= ratio <= 2:
+                raw_score = 0.6
+            elif 3 <= ratio <= 9:
+                raw_score = 0.8
+            else:  # ratio >= 10
+                raw_score = 1
+                
+            return raw_score
     
