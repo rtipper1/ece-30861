@@ -27,7 +27,7 @@ NOTE: May investigate other ways to find license for case when it is not include
 
 from src.metrics.metric import Metric
 from huggingface_hub import HfApi
-from src.cli.cli import URL
+from src.cli.url import ModelURL
 from typing import Dict, Optional
 
 level_5_licenses = ["apache-2.0", "mit", "bsd", "bsd-2-clause", "bsd-3-clause",
@@ -57,7 +57,7 @@ level_1_licenses = ["llama2", "llama3", "llama3.1", "llama3.2", "llama3.3",
 
 
 class LicenseMetric(Metric):
-    def __init__(self, model_url: URL):
+    def __init__(self, model_url: ModelURL):
         super().__init__("license")
         self.model_url = model_url
 
