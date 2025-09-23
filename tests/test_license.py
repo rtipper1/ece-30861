@@ -11,18 +11,14 @@ Tests cover:
 
 import pytest
 from src.metrics.license import LicenseMetric
-from src.cli.cli import URL
+from src.cli.url import ModelURL
 
 # Dummy empty url to pass into test cases in which we just set the data manually
-dummy_url = URL(raw="", url_type="", author="", name="")
+dummy_url = ModelURL(raw="https://huggingface.co/Alibaba-NLP/Tongyi-DeepResearch-30B-A3B")
 
 
 def test_get_data1():
-    url = URL(raw="https://huggingface.co/Alibaba-NLP/Tongyi-DeepResearch-30B-A3B", 
-              url_type="model", 
-              author="Alibaba-NLP", 
-              name="Tongyi-DeepResearch-30B-A3B"
-        )
+    url = ModelURL(raw="https://huggingface.co/Alibaba-NLP/Tongyi-DeepResearch-30B-A3B")
 
     metric = LicenseMetric(url)
     metric.run()
@@ -31,11 +27,7 @@ def test_get_data1():
 
 
 def test_get_data2():
-    url = URL(raw="https://huggingface.co/inclusionAI/Ling-flash-2.0", 
-              url_type="model", 
-              author="inclusionAI", 
-              name="Ling-flash-2.0"
-        )
+    url = ModelURL(raw="https://huggingface.co/inclusionAI/Ling-flash-2.0")
 
     metric = LicenseMetric(url)
     metric.run()
@@ -44,11 +36,7 @@ def test_get_data2():
 
 
 def test_get_data3():
-    url = URL(raw="https://huggingface.co/deepseek-ai/DeepSeek-V3.1-Terminus", 
-              url_type="model", 
-              author="deepseek-ai", 
-              name="DeepSeek-V3.1-Terminus"
-        )
+    url = ModelURL(raw="https://huggingface.co/deepseek-ai/DeepSeek-V3.1-Terminus")
 
     metric = LicenseMetric(url)
     metric.run()
@@ -58,12 +46,8 @@ def test_get_data3():
 
 def test_get_data4():
     # model does not have license in metadata, should score 0
-    url = URL(raw="https://huggingface.co/ShaunMendes001/llama-3.2-1b-instruct-customer-support-gguf", 
-              url_type="model", 
-              author="ShaunMendes001", 
-              name="llama-3.2-1b-instruct-customer-support-gguf"
-        )
-
+    url = ModelURL(raw="https://huggingface.co/ShaunMendes001/llama-3.2-1b-instruct-customer-support-gguf")
+    
     metric = LicenseMetric(url)
     metric.run()
     assert metric.data == {"license": None}
@@ -71,11 +55,7 @@ def test_get_data4():
 
 
 def test_get_data5():
-    url = URL(raw="https://huggingface.co/XLabs-AI/flux-controlnet-hed-v3", 
-              url_type="model", 
-              author="XLabs-AI", 
-              name="flux-controlnet-hed-v3"
-        )
+    url = ModelURL(raw="https://huggingface.co/XLabs-AI/flux-controlnet-hed-v3")
 
     metric = LicenseMetric(url)
     metric.run()
