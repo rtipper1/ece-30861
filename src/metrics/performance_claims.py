@@ -24,11 +24,11 @@ Rubric:
 
 from src.metrics.metric import Metric
 from huggingface_hub import HfApi
-from src.cli.cli import URL
+from src.cli.url import ModelURL
 from typing import Dict, Optional
 
 class PerformanceClaimsMetric(Metric):
-    def __init__(self, model_url : URL):
+    def __init__(self, model_url : ModelURL):
         super().__init__("performance_claims")
         self.model_url = model_url
 
@@ -42,17 +42,17 @@ class PerformanceClaimsMetric(Metric):
         model_downloads = info.downloads
         model_likes = info.likes
 
-        return {"Downloads": model_downloads, "Likes": model_likes}
+        return {"downloads": model_downloads, "likes": model_likes}
 
     def calculate_score(self) -> float:
         # If no likes or downloads, give it a 0
-        if self.data["Downloads"] == 0 or self.data["Likes"] == 0:
+        if self.data["downloads"] == 0 or self.data["likes"] == 0:
             return 0.0
             
 
         # Retrieve license from metric data
-        likes = self.data["Likes"]
-        downloads = self.data["Downloads"]
+        likes = self.data["likes"]
+        downloads = self.data["downloads"]
         ratio = likes / downloads
         # Score metric based on categories
         if ratio > .75:
