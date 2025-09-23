@@ -4,21 +4,16 @@ license.py
 License Metric.
 
 Summary:
-Input:
-- card: dict | None  (this is `info.cardData` from huggingface_hub HfApi.model_info)
 
-Class for storage and calculation of license metric. 
+- Class for storage and calculation of license metric. 
+- Inherits from metric.py 
+- Constructed with model URL
+- Uses api.model_info.cardData to get license
 
-Inherits from metric.py
-
-Scoring:
-- 0 = no license listed
-- 1 = fully open (Apache-2.0, MIT, BSD)
 
 Rubric:
 
 - 1.0 = fully open (Apache-2.0, MIT, BSD)
->>>>>>> 0a1eae73a5e86abdad492310a310a8484b96764d
 - 0.8 = open but with some restrictions (e.g., LGPL, CC-BY)
 - 0.6 = research/evaluation-only or non-commercial
 - 0.4 = fallback when license string exists but is unknown
@@ -26,11 +21,14 @@ Rubric:
 
 - 0.0 = no license listed
 
-NOTE: Need to figure out how to handle when data is empty i.e. self.data["license"] = None
+NOTE: May investigate other ways to find license for case when it is not included in metadata
 
 """
 
 from src.metrics.metric import Metric
+from huggingface_hub import HfApi
+from src.cli.cli import URL
+from typing import Dict, Any
 
 level_5_licenses = ["apache-2.0", "mit", "bsd", "bsd-2-clause", "bsd-3-clause",
     "bsd-3-clause-clear", "isc", "zlib", "unlicense", "cc0-1.0",
@@ -59,8 +57,23 @@ level_1_licenses = ["llama2", "llama3", "llama3.1", "llama3.2", "llama3.3",
 
 
 class LicenseMetric(Metric):
-    def __init__(self):
+    def __init__(self, url: URL):
         super().__init__("license")
+        self.url = url
+
+    def get_data(self) -> Dict[str, Any]:
+        """
+            Gets license stored under either license or license_name, 
+            changes from model to model so we need to check both
+        """
+        api = HfApi()
+        info = api.model_info(f"{self.url.author}/{self.url.name}")
+
+        license = None
+        if info.cardData:
+            license = info.cardData.get("license_name") or info.cardData.get("license")
+
+        return {"license": license}
 
     def calculate_score(self) -> float:
         # If license does not exist give it 0 score
