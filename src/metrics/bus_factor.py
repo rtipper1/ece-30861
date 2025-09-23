@@ -6,11 +6,9 @@ Bus Factor Metric.
 Summary
 - Calculates contributor redundancy relative to project size.
 - Uses number of contributors per parameter scale as described in the rubric.
-- Scores in [0,1]; higher = safer (more maintainers).
+- Gets number of paramenters from model_info.safetensors
+- Gets conitrubutors from github status json
 
-Notes
-- Determine with: git shortlog -s -n 
-- lists contributor and number of commits
 """
 
 from src.metrics.metric import Metric
@@ -36,8 +34,7 @@ class BusFactorMetric(Metric):
 
     def get_data(self) -> Dict[str, int]:
         """
-            Gets number of parameters from model_info.safetensors or
-            cardata params
+            Gets number of parameters from model_info.safetensors
 
             Gets contributrs from api.list_of_contributors
         """
