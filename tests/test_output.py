@@ -19,7 +19,7 @@ def test_build_output():
     metrics = [
         RampUpTimeMetric(),
         BusFactorMetric(dummy_code_url, dummy_model_url),
-        PerformanceClaimsMetric(),
+        PerformanceClaimsMetric(dummy_code_url, dummy_model_url),
         LicenseMetric(dummy_model_url),
         SizeMetric(dummy_model_url),
         GlueScoreMetric(), # Dataset and code score
