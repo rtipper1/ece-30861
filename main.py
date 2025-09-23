@@ -29,6 +29,7 @@ from src.cli.url import (
     DatasetURL,
     CodeURL,
 )
+import subprocess
 
 # Dummy empty url to pass into test cases in which we just set the data manually
 dummy_model_url = ModelURL(raw="https://huggingface.co/google-bert/bert-base-uncased")
@@ -50,7 +51,8 @@ def main(argv=None):
     cli_args = parse_args(argv)
     
     if cli_args.command == 'install':
-        print("install")
+        print("Installing dependencies from requirements.txt...")
+        subprocess.run([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"], check=True)
 
     if cli_args.command == 'test':
         print("test")
