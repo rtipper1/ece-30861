@@ -21,7 +21,7 @@ def test_build_output():
         SizeMetric(dummy_url),
         GlueScoreMetric(),
         DatasetQualityMetric(),
-        CodeQualityMetric(),
+        CodeQualityMetric(dummy_url, dummy_url),
     ]
 
     # Hard-code scores and latencies for test

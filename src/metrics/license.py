@@ -28,7 +28,7 @@ NOTE: May investigate other ways to find license for case when it is not include
 from src.metrics.metric import Metric
 from huggingface_hub import HfApi
 from src.cli.cli import URL
-from typing import Dict,
+from typing import Dict, Optional
 
 level_5_licenses = ["apache-2.0", "mit", "bsd", "bsd-2-clause", "bsd-3-clause",
     "bsd-3-clause-clear", "isc", "zlib", "unlicense", "cc0-1.0",
@@ -57,9 +57,9 @@ level_1_licenses = ["llama2", "llama3", "llama3.1", "llama3.2", "llama3.3",
 
 
 class LicenseMetric(Metric):
-    def __init__(self, url: URL):
+    def __init__(self, model_url: URL):
         super().__init__("license")
-        self.url = url
+        self.model_url = model_url
 
     def get_data(self) -> Dict[str, Optional[str]]:
         """
@@ -67,7 +67,7 @@ class LicenseMetric(Metric):
             changes from model to model so we need to check both
         """
         api = HfApi()
-        info = api.model_info(f"{self.url.author}/{self.url.name}")
+        info = api.model_info(f"{self.model_url.author}/{self.model_url.name}")
 
         license = None
         if info.cardData:

@@ -64,11 +64,18 @@ Rubric:
 #     score = code_quality_score(model_owner=owner, model_name=model)
 #     print('Score: ', score)
 
-from .metric import Metric
+from src.metrics.metric import Metric
+from src.cli.cli import URL
+from typing import Optional, Dict
 
 class CodeQualityMetric(Metric):
-    def __init__(self):
+    def __init__(self, code_url: URL, model_url: URL):
         super().__init__("code_quality")
+        self.code_url = code_url
+        self.model_url = model_url
+
+    def get_data(self) -> Dict[str, Optional[str]]:
+        return {"code_quality": None}
 
     def calculate_score(self) -> float:
         return 0.0

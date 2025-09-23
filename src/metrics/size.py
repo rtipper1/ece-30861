@@ -26,16 +26,16 @@ from huggingface_hub import HfApi
 
 
 class SizeMetric(Metric):
-    def __init__(self, url: URL):
+    def __init__(self, model_url: URL):
         super().__init__("size")
-        self.url = url
+        self.model_url = model_url
 
     def get_data(self) -> Dict[str, Optional[int]]:
         """
             Gets number of parameters from model_info.safetensors or cardData "params"
         """
         api = HfApi()
-        info = api.model_info(f"{self.url.author}/{self.url.name}")
+        info = api.model_info(f"{self.model_url.author}/{self.model_url.name}")
 
         #
         if info.safetensors and "total" in info.safetensors:

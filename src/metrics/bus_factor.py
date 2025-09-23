@@ -13,7 +13,7 @@ Notes
 - lists contributor and number of commits
 """
 
-from .metric import Metric
+from src.metrics.metric import Metric
 
 class BusFactorMetric(Metric):
     def __init__(self):
