@@ -37,15 +37,8 @@ class SizeMetric(Metric):
         api = HfApi()
         info = api.model_info(f"{self.model_url.author}/{self.model_url.name}")
 
-        #
         if info.safetensors and "total" in info.safetensors:
             return {"size": info.safetensors.get("total")}
-
-        if info.cardData:
-            params = info.cardData.get("params") or info.cardData.get("parameters")
-
-            if params:
-                return {"size": parse_param_string(params)}
 
         return {"size": None}
 

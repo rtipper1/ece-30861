@@ -15,7 +15,7 @@ def test_build_output():
     dummy_url = URL(raw="", url_type="", author="", name="")
     metrics = [
         RampUpTimeMetric(),
-        BusFactorMetric(),
+        BusFactorMetric(dummy_url),
         PerformanceClaimsMetric(),
         LicenseMetric(dummy_url),
         SizeMetric(dummy_url),
