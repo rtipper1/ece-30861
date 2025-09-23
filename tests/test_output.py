@@ -8,20 +8,23 @@ from src.metrics.bus_factor import BusFactorMetric
 from src.metrics.performance_claims import PerformanceClaimsMetric
 from src.metrics.glue_score import GlueScoreMetric
 from src.cli.output import build_output
-from src.cli.cli import URL
+from src.cli.url import ModelURL, CodeURL, DatasetURL
 
 def test_build_output():
-    # Instantiate all metric classes
-    dummy_url = URL(raw="", url_type="", author="", name="")
+    # Dummy empty url to pass into test cases in which we just set the data manually
+    dummy_model_url = ModelURL(raw="https://huggingface.co/google-bert/bert-base-uncased")
+    dummy_code_url = CodeURL(raw="https://github.com/google-research/bert")
+    dummy_dataset_url = DatasetURL(raw="https://huggingface.co/datasets/bookcorpus/bookcorpus")
+
     metrics = [
         RampUpTimeMetric(),
-        BusFactorMetric(dummy_url),
+        BusFactorMetric(dummy_model_url),
         PerformanceClaimsMetric(),
-        LicenseMetric(dummy_url),
-        SizeMetric(dummy_url),
-        GlueScoreMetric(),
+        LicenseMetric(dummy_model_url),
+        SizeMetric(dummy_model_url),
+        GlueScoreMetric(), # Dataset and code score
         DatasetQualityMetric(),
-        CodeQualityMetric(dummy_url, dummy_url),
+        CodeQualityMetric(dummy_code_url, dummy_model_url),
     ]
 
     # Hard-code scores and latencies for test
