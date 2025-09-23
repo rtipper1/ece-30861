@@ -18,7 +18,7 @@ def test_build_output():
         BusFactorMetric(),
         PerformanceClaimsMetric(),
         LicenseMetric(dummy_url),
-        SizeMetric(),
+        SizeMetric(dummy_url),
         GlueScoreMetric(),
         DatasetQualityMetric(),
         CodeQualityMetric(),
@@ -42,7 +42,7 @@ def test_build_output():
         m.latency = latency
 
     # Define weights for all metrics (sum doesn’t have to be 1 for test)
-    weights = {m.name: 0.1 for m in metrics}
+    weights = {m.name: 0.125 for m in metrics}
 
     # Build NDJSON output
     result_json = build_output("bert-base-uncased", metrics, weights)

@@ -28,7 +28,7 @@ NOTE: May investigate other ways to find license for case when it is not include
 from src.metrics.metric import Metric
 from huggingface_hub import HfApi
 from src.cli.cli import URL
-from typing import Dict, Any
+from typing import Dict,
 
 level_5_licenses = ["apache-2.0", "mit", "bsd", "bsd-2-clause", "bsd-3-clause",
     "bsd-3-clause-clear", "isc", "zlib", "unlicense", "cc0-1.0",
@@ -61,7 +61,7 @@ class LicenseMetric(Metric):
         super().__init__("license")
         self.url = url
 
-    def get_data(self) -> Dict[str, Any]:
+    def get_data(self) -> Dict[str, Optional[str]]:
         """
             Gets license stored under either license or license_name, 
             changes from model to model so we need to check both
