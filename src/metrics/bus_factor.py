@@ -12,7 +12,7 @@ Summary
 """
 
 from src.metrics.metric import Metric
-from src.cli.cli import URL
+from src.cli.url import ModelURL, CodeURL
 from typing import Dict
 from huggingface_hub import HfApi
 import requests
@@ -27,7 +27,7 @@ def get_contributors(owner: str, repo: str, token: str = None):
     return [c["login"] for c in r.json()]
 
 class BusFactorMetric(Metric):
-    def __init__(self, code_url: URL, model_url: URL):
+    def __init__(self, code_url: CodeURL, model_url: ModelURL):
         super().__init__("bus_factor")
         self.model_url = model_url
         self.code_url = code_url

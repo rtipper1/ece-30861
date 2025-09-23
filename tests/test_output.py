@@ -18,7 +18,7 @@ def test_build_output():
 
     metrics = [
         RampUpTimeMetric(),
-        BusFactorMetric(dummy_model_url),
+        BusFactorMetric(dummy_code_url, dummy_model_url),
         PerformanceClaimsMetric(),
         LicenseMetric(dummy_model_url),
         SizeMetric(dummy_model_url),
