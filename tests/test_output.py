@@ -8,14 +8,16 @@ from src.metrics.bus_factor import BusFactorMetric
 from src.metrics.performance_claims import PerformanceClaimsMetric
 from src.metrics.glue_score import GlueScoreMetric
 from src.cli.output import build_output
+from src.cli.cli import URL
 
 def test_build_output():
     # Instantiate all metric classes
+    dummy_url = URL(raw="", url_type="", author="", name="")
     metrics = [
         RampUpTimeMetric(),
         BusFactorMetric(),
         PerformanceClaimsMetric(),
-        LicenseMetric(),
+        LicenseMetric(dummy_url),
         SizeMetric(),
         GlueScoreMetric(),
         DatasetQualityMetric(),
@@ -62,5 +64,3 @@ def test_build_output():
     # Check net_score_latency matches sum of latencies
     expected_latency = sum(lat for _, lat in test_values.values())
     assert result["net_score_latency"] == expected_latency
-
-    print("✅ test_build_output passed:", result_json)
