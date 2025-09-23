@@ -30,11 +30,45 @@ from src.cli.url import (
     CodeURL,
 )
 import subprocess
+import multiprocessing
 
 # Dummy empty url to pass into test cases in which we just set the data manually
 dummy_model_url = ModelURL(raw="https://huggingface.co/google-bert/bert-base-uncased")
 dummy_code_url = CodeURL(raw="https://github.com/google-research/bert")
 dummy_dataset_url = DatasetURL(raw="https://huggingface.co/datasets/bookcorpus/bookcorpus")
+
+metric_classes = [
+    (RampUpTimeMetric, []),                          # no URL required
+    (BusFactorMetric, ["model"]),                   # needs model URL
+    (PerformanceClaimsMetric, []),
+    (LicenseMetric, ["model"]),                     # needs model URL
+    (SizeMetric, ["model"]),                        # needs model URL
+    (GlueScoreMetric, []),
+    (DatasetQualityMetric, ["dataset"]),            # needs dataset URL
+    (CodeQualityMetric, ["code", "model"]),         # needs both
+]
+
+def run_metric(metric_class, url_roles, code_url, dataset_url, model_url):
+    try:
+        # Map roles -> actual args
+        args = []
+        for role in url_roles:
+            if role == "code":
+                args.append(code_url)
+            elif role == "dataset":
+                args.append(dataset_url)
+            elif role == "model":
+                args.append(model_url)
+
+        # Instantiate with the correct URLs
+        metric = metric_class(*args)
+
+        # Run the metric
+        metric.run()
+        return (metric.name, metric.score, metric.data)
+
+    except Exception as e:
+        return (metric_class.__name__, None, f"Error: {e}")
 
 metrics = [
     RampUpTimeMetric(),
@@ -71,9 +105,15 @@ def main(argv=None):
                 """
                     - calculate metrics in parallel
                 """
-                pass
+                with multiprocessing.Pool(processes=len(metric_classes)) as pool:
+                    results = pool.starmap(
+                    run_metric,
+                    [(cls, roles, code_url, dataset_url, model_url) for cls, roles in metric_classes]
+                )
 
-            
+                for name, score, data in results:
+                    print(f"[{name}] score={score}, data={data}")
+                    pass
 
 # Allows us to run with 'python3 main.py [args]'
 if __name__ == "__main__":
