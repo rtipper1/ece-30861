@@ -25,3 +25,10 @@ tqdm==4.67.1
 transformers==4.56.1
 typing_extensions==4.15.0
 urllib3==2.5.0
+huggingface_hub>=0.24.0
+requests>=2.31.0
+isort
+flake8
+mypy
+pytest
+pytest-cov
