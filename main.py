@@ -23,16 +23,20 @@ from src.metrics.dataset_quality import DatasetQualityMetric
 from src.metrics.bus_factor import BusFactorMetric
 from src.metrics.performance_claims import PerformanceClaimsMetric
 from src.metrics.glue_score import GlueScoreMetric
+from src.cli.cli import URL
+
+# Dummy empty url to pass into test cases in which we just set the data manually
+dummy_url = URL(raw="", url_type="", author="", name="")
 
 metrics = [
     RampUpTimeMetric(),
-    BusFactorMetric(),
+    BusFactorMetric(dummy_url),
     PerformanceClaimsMetric(),
-    LicenseMetric(),
-    SizeMetric(),
+    LicenseMetric(dummy_url),
+    SizeMetric(dummy_url),
     GlueScoreMetric(), # Dataset and code score
     DatasetQualityMetric(),
-    CodeQualityMetric(),
+    CodeQualityMetric(dummy_url, dummy_url),
 ]
 
 def main(argv=None):
@@ -49,9 +53,9 @@ def main(argv=None):
         
         for line in lines:
             code_url, dataset_url, model_url = line
-            # print(code_url)
-            # print(dataset_url)
-            # print(model_url)
+            print(code_url)
+            print(dataset_url)
+            print(model_url)
 
             # If line contains a model url, process it
             if model_url:

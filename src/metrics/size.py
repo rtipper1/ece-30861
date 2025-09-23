@@ -89,6 +89,3 @@ def score_aws_server(params: int) -> float:
     elif params <= 70e9: return 0.5
     elif params <= 200e9: return 0.2
     else: return 0.0
-
-
-    
