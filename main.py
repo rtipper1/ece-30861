@@ -31,8 +31,6 @@ from src.cli.url import ModelURL, DatasetURL, CodeURL
 from src.logging import validate_log_file, setup_logger
 from src.git import validate_github_token
 
-logger = setup_logger()
-
         
 def main(argv=None):
     log_file = validate_log_file()
