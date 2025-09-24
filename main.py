@@ -28,14 +28,18 @@ from src.metrics.performance_claims import PerformanceClaimsMetric
 from src.metrics.dataset_and_code import DatasetAndCodeMetric
 from src.cli.cli import URL
 from src.cli.url import ModelURL, DatasetURL, CodeURL
-from src.logging_config import setup_logger
+from src.logging import validate_log_file, setup_logger
+from src.git import validate_github_token
 
 logger = setup_logger()
 
         
 def main(argv=None):
-    logger.info("Program started")
-    token = os.getenv("GITHUB_TOKEN")
+    log_file = validate_log_file()
+    github_token = validate_github_token()
+
+    setup_logger()
+
     cli_args = parse_args(argv)
 
     if cli_args.command == 'process':
