@@ -128,18 +128,3 @@ def create_parser() -> argparse.ArgumentParser:
     p.add_argument('--log-file', default=os.environ.get('LOG_FILE'))
     p.add_argument('--log-level', type=int, default=int(os.environ.get('LOG_LEVEL', '0')))
     return p
-
-
-def get_model_url_author(url: str):
-    """Extract (author, model) from a Hugging Face model URL."""
-    m = HF_PATTERN.match(url)
-    if not m:
-        return None, None
-    return m.group(1)
-
-def get_model_url_name(url: str):
-    """Extract (name) from a Hugging Face model URL."""
-    m = HF_PATTERN.match(url)
-    if not m:
-        return None, None
-    return m.group(2)
