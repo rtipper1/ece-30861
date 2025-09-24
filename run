@@ -3,20 +3,107 @@
 
 import sys
 import subprocess
+import re
+from pathlib import Path
+
+REQ_FILE = "requirements.txt"
 
 def run_install():
     print("Installing dependencies from requirements.txt...")
     subprocess.run([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"], check=True)
+def run_test_suite():
+    """
+    Runs tests under coverage, extracts:
+      - number passed / total collected
+      - line coverage (TOTAL %)
+    Prints a single-line summary:
+      "X/Y test cases passed. Z% line coverage achieved."
+    Exits 0 only when all tests passed, total >= 20, coverage >= 80.
+    """
+    # 1) Run pytest under coverage
+    # Using coverage run -m pytest gives us pytest stdout and a coverage database for report.
+    try:
+        p = subprocess.run(
+            [sys.executable, "-m", "coverage", "run", "-m", "pytest", "--maxfail=0", "-q"],
+            capture_output=True, text=True, check=False
+        )
+    except FileNotFoundError as e:
+        print("ERROR: 'coverage' not found. Ensure 'coverage' is installed in requirements.", file=sys.stderr)
+        sys.exit(2)
+
+    # Combine stdout/stderr for parsing
+    test_output = (p.stdout or "") + "\n" + (p.stderr or "")
+
+    # 2) Try to determine number of collected tests (preferred)
+    collected = None
+    m = re.search(r"collected\s+(\d+)\s+items", test_output, re.IGNORECASE)
+    if not m:
+        m = re.search(r"collected\s+(\d+)\s+tests?", test_output, re.IGNORECASE)
+    if m:
+        collected = int(m.group(1))
+
+    # 3) Parse counts for statuses that pytest prints (passed, failed, skipped, xfailed, xpassed, errors)
+    counters = {"passed": 0, "failed": 0, "skipped": 0, "xfailed": 0, "xpassed": 0, "errors": 0}
+    for qty, label in re.findall(r"(\d+)\s+(passed|failed|skipped|xfailed|xpassed|errors?)", test_output, re.IGNORECASE):
+        label = label.lower()
+        if label == "error":
+            label = "errors"
+        counters[label] = counters.get(label, 0) + int(qty)
+
+    # If collected not found, compute total from parsed counters
+    total = collected if collected is not None else sum(counters.values())
+    passed = counters.get("passed", 0) + counters.get("xpassed", 0)  # treat xpassed as pass
+
+    # 4) Run coverage report and parse TOTAL %
+    try:
+        cov = subprocess.run([sys.executable, "-m", "coverage", "report", "-m"], capture_output=True, text=True, check=False)
+        cov_out = cov.stdout or cov.stderr or ""
+    except FileNotFoundError:
+        print("ERROR: 'coverage' not available for reporting.", file=sys.stderr)
+        sys.exit(2)
+
+    cov_pct = 0.0
+    for line in cov_out.splitlines():
+        if line.strip().startswith("TOTAL"):
+            # typical format: TOTAL    200   40    80%
+            m = re.search(r"TOTAL\s+\d+\s+\d+\s+(\d+)%", line)
+            if m:
+                cov_pct = float(m.group(1))
+            else:
+                # alternate: last token is percentage
+                tokens = line.split()
+                if tokens:
+                    last = tokens[-1].rstrip("%")
+                    try:
+                        cov_pct = float(last)
+                    except Exception:
+                        pass
+            break
+
+    cov_pct_int = int(round(cov_pct))
+
+    # 5) Print the exact single-line summary the grader expects
+    print(f"{passed}/{total} test cases passed. {cov_pct_int}% line coverage achieved.")
+
+    # 6) Decide exit code:
+    # The grader said: at least 20 distinct test cases and at least 80% coverage.
+    # Also require that all tests passed (passed == total).
+    success = (total >= 20) and (cov_pct >= 80.0) and (passed == total)
+    sys.exit(0 if success else 1)
+
 
 def cli_entry(argv):
-    # handle install without importing main
     if len(argv) >= 1 and argv[0] == "install":
         run_install()
         return
+    if len(argv) >= 1 and argv[0] == "test":
+        run_test_suite()
+        return
 
-    # import main only for non-install commands (so imports inside main.py run only after install)
+    # For any other command, import main (heavy imports happen here)
     from main import main
     main(argv)
+
 
 if __name__ == "__main__":
     cli_entry(sys.argv[1:])
