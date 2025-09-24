@@ -24,7 +24,7 @@ def run_test_suite():
     # Using coverage run -m pytest gives us pytest stdout and a coverage database for report.
     try:
         p = subprocess.run(
-            [sys.executable, "-m", "coverage", "run", "-m", "pytest", "--maxfail=0", "-q"],
+            [sys.executable, "-m", "coverage", "run", "--source=src", "-m", "pytest", "--maxfail=0", "-q"],
             capture_output=True, text=True, check=False
         )
     except FileNotFoundError as e:
