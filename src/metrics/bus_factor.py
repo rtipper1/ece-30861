@@ -45,8 +45,10 @@ class BusFactorMetric(Metric):
         if info.safetensors and "total" in info.safetensors:
             params = info.safetensors.get("total")
 
-        contributors = get_contributors(self.code_url.author, self.code_url.name)
-        num_contributors = len(contributors)
+        num_contributors = 0
+        if self.code_url:
+            contributors = get_contributors(self.code_url.author, self.code_url.name)
+            num_contributors = len(contributors)
         
         return {
             "params": params,

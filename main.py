@@ -68,13 +68,13 @@ def main(argv=None):
 
             metrics = [
                 RampUpTimeMetric(),
-                BusFactorMetric(dummy_code_url, dummy_model_url),
-                PerformanceClaimsMetric(dummy_model_url),
-                LicenseMetric(dummy_model_url),
-                SizeMetric(dummy_model_url),
+                BusFactorMetric(code_url, model_url),
+                PerformanceClaimsMetric(model_url),
+                LicenseMetric(model_url),
+                SizeMetric(model_url),
                 DatasetAndCodeMetric(),
                 DatasetQualityMetric(),
-                CodeQualityMetric(dummy_code_url, dummy_model_url),
+                CodeQualityMetric(code_url, model_url),
             ]
 
             # If line contains a model url, process it
