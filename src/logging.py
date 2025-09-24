@@ -26,12 +26,9 @@ def validate_log_file():
 
 
 
-def setup_logger():
-    log_file = os.getenv("LOG_FILE", "app.log")
-    log_level_str = os.getenv("LOG_LEVEL", "0")
-
+def setup_logger(log_file, log_level_str="0"):
     try:
-        log_level = int(log_level_str)
+        log_level = int(os.getenv("LOG_LEVEL", log_level_str))
     except ValueError:
         log_level = 0
 

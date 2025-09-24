@@ -38,7 +38,7 @@ def main(argv=None):
     log_file = validate_log_file()
     github_token = validate_github_token()
 
-    setup_logger()
+    setup_logger(log_file)
 
     cli_args = parse_args(argv)
 
