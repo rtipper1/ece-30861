@@ -27,7 +27,6 @@ from src.metrics.performance_claims import PerformanceClaimsMetric
 from src.metrics.dataset_and_code import DatasetAndCodeMetric
 from src.cli.cli import URL
 from src.cli.url import ModelURL, DatasetURL, CodeURL
-from src.cli.run_tests import run_tests
 
 
 # Dummy empty url to pass into test cases in which we just set the data manually
