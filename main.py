@@ -11,6 +11,7 @@ Summary
 """
 
 import sys
+import os
 import subprocess
 import re
 
@@ -34,6 +35,7 @@ logger = setup_logger()
         
 def main(argv=None):
     logger.info("Program started")
+    token = os.getenv("GITHUB_TOKEN")
     cli_args = parse_args(argv)
 
     if cli_args.command == 'process':
