@@ -2,15 +2,28 @@ import os
 import sys
 import logging
 
+import os
+import sys
+
 def validate_log_file():
-    log_file = os.getenv("LOG_FILE", "app.log")
-    try:
-        with open(log_file, "a"):
-            pass
-    except Exception as e:
-        print(f"ERROR: Cannot write to log file {log_file} ({e})", file=sys.stderr)
+    log_file = os.getenv("LOG_FILE")
+
+    if not log_file:
+        print("ERROR: LOG_FILE environment variable is missing", file=sys.stderr)
         sys.exit(1)
+
+    # 1. File must already exist
+    if not os.path.isfile(log_file):
+        print(f"ERROR: Log file does not exist: {log_file}", file=sys.stderr)
+        sys.exit(1)
+
+    # 2. Must be writable
+    if not os.access(log_file, os.W_OK):
+        print(f"ERROR: Log file is not writable: {log_file}", file=sys.stderr)
+        sys.exit(1)
+
     return log_file
+
 
 
 def setup_logger():
