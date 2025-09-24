@@ -2,7 +2,21 @@
 # run
 
 import sys
-from main import main
+import subprocess
+
+def run_install():
+    print("Installing dependencies from requirements.txt...")
+    subprocess.run([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"], check=True)
+
+def cli_entry(argv):
+    # handle install without importing main
+    if len(argv) >= 1 and argv[0] == "install":
+        run_install()
+        return
+
+    # import main only for non-install commands (so imports inside main.py run only after install)
+    from main import main
+    main(argv)
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    cli_entry(sys.argv[1:])

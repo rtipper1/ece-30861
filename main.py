@@ -49,6 +49,8 @@ metrics = [
 def main(argv=None):
     cli_args = parse_args(argv)
     
+    # NOTE: install is also handled by top-level `run` script.
+    # Keeping here for backwards compatibility when running `python main.py install`.
     if cli_args.command == 'install':
         print("Installing dependencies from requirements.txt...")
         subprocess.run([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"], check=True)
