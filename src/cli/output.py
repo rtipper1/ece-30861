@@ -67,12 +67,11 @@ print(json.dumps(d))  # one line
 import json
 from typing import List, Dict
 from src.metrics.metric import Metric
+from src.cli.url import ModelURL
 
-def build_output(model_name: str, metrics: List[Metric], weights: Dict[str, float]) -> str:
-    
-    # Need to update later to use URL object, wont always be building an output for a model
+def build_output(model: ModelURL, metrics: List[Metric], weights: Dict[str, float]) -> str:
     output = {
-        "name": model_name,
+        "name": model.name,
         "category": "MODEL",
     }
 
@@ -81,12 +80,20 @@ def build_output(model_name: str, metrics: List[Metric], weights: Dict[str, floa
 
     for m in metrics:
         weight = weights[m.name]
-        net_score += weight * m.score
-        net_score_latency += m.latency
+        
+        if m.name == "size":
+            average_score = m.score["raspberry_pi"] + m.score["jetson_nano"] + m.score["desktop_pc"] + m.score["aws_server"] / 4
+            net_score = weight * average_score
+            net_score_latency += m.latency
+        else:
+            net_score += weight * m.score
+            net_score_latency += m.latency
 
-    output["net_score"] = net_score
+    # Add net score and net score latency to dict
+    output["net_score"] = round(net_score, 2)
     output["net_score_latency"] = net_score_latency
     
+    # in order add each metric to the dict
     for m in metrics:
         output.update(m.as_dict())
         

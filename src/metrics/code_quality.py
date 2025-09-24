@@ -71,20 +71,22 @@ class CodeQualityMetric(Metric):
             
         # If fileList is empty, check the base model for python files
         if fileList == []:
-            base_model = info.cardData['base_model']
-            full_name = base_model
-            info = api.model_info(full_name) # Reset API endpoint
-            sibs = info.siblings # info.siblings is a list of all files in the repo, each file is a RepoSibling
-            for sib in sibs:
-                file = sib.rfilename
-                if '.py' in file:
-                    # Repo Contains a pytohn file
-                    path = self.SingleFileDownload(full_name= full_name, filename= file, landingPath=temp_dir.name)
-                    fileList.append(path)
-                    # Count number of lines in python file
-                    f = open(path, "r")
-                    length = len(f.readlines())
-                    LoC += length
+            base_model = info.cardData.get('base_model') if info.cardData else None
+            if base_model:
+                print("FULL NAME: " + full_name)
+                full_name = base_model
+                info = api.model_info(full_name) # Reset API endpoint
+                sibs = info.siblings # info.siblings is a list of all files in the repo, each file is a RepoSibling
+                for sib in sibs:
+                    file = sib.rfilename
+                    if '.py' in file:
+                        # Repo Contains a pytohn file
+                        path = self.SingleFileDownload(full_name= full_name, filename= file, landingPath=temp_dir.name)
+                        fileList.append(path)
+                        # Count number of lines in python file
+                        f = open(path, "r")
+                        length = len(f.readlines())
+                        LoC += length
         
         if fileList != []:
             report = style_guide.check_files([fileList])

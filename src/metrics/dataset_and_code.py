@@ -12,7 +12,7 @@ from typing import Dict
 
 class DatasetAndCodeMetric(Metric):
     def __init__(self):
-        super().__init__("dataset_and_code_score")
+        super().__init__("dataset_and_code")
 
     def calculate_score(self) -> float:
         return 0.0
