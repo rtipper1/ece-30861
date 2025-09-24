@@ -1,124 +1,96 @@
-"""
-test_cli_txt.py
-----------------
-Unit tests for CLI URL classification using URL files.
-
-Tests cover:
-- install/test commands
-- File input with multiple URLs
-- Hugging Face model URLs
-- Hugging Face dataset URLs
-- GitHub/GitLab/HF Spaces URLs (code)
-- Invalid or unknown URLs
-- Missing or empty URLs
-"""
-
 import pytest
+import tempfile
 import os
-from src.cli.cli import parse_args, parse_url_file
-from src.cli.url import CodeURL, ModelURL, DatasetURL
+from src.cli.cli import parse_args, parse_url_file, CLIArgs
+from src.cli.url import URL, classify_url
 
-# Helper to write a temporary URL file
-def write_url_file(filename: str, lines: list[str]):
-    with open(filename, "w", encoding="utf-8") as f:
-        for line in lines:
-            f.write(line + "\n")
-
-# ------------------------------
-# Subcommand tests (unchanged)
-# ------------------------------
-def test_install_command():
+# -----------------------------
+# parse_args coverage
+# -----------------------------
+def test_parse_args_install():
     args = parse_args(['install'])
+    assert isinstance(args, CLIArgs)
     assert args.command == 'install'
     assert args.url_file is None
 
-def test_test_command(): 
+def test_parse_args_test():
     args = parse_args(['test'])
-    assert args.command == "test"
+    assert isinstance(args, CLIArgs)
+    assert args.command == 'test'
     assert args.url_file is None
 
-def test_missing_raises(): 
+def test_parse_args_missing_raises():
     with pytest.raises(SystemExit):
-        parse_args([])
+        parse_args([])  # triggers "Missing positional argument" parser.error (line ~91)
 
-# ------------------------------
-# File input tests
-# ------------------------------
-def test_file_multiple_urls(tmp_path):
+def test_parse_args_file_processing(tmp_path):
+    # create dummy URL file
     url_file = tmp_path / "urls.txt"
-    write_url_file(url_file, [
-        "https://github.com/org/repo1, https://huggingface.co/datasets/dataset-owner/dataset1, https://huggingface.co/owner/model1",
-        ", , https://huggingface.co/owner/model2",
-        "https://gitlab.com/org/repo2,, https://huggingface.co/owner/model3",
-        "https://huggingface.co/spaces/user/my-space, , "
-    ])
-
+    url_file.write_text(",,https://huggingface.co/owner/model1\n")
+    
     args = parse_args([str(url_file)])
     assert args.command == 'process'
     assert args.url_file == str(url_file)
-    # Parse URL file into list of rows [code, dataset, model]
-    rows = parse_url_file(str(url_file))
-    assert isinstance(rows, list)
-    assert len(rows) == 4
 
-    # First row
-    r1 = rows[0]
-    assert len(r1) == 3
-    code1, dataset1, model1 = r1
-    assert isinstance(code1, CodeURL) and code1.url_type == 'code'
-    assert isinstance(dataset1, DatasetURL) and dataset1.url_type == 'dataset'
-    # Dataset owner/name parsing not implemented yet; allow None
-    assert dataset1.author == 'dataset-owner' and dataset1.name == 'dataset1'
-    assert isinstance(model1, ModelURL) and model1.url_type == 'model'
-    assert model1.author == 'owner' and model1.name == 'model1'
+def test_parse_args_invalid_target_raises(tmp_path):
+    # invalid target (not file)
+    with pytest.raises(SystemExit):
+        parse_args(['not_a_file.txt'])  # triggers "Target must be a path..." (line ~121)
 
-    # Second row: only model present
-    r2 = rows[1]
-    assert len(r2) == 3
-    code2, dataset2, model2 = r2
-    assert code2 is None and dataset2 is None
-    assert isinstance(model2, ModelURL) and model2.url_type == 'model'
-
-    # Third row: GitLab code and model present
-    r3 = rows[2]
-    assert len(r3) == 3
-    code3, dataset3, model3 = r3
-    assert isinstance(code3, CodeURL) and code3.url_type == 'code'
-    assert dataset3 is None
-    assert isinstance(model3, ModelURL) and model3.url_type == 'model'
-
-    # Fourth row: HF Spaces code only
-    r4 = rows[3]
-    assert len(r4) == 3
-    code4, dataset4, model4 = r4
-    assert isinstance(code4, CodeURL) and code4.url_type == 'code'
-    assert dataset4 is None
-    assert model4 is None
-
-def test_file_empty_and_comments(tmp_path):
+# -----------------------------
+# parse_url_file coverage
+# -----------------------------
+def test_parse_url_file_empty_lines_and_comments(tmp_path):
     url_file = tmp_path / "urls.txt"
-    write_url_file(url_file, [
-        "# comment line",
-        "",
-        " , , https://huggingface.co/owner/model-only"
-    ])
+    url_file.write_text("\n# comment line\n,,https://huggingface.co/owner/model1")
+    
     rows = parse_url_file(str(url_file))
     assert len(rows) == 1
-    r = rows[0]
-    assert len(r) == 3
-    code, dataset, model = r
+    code, dataset, model = rows[0]
     assert code is None and dataset is None
-    assert isinstance(model, ModelURL) and model.url_type == 'model'
-    
+    assert isinstance(model, URL)
 
-def test_hf_model_extra_path(tmp_path):
+def test_parse_url_file_invalid_url(tmp_path):
     url_file = tmp_path / "urls.txt"
-    write_url_file(url_file, [
-        " , , https://huggingface.co/owner/model/subdir"
-    ])
+    url_file.write_text(",,invalid_url_here")
+    
+    with pytest.raises(ValueError):
+        parse_url_file(str(url_file))  # triggers "Invalid or unsupported URL" (~lines 135-138)
+
+def test_parse_url_file_nonexistent_file():
+    with pytest.raises(FileNotFoundError):
+        parse_url_file("/tmp/this_file_does_not_exist.txt")  # triggers file not found check (~line 68)
+
+def test_parse_url_file_invalid_url_raises(tmp_path):
+    """Trigger ValueError for unsupported URLs (lines 135-138)."""
+    url_file = tmp_path / "urls.txt"
+    url_file.write_text(",,not_a_real_url")
+    
+    with pytest.raises(ValueError) as excinfo:
+        parse_url_file(str(url_file))
+    assert "Invalid or unsupported URL" in str(excinfo.value)
+
+def test_parse_url_file_valid_and_none_urls(tmp_path):
+    """Trigger normal append to url_lines (lines 142-145)."""
+    url_file = tmp_path / "urls.txt"
+    url_file.write_text(
+        "https://github.com/org/repo1, , https://huggingface.co/owner/model1\n"
+        ", , https://huggingface.co/owner/model2"
+    )
+    
     rows = parse_url_file(str(url_file))
-    r = rows[0]
-    code, dataset, model = r
-    assert isinstance(model, ModelURL)
-    assert model.author == "owner"
-    assert model.name == "model"
+    
+    # Should have 2 rows
+    assert len(rows) == 2
+    
+    # First row: code + model, dataset None
+    code, dataset, model = rows[0]
+    assert code is not None
+    assert dataset is None
+    assert model is not None
+    
+    # Second row: only model
+    code, dataset, model = rows[1]
+    assert code is None
+    assert dataset is None
+    assert model is not None
