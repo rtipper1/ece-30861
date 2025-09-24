@@ -11,6 +11,8 @@ Summary
 """
 
 import sys
+import subprocess
+import re
 
 from src.cli.cli import parse_args
 from src.cli.cli import parse_url_file
@@ -24,13 +26,9 @@ from src.metrics.bus_factor import BusFactorMetric
 from src.metrics.performance_claims import PerformanceClaimsMetric
 from src.metrics.dataset_and_code import DatasetAndCodeMetric
 from src.cli.cli import URL
-from src.cli.url import (
-    ModelURL,
-    DatasetURL,
-    CodeURL,
-)
-import subprocess
-import re 
+from src.cli.url import ModelURL, DatasetURL, CodeURL
+from src.cli.run_tests import run_tests
+
 
 # Dummy empty url to pass into test cases in which we just set the data manually
 dummy_model_url = ModelURL(raw="https://huggingface.co/google-bert/bert-base-uncased")
@@ -47,47 +45,6 @@ metrics = [
     DatasetQualityMetric(),
     CodeQualityMetric(dummy_code_url, dummy_model_url),
 ]
-def run_tests() -> None:
-    """
-    Run pytest on the `tests/` folder with coverage for `src/`,
-    print a summary line, and exit per spec.
-    """
-
-    completed: subprocess.CompletedProcess[str] = subprocess.run(
-        [sys.executable, "-m", "pytest",
-         "tests",               # explicitly run test folder
-         "--maxfail=1",
-         "--disable-warnings",
-         "--cov=src",
-         "--cov-report=term"],
-        capture_output=True,
-        text=True
-    )
-
-    output: str = completed.stdout + completed.stderr
-
-    # Parse total tests
-    collected_match: Optional[re.Match] = re.search(r"collected (\d+) items", output)
-    if not collected_match:
-        collected_match = re.search(r"collected (\d+) test", output)
-    total: int = int(collected_match.group(1)) if collected_match else 0
-
-    # Parse passed tests
-    passed_match: Optional[re.Match] = re.search(r"=+ (\d+) passed", output)
-    passed: int = int(passed_match.group(1)) if passed_match else 0
-
-    # Parse coverage %
-    coverage_match: Optional[re.Match] = re.search(r"TOTAL\s+\d+\s+\d+\s+(\d+)%", output)
-    coverage: int = int(coverage_match.group(1)) if coverage_match else 0
-
-    # Print summary per spec
-    print(f"{passed}/{total} test cases passed. {coverage}% line coverage achieved.")
-
-    # Exit code per spec
-    if passed == total and total >= 20 and coverage >= 80:
-        sys.exit(0)
-    else:
-        sys.exit(1)
         
 def main(argv=None):
     cli_args = parse_args(argv)
@@ -101,21 +58,40 @@ def main(argv=None):
 
     if cli_args.command == 'process':
         lines = parse_url_file(cli_args.url_file)
+
+        # Define metric weights (adjust as needed)
+        weights = {
+            "ramp_up_time": 0.1,
+            "bus_factor": 0.15,
+            "performance_claims": 0.1,
+            "license": 0.1,
+            "size": 0.1,
+            "dataset_and_code": 0.15,
+            "dataset_quality": 0.15,
+            "code_quality": 0.15,
+        }
         
         for line in lines:
             code_url, dataset_url, model_url = line
-            print(code_url)
-            print(dataset_url)
-            print(model_url)
+
+            metrics = [
+                RampUpTimeMetric(),
+                BusFactorMetric(dummy_code_url, dummy_model_url),
+                PerformanceClaimsMetric(dummy_model_url),
+                LicenseMetric(dummy_model_url),
+                SizeMetric(dummy_model_url),
+                DatasetAndCodeMetric(),
+                DatasetQualityMetric(),
+                CodeQualityMetric(dummy_code_url, dummy_model_url),
+            ]
 
             # If line contains a model url, process it
             if model_url:
-                """
-                    - calculate metrics in parallel
-                """
-                pass
+                for metric in metrics:
+                    metric.run()
 
-            
+            output_str = build_output(model_url, metrics, weights)
+            print(output_str)
 
 # Allows us to run with 'python3 main.py [args]'
 if __name__ == "__main__":
