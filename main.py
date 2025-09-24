@@ -27,25 +27,13 @@ from src.metrics.performance_claims import PerformanceClaimsMetric
 from src.metrics.dataset_and_code import DatasetAndCodeMetric
 from src.cli.cli import URL
 from src.cli.url import ModelURL, DatasetURL, CodeURL
+from src.logging_config import setup_logger
 
+logger = setup_logger()
 
-# Dummy empty url to pass into test cases in which we just set the data manually
-dummy_model_url = ModelURL(raw="https://huggingface.co/google-bert/bert-base-uncased")
-dummy_code_url = CodeURL(raw="https://github.com/google-research/bert")
-dummy_dataset_url = DatasetURL(raw="https://huggingface.co/datasets/bookcorpus/bookcorpus")
-
-metrics = [
-    RampUpTimeMetric(),
-    BusFactorMetric(dummy_code_url, dummy_model_url),
-    PerformanceClaimsMetric(dummy_model_url),
-    LicenseMetric(dummy_model_url),
-    SizeMetric(dummy_model_url),
-    DatasetAndCodeMetric(), # Dataset and code score
-    DatasetQualityMetric(),
-    CodeQualityMetric(dummy_code_url, dummy_model_url),
-]
         
 def main(argv=None):
+    logger.info("Program started")
     cli_args = parse_args(argv)
 
     if cli_args.command == 'process':
