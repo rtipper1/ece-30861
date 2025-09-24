@@ -57,8 +57,8 @@ def main(argv=None):
             "bus_factor": 0.15,
             "performance_claims": 0.1,
             "license": 0.1,
-            "size": 0.1,
-            "dataset_and_code": 0.15,
+            "size_score": 0.1,
+            "dataset_and_code_score": 0.15,
             "dataset_quality": 0.15,
             "code_quality": 0.15,
         }

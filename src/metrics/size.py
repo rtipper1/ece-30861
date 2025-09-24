@@ -27,7 +27,7 @@ from huggingface_hub import HfApi
 
 class SizeMetric(Metric):
     def __init__(self, model_url: ModelURL):
-        super().__init__("size")
+        super().__init__("size_score")
         self.model_url = model_url
 
     def get_data(self) -> Dict[str, Optional[int]]:

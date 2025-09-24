@@ -81,7 +81,7 @@ def build_output(model: ModelURL, metrics: List[Metric], weights: Dict[str, floa
     for m in metrics:
         weight = weights[m.name]
         
-        if m.name == "size":
+        if m.name == "size_score":
             average_score = m.score["raspberry_pi"] + m.score["jetson_nano"] + m.score["desktop_pc"] + m.score["aws_server"] / 4
             net_score = weight * average_score
             net_score_latency += m.latency
