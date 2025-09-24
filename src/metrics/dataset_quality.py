@@ -9,7 +9,8 @@ Summary
 - Normalizes score in [0,1] according to rubric criteria.
 """
 
-from .metric import Metric
+from src.metrics.metric import Metric
+from typing import Dict
 
 class DatasetQualityMetric(Metric):
     def __init__(self):
@@ -17,3 +18,9 @@ class DatasetQualityMetric(Metric):
 
     def calculate_score(self) -> float:
         return 0.0
+
+    def get_data(self) -> Dict[str, float]:
+        return {
+            "dataset_quality": 0.0,
+        }
+    

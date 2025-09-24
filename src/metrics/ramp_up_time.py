@@ -10,7 +10,8 @@ Summary
 - Calculates latency of the scoring process to support performance reporting.
 """
 
-from .metric import Metric
+from src.metrics.metric import Metric
+from typing import Dict
 
 class RampUpTimeMetric(Metric):
     def __init__(self):
@@ -18,3 +19,9 @@ class RampUpTimeMetric(Metric):
 
     def calculate_score(self) -> float:
         return 0.0
+
+    def get_data(self) -> Dict[str, float]:
+        return {
+            "ramp_up_time": 0.0,
+        }
+    

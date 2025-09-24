@@ -6,7 +6,7 @@ from src.metrics.code_quality import CodeQualityMetric
 from src.metrics.dataset_quality import DatasetQualityMetric
 from src.metrics.bus_factor import BusFactorMetric
 from src.metrics.performance_claims import PerformanceClaimsMetric
-from src.metrics.glue_score import GlueScoreMetric
+from src.metrics.dataset_and_code import DatasetAndCodeMetric
 from src.cli.output import build_output
 from src.cli.url import ModelURL, CodeURL, DatasetURL
 
@@ -19,10 +19,10 @@ def test_build_output():
     metrics = [
         RampUpTimeMetric(),
         BusFactorMetric(dummy_code_url, dummy_model_url),
-        PerformanceClaimsMetric(dummy_code_url, dummy_model_url),
+        PerformanceClaimsMetric(dummy_model_url),
         LicenseMetric(dummy_model_url),
         SizeMetric(dummy_model_url),
-        GlueScoreMetric(), # Dataset and code score
+        DatasetAndCodeMetric(), # Dataset and code score
         DatasetQualityMetric(),
         CodeQualityMetric(dummy_code_url, dummy_model_url),
     ]
