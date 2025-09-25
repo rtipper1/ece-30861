@@ -34,13 +34,7 @@ from typing import Any
 
 
 def run_metric(metric: Any) -> Any:
-    pid = os.getpid()
-    name = metric.__class__.__name__
-    print(f"[DEBUG] PID {pid} starting {name}")
-    start = time.time()
     metric.run()
-    elapsed = int((time.time() - start) * 1000)
-    print(f"[DEBUG] PID {pid} finished {name} in {elapsed} ms")
     return metric
 
 
