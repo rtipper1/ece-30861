@@ -12,8 +12,8 @@ Summary
 
 import sys
 import os
-import subprocess
-import re
+import multiprocessing as mp
+import time
 
 from src.cli.cli import parse_args
 from src.cli.cli import parse_url_file
@@ -30,8 +30,14 @@ from src.cli.cli import URL
 from src.cli.url import ModelURL, DatasetURL, CodeURL
 from src.logging import validate_log_file, setup_logger
 from src.git import validate_github_token
+from typing import Any
 
-        
+
+def run_metric(metric: Any) -> Any:
+    metric.run()
+    return metric
+
+
 def main(argv=None):
     log_file = validate_log_file()
     github_token = validate_github_token()
@@ -40,7 +46,7 @@ def main(argv=None):
 
     cli_args = parse_args(argv)
 
-    if cli_args.command == 'process':
+    if cli_args.command == "process":
         lines = parse_url_file(cli_args.url_file)
 
         # Define metric weights (adjust as needed)
@@ -54,7 +60,7 @@ def main(argv=None):
             "dataset_quality": 0.15,
             "code_quality": 0.15,
         }
-        
+
         for line in lines:
             code_url, dataset_url, model_url = line
 
@@ -71,11 +77,12 @@ def main(argv=None):
 
             # If line contains a model url, process it
             if model_url:
-                for metric in metrics:
-                    metric.run()
+                with mp.Pool(processes=min(len(metrics), mp.cpu_count())) as pool:
+                    metrics = pool.map(run_metric, metrics)
 
             output_str = build_output(model_url, metrics, weights)
             print(output_str)
+
 
 # Allows us to run with 'python3 main.py [args]'
 if __name__ == "__main__":
