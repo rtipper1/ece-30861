@@ -17,7 +17,7 @@ Rubric:
 """
 
 from src.metrics.metric import Metric
-from src.cli.url import ModelURL, CodeURL
+from src.cli.url import DatasetURL, CodeURL
 from huggingface_hub import HfApi, hf_hub_download
 from typing import Dict
 import tempfile
@@ -33,10 +33,10 @@ Step 5: If a significant phrase is found in the line, remove the phrase from the
 '''
 
 class DatasetQualityMetric(Metric):
-    def __init__(self, code_url: CodeURL, model_url: ModelURL):
+    def __init__(self, code_url: CodeURL, dataset_url: DatasetURL):
         super().__init__("dataset_quality")
         self.code_url = code_url
-        self.model_url = model_url
+        self.dataset_url = dataset_url
 
     def calculate_score(self) -> float:
         if self.data["score"] == None:
@@ -68,7 +68,7 @@ class DatasetQualityMetric(Metric):
     
     def get_data(self) -> Dict[str, int]:
         temp_dir = tempfile.TemporaryDirectory()
-        full_name = f"{self.model_url.author}/{self.model_url.name}" # Full model name
+        full_name = f"{self.dataset_url.author}/{self.dataset_url.name}" # Full model name
         file_path = self.SingleFileDownload(full_name= full_name, filename="README.md", landingPath=temp_dir.name)
         count = 0
         phrases = sigPhrases

@@ -4,130 +4,79 @@ test_dataset_quality.py
 Basic unit tests for DatasetQualityeMetric.
 
 Tests cover:
-- 
-- 
-- 
+- Metric gets the correct score from an example url
+- Metric gets the correct score given the number of significant phrases
+- Metric gives the correct score when there are no significant phrases
 """
 
 import pytest
 from src.metrics.dataset_quality import DatasetQualityMetric
-from src.cli.url import ModelURL
+from src.cli.url import DatasetURL
 
 # Dummy empty url to pass into test cases in which we just set the data manually
-dummy_url = ModelURL(raw="https://huggingface.co/Alibaba-NLP/Tongyi-DeepResearch-30B-A3B")
+dummy_url = DatasetURL(raw="https://huggingface.co/datasets/HuggingFaceM4/FineVision")
 
 
-def test_get_data1():
-    url = ModelURL(raw="https://huggingface.co/Alibaba-NLP/Tongyi-DeepResearch-30B-A3B")
-
-    metric = DatasetQualityMetric(url)
-    metric.run()
-    assert metric.data == {"license": "apache-2.0"}
-    assert metric.score == 1.0
-
-
-def test_get_data2():
-    url = ModelURL(raw="https://huggingface.co/inclusionAI/Ling-flash-2.0")
+def test_get_data():
+    url = DatasetURL(raw="https://huggingface.co/datasets/HuggingFaceM4/FineVision")
 
     metric = DatasetQualityMetric(url)
     metric.run()
-    assert metric.data == {"license": "mit"}
-    assert metric.score == 1.0
+    assert metric.data == {"score": 1}
+    assert metric.score == 0.2
 
 
-def test_get_data3():
-    url = ModelURL(raw="https://huggingface.co/deepseek-ai/DeepSeek-V3.1-Terminus")
-
-    metric = DatasetQualityMetric(url)
-    metric.run()
-    assert metric.data == {"license": "mit"}
-    assert metric.score == 1.0
-
-
-def test_get_data4():
-    # model does not have license in metadata, should score 0
-    url = ModelURL(raw="https://huggingface.co/ShaunMendes001/llama-3.2-1b-instruct-customer-support-gguf")
-    
-    metric = DatasetQualityMetric(url)
-    metric.run()
-    assert metric.data == {"license": None}
-    assert metric.score == 0.0
-
-
-def test_get_data5():
-    url = ModelURL(raw="https://huggingface.co/XLabs-AI/flux-controlnet-hed-v3")
-
-    metric = DatasetQualityMetric(url)
-    metric.run()
-    assert metric.data == {"license": "flux-1-dev-non-commercial-license"}
-    assert metric.score == 0.0
-
-
-def test_level_5_license():
+def test_level_5_DQ():
     metric = DatasetQualityMetric(dummy_url)
-    metric.set_data({"license": "apache-2.0"})
+    metric.set_data({"score ": 5})
     metric.run()
     assert metric.score == 1
 
 
-def test_level_4_license():
+def test_level_4_DQv ():
     metric = DatasetQualityMetric(dummy_url)
-    metric.set_data({"license": "lgpl-3.0"})
+    metric.set_data({"score": 4})
     metric.run()
     assert metric.score == 0.8
 
 
-def test_level_3_license():
+def test_level_3_DQ():
     metric = DatasetQualityMetric(dummy_url)
-    metric.set_data({"license": "cc-by-nc-4.0"})
+    metric.set_data({"score": 3})
     metric.run()
     assert metric.score == 0.6
 
 
-def test_level_2_license():
+def test_level_2_DQ():
     metric = DatasetQualityMetric(dummy_url)
-    metric.set_data({"license": "openrail"})
+    metric.set_data({"score": 2})
     metric.run()
     assert metric.score == 0.4
 
 
-def test_level_1_license():
+def test_level_1_DQ():
     metric = DatasetQualityMetric(dummy_url)
-    metric.set_data({"license": "llama3"})
+    metric.set_data({"score": 1})
     metric.run()
     assert metric.score == 0.2
 
 
-def test_case_insensitivity():
+def test_level_0_DQ():
     metric = DatasetQualityMetric(dummy_url)
-    metric.set_data({"license": "APACHE-2.0"})
-    metric.run()
-    assert metric.score == 1.0
-
-
-def test_license_with_whitespace():
-    metric = DatasetQualityMetric(dummy_url)
-    metric.set_data({"license": "  mit  "})
-    metric.run()
-    assert metric.score == 1.0
-
-
-def test_unknown_license():
-    metric = DatasetQualityMetric(dummy_url)
-    metric.set_data({"license": "something-unknown"})
+    metric.set_data({"score": 0})
     metric.run()
     assert metric.score == 0.0
 
 
-def test_none_license():
+def test_none_DQ():
     metric = DatasetQualityMetric(dummy_url)
-    metric.set_data({"license": None})
+    metric.set_data({"score": None})
     metric.run()
     assert metric.score == 0.0
 
 
-def test_empty_license_string():
+def test_empty_DQ():
     metric = DatasetQualityMetric(dummy_url)
-    metric.set_data({"license": ""})
+    metric.set_data({"score": ""})
     metric.run()
     assert metric.score == 0.0
