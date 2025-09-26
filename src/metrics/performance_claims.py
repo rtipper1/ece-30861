@@ -51,8 +51,8 @@ class PerformanceClaimsMetric(Metric):
             
 
         # Retrieve license from metric data
-        likes = self.data["likes"]
-        downloads = self.data["downloads"]
+        likes = int(self.data["likes"])
+        downloads = int(self.data["downloads"])
         ratio = likes / downloads
         # Score metric based on categories
         if ratio > .75:
