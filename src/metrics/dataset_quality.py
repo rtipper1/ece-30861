@@ -7,6 +7,13 @@ Summary
 - Evaluates datasets linked to the model.
 - Scores based on documentation availability, peer review, and community adoption.
 - Normalizes score in [0,1] according to rubric criteria.
+
+Rubric:
+- 0.2 = Only 1 significant phrase found
+- 0.4 = Only 2 significant phrases found
+- 0.6 = Only 3 significant phrases found
+- 0.8 = Only 4 significant phrases found
+- 1 = All 5 significant phrases found
 """
 
 from src.metrics.metric import Metric
