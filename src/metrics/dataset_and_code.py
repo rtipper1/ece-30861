@@ -26,7 +26,7 @@ class DatasetAndCodeMetric(Metric):
         return self.data["score"]
 
     def get_data(self) -> Dict[str, float]:
-        api_key = os.environ.get("API_KEY")
+        api_key = os.environ.get("GEN_AI_STUDIO_API_KEY")
         if not api_key:
             raise Exception("API key not set")
 
