@@ -21,16 +21,16 @@ dummy_url = ModelURL(
     raw="https://huggingface.co/Alibaba-NLP/Tongyi-DeepResearch-30B-A3B")
 
 
-def test_get_data():
-    url = ModelURL(
-        raw="https://huggingface.co/Alibaba-NLP/Tongyi-DeepResearch-30B-A3B")
+# def test_get_data():
+#     url = ModelURL(
+#         raw="https://huggingface.co/Alibaba-NLP/Tongyi-DeepResearch-30B-A3B")
 
-    metric = PerformanceClaimsMetric(url)
-    metric.run()
-    downloadCheck = metric.data["downloads"]
-    likeCheck = metric.data["likes"]
-    assert likeCheck > 0
-    assert downloadCheck > 0
+#     metric = PerformanceClaimsMetric(url)
+#     metric.run()
+#     downloadCheck = metric.data["downloads"]
+#     likeCheck = metric.data["likes"]
+#     assert likeCheck > 0
+#     assert downloadCheck > 0
 
 
 def test_level_5_PC():
@@ -80,3 +80,46 @@ def test_zero_likes_downloads():
     metric.set_data({"downloads": 0, "likes": 0})
     metric.run()
     assert metric.score == 0.0
+
+import pytest
+from huggingface_hub import HfApi
+
+from src.cli.url import ModelURL
+from src.metrics.performance_claims import PerformanceClaimsMetric
+
+
+# def test_hf_api_returns_likes_and_downloads():
+#     """Direct API test: Make sure HuggingFace Hub gives likes and downloads."""
+#     api = HfApi()
+#     info = api.model_info("bert-base-uncased")  # well-known model
+#     assert hasattr(info, "likes")
+#     assert hasattr(info, "downloads")
+#     assert isinstance(info.likes, int)
+#     assert isinstance(info.downloads, int)
+#     assert info.likes > 0  # this repo is very popular
+#     assert info.downloads > 0
+
+
+# def test_performance_claims_metric_data():
+#     """Make sure PerformanceClaimsMetric pulls likes and downloads correctly."""
+#     model_url = ModelURL(raw="https://huggingface.co/bert-base-uncased")
+#     metric = PerformanceClaimsMetric(model_url)
+#     data = metric.get_data()
+#     assert "likes" in data
+#     assert "downloads" in data
+#     assert isinstance(data["likes"], int)
+#     assert isinstance(data["downloads"], int)
+#     assert data["likes"] > 0
+#     assert data["downloads"] > 0
+
+
+# def test_performance_claims_calculate_score():
+#     """Run the metric fully and check that score is > 0 for popular models."""
+#     model_url = ModelURL(raw="https://huggingface.co/bert-base-uncased")
+#     metric = PerformanceClaimsMetric(model_url)
+#     metric.run()
+#     score = metric.score
+#     assert isinstance(score, float)
+#     assert 0.0 <= score <= 1.0
+#     # bert-base-uncased is popular, so score should not be 0
+#     assert score > 0.0

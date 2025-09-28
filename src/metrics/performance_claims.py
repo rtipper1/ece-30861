@@ -45,10 +45,16 @@ class PerformanceClaimsMetric(Metric):
             except (ValueError, TypeError):
                 return None
 
-        model_downloads = safe_int(getattr(info, "downloads", None))
-        model_likes = safe_int(getattr(info, "likes", None))
+        downloads = None
+        likes = None
 
-        return {"downloads": model_downloads, "likes": model_likes}
+        # HuggingFace often stores these in cardData
+        if info.cardData:
+            downloads = safe_int(info.cardData.get("downloads"))
+            likes = safe_int(info.cardData.get("likes"))
+
+        return {"downloads": downloads, "likes": likes}
+
 
     def calculate_score(self) -> float:
         downloads = self.data.get("downloads")

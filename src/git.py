@@ -17,3 +17,5 @@ def validate_github_token():
     except BadCredentialsException:
         print("ERROR: Invalid GITHUB_TOKEN provided", file=sys.stderr)
         sys.exit(1)
+
+    return g
