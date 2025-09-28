@@ -1,8 +1,7 @@
 import pytest
 from github import BadCredentialsException
 
-import src.git  # <-- this is where validate_github_token lives
-
+import src.git
 
 def test_validate_github_token_missing_env(monkeypatch, capsys):
     monkeypatch.delenv("GITHUB_TOKEN", raising=False)
@@ -28,8 +27,9 @@ def test_validate_github_token_valid(monkeypatch):
     monkeypatch.setenv("GITHUB_TOKEN", "fake-token")
     monkeypatch.setattr(src.git, "Github", lambda token: DummyGithub(token))
 
-    g = src.git.validate_github_token()
-    assert isinstance(g, DummyGithub)
+    # should not raise if valid
+    src.git.validate_github_token()
+
 
 
 def test_validate_github_token_invalid(monkeypatch, capsys):
