@@ -63,8 +63,9 @@ print(json.dumps(d))  # one line
 =====================================================================
 """
 
+from typing import Dict, List
+
 from src.cli.url import ModelURL
-from typing import List, Dict
 from src.metrics.metric import Metric
 
 

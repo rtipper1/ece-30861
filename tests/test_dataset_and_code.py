@@ -1,6 +1,7 @@
 import pytest
-from src.metrics.dataset_and_code import DatasetAndCodeMetric
+
 from src.cli.url import ModelURL
+from src.metrics.dataset_and_code import DatasetAndCodeMetric
 
 
 def test_null_model_url_returns_zero_score(monkeypatch):

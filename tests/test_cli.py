@@ -1,7 +1,9 @@
-import pytest
-import tempfile
 import os
-from src.cli.cli import parse_args, parse_url_file, CLIArgs
+import tempfile
+
+import pytest
+
+from src.cli.cli import CLIArgs, parse_args, parse_url_file
 from src.cli.url import URL, classify_url
 
 # -----------------------------

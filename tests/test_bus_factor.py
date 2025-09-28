@@ -8,8 +8,9 @@ Tests cover:
 """
 
 import pytest
-from src.metrics.bus_factor import BusFactorMetric
+
 from src.cli.url import CodeURL, ModelURL
+from src.metrics.bus_factor import BusFactorMetric
 
 
 def test_get_data_contributors1():

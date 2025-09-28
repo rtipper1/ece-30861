@@ -1,5 +1,6 @@
-import requests
 import os
+
+import requests
 
 api_key = os.environ.get("API_KEY")
 if not api_key:

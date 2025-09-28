@@ -10,6 +10,7 @@ Tests cover:
 """
 
 import pytest
+
 from src.metrics.metric import Metric
 
 # A simple subclass for testing

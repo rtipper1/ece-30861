@@ -1,8 +1,9 @@
 from __future__ import annotations
-from dataclasses import dataclass
-from typing import Optional
+
 import re
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
+from typing import Optional
 
 
 @dataclass

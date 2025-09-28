@@ -10,8 +10,9 @@ Tests cover:
 """
 
 import pytest
+
+from src.cli.url import CodeURL, DatasetURL
 from src.metrics.dataset_quality import DatasetQualityMetric
-from src.cli.url import DatasetURL, CodeURL
 
 
 def test_null_dataset_url_returns_zero_score():

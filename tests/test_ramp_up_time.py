@@ -1,6 +1,7 @@
 import pytest
-from src.metrics.ramp_up_time import RampUpTimeMetric
+
 from src.cli.url import ModelURL
+from src.metrics.ramp_up_time import RampUpTimeMetric
 
 
 def test_null_model_url_returns_zero_score(monkeypatch):

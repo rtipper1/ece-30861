@@ -11,11 +11,13 @@ Summary
 
 """
 
-from src.metrics.metric import Metric
-from src.cli.url import ModelURL, CodeURL
 from typing import Dict
-from huggingface_hub import HfApi
+
 import requests
+from huggingface_hub import HfApi
+
+from src.cli.url import CodeURL, ModelURL
+from src.metrics.metric import Metric
 
 
 def get_contributors(owner: str, repo: str, token: str = None):

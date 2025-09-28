@@ -19,10 +19,12 @@ NOTES: potentially upgrade in future to infer number of parameters from model na
 
 """
 
-from src.metrics.metric import Metric
-from src.cli.url import ModelURL
 from typing import Dict, Optional
+
 from huggingface_hub import HfApi
+
+from src.cli.url import ModelURL
+from src.metrics.metric import Metric
 
 
 class SizeMetric(Metric):

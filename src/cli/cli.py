@@ -19,19 +19,15 @@ NOTES: Needs to be updated to handle invalid URLS, i.e. URLS in which classify U
 """
 
 from __future__ import annotations
+
 import argparse
 import os
-from dataclasses import dataclass
-from typing import Optional, Literal
 import re
+from dataclasses import dataclass
 from pathlib import Path
-from src.cli.url import (
-    ModelURL,
-    DatasetURL,
-    CodeURL,
-    URL,
-    classify_url,
-)
+from typing import Literal, Optional
+
+from src.cli.url import URL, CodeURL, DatasetURL, ModelURL, classify_url
 
 
 @dataclass

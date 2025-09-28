@@ -10,8 +10,9 @@ Tests cover:
 """
 
 import pytest
-from src.metrics.license import LicenseMetric
+
 from src.cli.url import ModelURL
+from src.metrics.license import LicenseMetric
 
 # Dummy empty url to pass into test cases in which we just set the data manually
 dummy_url = ModelURL(

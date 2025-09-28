@@ -10,11 +10,13 @@ Summary
 - Maps overall availability/quality into a [0,1] score.
 """
 
-from src.metrics.metric import Metric
-from typing import Dict
-from src.cli.url import ModelURL
-import requests
 import os
+from typing import Dict
+
+import requests
+
+from src.cli.url import ModelURL
+from src.metrics.metric import Metric
 
 
 class DatasetAndCodeMetric(Metric):

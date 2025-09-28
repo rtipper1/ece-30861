@@ -33,13 +33,15 @@ print(temp_dir.name)
 temp_dir.cleanup()
 '''
 
+import tempfile
 # from pathlib import Path
 from typing import Dict, Optional
-import tempfile
-from src.cli.url import ModelURL, CodeURL
-from huggingface_hub import HfApi, hf_hub_download
-from src.metrics.metric import Metric
+
 from flake8.api import legacy as flake8
+from huggingface_hub import HfApi, hf_hub_download
+
+from src.cli.url import CodeURL, ModelURL
+from src.metrics.metric import Metric
 
 
 class CodeQualityMetric(Metric):

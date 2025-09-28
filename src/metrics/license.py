@@ -25,10 +25,12 @@ NOTE: May investigate other ways to find license for case when it is not include
 
 """
 
-from src.metrics.metric import Metric
-from huggingface_hub import HfApi
-from src.cli.url import ModelURL
 from typing import Dict, Optional
+
+from huggingface_hub import HfApi
+
+from src.cli.url import ModelURL
+from src.metrics.metric import Metric
 
 level_5_licenses = ["apache-2.0", "mit", "bsd", "bsd-2-clause", "bsd-3-clause",
                     "bsd-3-clause-clear", "isc", "zlib", "unlicense", "cc0-1.0",

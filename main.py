@@ -10,24 +10,23 @@ Summary
 - Orchestrates metric execution and output generation.
 """
 
-import sys
 import multiprocessing as mp
+import sys
 import time
-
-from src.cli.cli import parse_args
-from src.cli.cli import parse_url_file
-from src.cli.output import build_output
-from src.metrics.license import LicenseMetric
-from src.metrics.size import SizeMetric
-from src.metrics.ramp_up_time import RampUpTimeMetric
-from src.metrics.code_quality import CodeQualityMetric
-from src.metrics.dataset_quality import DatasetQualityMetric
-from src.metrics.bus_factor import BusFactorMetric
-from src.metrics.performance_claims import PerformanceClaimsMetric
-from src.metrics.dataset_and_code import DatasetAndCodeMetric
-from src.logging import validate_log_file, setup_logger
-from src.git import validate_github_token
 from typing import Any
+
+from src.cli.cli import parse_args, parse_url_file
+from src.cli.output import build_output
+from src.git import validate_github_token
+from src.logging import setup_logger, validate_log_file
+from src.metrics.bus_factor import BusFactorMetric
+from src.metrics.code_quality import CodeQualityMetric
+from src.metrics.dataset_and_code import DatasetAndCodeMetric
+from src.metrics.dataset_quality import DatasetQualityMetric
+from src.metrics.license import LicenseMetric
+from src.metrics.performance_claims import PerformanceClaimsMetric
+from src.metrics.ramp_up_time import RampUpTimeMetric
+from src.metrics.size import SizeMetric
 
 
 def run_metric(metric: Any) -> Any:

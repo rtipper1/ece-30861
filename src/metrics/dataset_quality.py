@@ -9,11 +9,13 @@ Summary
 - Normalizes dataset quality into [0,1].
 """
 
-from src.metrics.metric import Metric
-from src.cli.url import DatasetURL, CodeURL
-from typing import Dict
-import requests
 import os
+from typing import Dict
+
+import requests
+
+from src.cli.url import CodeURL, DatasetURL
+from src.metrics.metric import Metric
 
 
 class DatasetQualityMetric(Metric):

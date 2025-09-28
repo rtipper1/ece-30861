@@ -15,13 +15,7 @@ These tests validate that each subclass:
 
 import pytest
 
-from src.cli.url import (
-    ModelURL,
-    DatasetURL,
-    CodeURL,
-    classify_url,
-)
-
+from src.cli.url import CodeURL, DatasetURL, ModelURL, classify_url
 
 # ------------------------------
 # ModelURL Tests

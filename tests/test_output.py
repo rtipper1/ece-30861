@@ -1,6 +1,7 @@
 import json
-import pytest
 from types import SimpleNamespace
+
+import pytest
 
 from src.cli.output import build_output
 from src.cli.url import ModelURL

@@ -1,7 +1,8 @@
+import logging
 import os
 import sys
-import logging
-from github import Github, BadCredentialsException
+
+from github import BadCredentialsException, Github
 
 
 def validate_github_token():
