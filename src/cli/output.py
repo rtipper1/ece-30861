@@ -63,10 +63,10 @@ print(json.dumps(d))  # one line
 =====================================================================
 """
 
-from typing import Dict, List
-
-from src.cli.url import ModelURL
+import json
 from src.metrics.metric import Metric
+from typing import Dict, List
+from src.cli.url import ModelURL
 
 
 def build_output(model: ModelURL, metrics: List[Metric], weights: Dict[str, float], net_latency: int) -> str:

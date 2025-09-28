@@ -34,7 +34,6 @@ temp_dir.cleanup()
 '''
 
 import tempfile
-# from pathlib import Path
 from typing import Dict, Optional
 
 from flake8.api import legacy as flake8
