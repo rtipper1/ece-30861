@@ -63,37 +63,37 @@ print(json.dumps(d))  # one line
 =====================================================================
 """
 
-
 import json
 from typing import List, Dict
 from src.metrics.metric import Metric
 from src.cli.url import ModelURL
 
-def build_output(model: ModelURL, metrics: List[Metric], weights: Dict[str, float]) -> str:
+def build_output(model: ModelURL, metrics: List[Metric], weights: Dict[str, float], net_latency: int) -> str:
     output = {
         "name": model.name,
         "category": "MODEL",
     }
 
     net_score = 0.0
-    net_score_latency = 0.0
 
     for m in metrics:
         weight = weights[m.name]
         
         if m.name == "size_score":
-            average_score = m.score["raspberry_pi"] + m.score["jetson_nano"] + m.score["desktop_pc"] + m.score["aws_server"] / 4
-            net_score = weight * average_score
-            net_score_latency += m.latency
+            avg_score = (
+                m.score["raspberry_pi"]
+                + m.score["jetson_nano"]
+                + m.score["desktop_pc"]
+                + m.score["aws_server"]
+            ) / 4
+            net_score += weight * avg_score
         else:
             net_score += weight * m.score
-            net_score_latency += m.latency
 
-    # Add net score and net score latency to dict
+    # Use orchestrator-measured latency, not sum/max of metric latencies
     output["net_score"] = round(net_score, 2)
-    output["net_score_latency"] = net_score_latency
+    output["net_score_latency"] = net_latency
     
-    # in order add each metric to the dict
     for m in metrics:
         output.update(m.as_dict())
         

@@ -4,95 +4,83 @@ dataset_quality.py
 Dataset Quality Metric.
 
 Summary
-- Evaluates datasets linked to the model.
-- Scores based on documentation availability, peer review, and community adoption.
-- Normalizes score in [0,1] according to rubric criteria.
-
-Rubric:
-- 0.2 = Only 1 significant phrase found
-- 0.4 = Only 2 significant phrases found
-- 0.6 = Only 3 significant phrases found
-- 0.8 = Only 4 significant phrases found
-- 1 = All 5 significant phrases found
+- Evaluates datasets linked to the model by prompting an AI.
+- Considers documentation, peer review, community adoption, and transparency.
+- Normalizes dataset quality into [0,1].
 """
 
 from src.metrics.metric import Metric
 from src.cli.url import DatasetURL, CodeURL
-from huggingface_hub import HfApi, hf_hub_download
 from typing import Dict
-import tempfile
+import requests
+import os
 
-
-sigPhrases = ["social impact", "bias", "limitations", "license", "comparison"]
-'''
-Step 1: Get dataset README.md
-Step 2: Isolate lines in README
-Step 3: Iterate Over Lines
-Step 4: Inside that iteration, iterate over phrases in sigPhrases list
-Step 5: If a significant phrase is found in the line, remove the phrase from the list and keep add on to count
-'''
 
 class DatasetQualityMetric(Metric):
-    def __init__(self, code_url: CodeURL, dataset_url: DatasetURL):
+    def __init__(self, dataset_url: DatasetURL):
         super().__init__("dataset_quality")
-        self.code_url = code_url
         self.dataset_url = dataset_url
 
     def calculate_score(self) -> float:
-        if self.data["score"] == None:
-            return 0.0
-            
+        return self.data["score"]
 
-        # Retrieve score from metric data
-        score = self.data["score"]
-        
-        # Score metric based on categories
-        if score == 5:
-            return 1
+    def get_data(self) -> Dict[str, float]:
+        api_key = os.environ.get("API_KEY")
+        if not api_key:
+            raise Exception("API key not set")
 
-        elif score == 4:
-            return 0.8
+        if not self.dataset_url:
+            return {"score": 0.0}
 
-        elif score == 3:
-            return 0.6
+        url = "https://genai.rcac.purdue.edu/api/chat/completions"
+        headers = {
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+        }
+        body = {
+            "model": "llama3.1:latest",
+            "messages": [
+                {
+                    "role": "user",
+                    "content": f"""You are tasked with evaluating the quality of a Hugging Face dataset.
+                                    Dataset URL: {self.dataset_url.raw}
 
-        elif score == 2:
-            return 0.4
+                                    Consider the following factors:
 
-        elif score == 1:
-            return 0.2
+                                    1. Documentation
+                                    - Is the dataset clearly described with purpose, structure, and usage?
+                                    - Are preprocessing steps, licensing, and benchmarks documented?
 
-        else:
-            return 0.0
-    
-    
-    def get_data(self) -> Dict[str, int]:
-        temp_dir = tempfile.TemporaryDirectory()
-        full_name = f"{self.dataset_url.author}/{self.dataset_url.name}" # Full model name
-        file_path = self.SingleFileDownload(full_name= full_name, filename="README.md", landingPath=temp_dir.name)
-        count = 0
-        phrases = sigPhrases
-        # Parse README.md for significant phrases
-        f = open(file_path, "r")
-        lines = f.readlines()
-        for line in lines:
-            index = 0
-            line = line.lower()
-            for phrase in phrases:
-                index += 1
-                if phrase in line:
-                    count += 1
-                    phrases.pop(index)
-        f.close()
-        temp_dir.cleanup()
-        
-        return {"score": count}
-        
-        
-    def SingleFileDownload(self, full_name : str, filename : str, landingPath : str):
-        # full_name = model_owner + "/" + model_name # Full model name    
-        model_path = hf_hub_download(repo_id = full_name, filename = filename, local_dir = landingPath)
-        # print(f"File downloaded to: {model_path}")
-        
-        return model_path
+                                    2. Availability & Transparency
+                                    - Is the dataset accessible and easy to use?
+                                    - Are limitations, biases, or ethical considerations discussed?
+
+                                    3. Community & Peer Review
+                                    - Has the dataset been cited, reviewed, or widely adopted?
+                                    - Are references or comparisons to similar datasets provided?
+
+                                    4. Supporting Code
+                                    - Is example code for using or evaluating the dataset included?
+
+                                    Your task: Provide a rating as a float in [0,1], 
+                                    where 0 = very poor dataset quality and 1 = excellent dataset quality.
+                                    IMPORTANT: Output only the float rating. Do not provide any context or explanation.
+                                """,
+                }
+            ],
+        }
+
+        try:
+            response = requests.post(url, headers=headers, json=body)
+            response.raise_for_status()
+            response_data = response.json()
+
+            output = response_data["choices"][0]["message"]["content"]
+            score = float(output.strip())
+            return {"score": score}
+
+        except (ValueError, KeyError) as e:
+            print(f"Error extracting dataset quality score: {e}")
+            return {"score": 0.0}
+
     

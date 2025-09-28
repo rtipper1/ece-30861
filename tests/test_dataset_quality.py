@@ -11,72 +11,34 @@ Tests cover:
 
 import pytest
 from src.metrics.dataset_quality import DatasetQualityMetric
-from src.cli.url import DatasetURL
+from src.cli.url import DatasetURL, CodeURL
 
-# Dummy empty url to pass into test cases in which we just set the data manually
-dummy_url = DatasetURL(raw="https://huggingface.co/datasets/HuggingFaceM4/FineVision")
+def test_null_dataset_url_returns_zero_score():
+    """If dataset_url is None, get_data should return score=0.0."""
+    metric = DatasetQualityMetric(dataset_url=None)
+    data = metric.get_data()
+    assert "score" in data
+    assert data["score"] == 0.0
 
+def test_calculate_score_reads_from_data():
+    """calculate_score should return the value stored in self.data['score']."""
+    dummy = DatasetURL(raw="https://huggingface.co/datasets/test/dummy")
+    metric = DatasetQualityMetric(dataset_url=dummy)
+    metric.data = {"score": 0.55}
+    assert metric.calculate_score() == 0.55
 
-def test_get_data():
-    url = DatasetURL(raw="https://huggingface.co/datasets/HuggingFaceM4/FineVision")
+def test_get_data_with_missing_api_key(monkeypatch):
+    """get_data should raise an Exception if API_KEY is not set."""
+    dummy = DatasetURL(raw="https://huggingface.co/datasets/test/dummy")
+    metric = DatasetQualityMetric(dataset_url=dummy)
+    monkeypatch.delenv("API_KEY", raising=False)
+    with pytest.raises(Exception, match="API key not set"):
+        metric.get_data()
 
-    metric = DatasetQualityMetric(url)
+def test_dataset_quality_prompt():
+    """Integration test: run end-to-end and check score is float in [0,1]."""
+    url = DatasetURL(raw="https://huggingface.co/datasets/glue")
+    metric = DatasetQualityMetric(dataset_url=url)
     metric.run()
-    assert metric.data == {"score": 1}
-    assert metric.score == 0.2
-
-
-def test_level_5_DQ():
-    metric = DatasetQualityMetric(dummy_url)
-    metric.set_data({"score ": 5})
-    metric.run()
-    assert metric.score == 1
-
-
-def test_level_4_DQv ():
-    metric = DatasetQualityMetric(dummy_url)
-    metric.set_data({"score": 4})
-    metric.run()
-    assert metric.score == 0.8
-
-
-def test_level_3_DQ():
-    metric = DatasetQualityMetric(dummy_url)
-    metric.set_data({"score": 3})
-    metric.run()
-    assert metric.score == 0.6
-
-
-def test_level_2_DQ():
-    metric = DatasetQualityMetric(dummy_url)
-    metric.set_data({"score": 2})
-    metric.run()
-    assert metric.score == 0.4
-
-
-def test_level_1_DQ():
-    metric = DatasetQualityMetric(dummy_url)
-    metric.set_data({"score": 1})
-    metric.run()
-    assert metric.score == 0.2
-
-
-def test_level_0_DQ():
-    metric = DatasetQualityMetric(dummy_url)
-    metric.set_data({"score": 0})
-    metric.run()
-    assert metric.score == 0.0
-
-
-def test_none_DQ():
-    metric = DatasetQualityMetric(dummy_url)
-    metric.set_data({"score": None})
-    metric.run()
-    assert metric.score == 0.0
-
-
-def test_empty_DQ():
-    metric = DatasetQualityMetric(dummy_url)
-    metric.set_data({"score": ""})
-    metric.run()
-    assert metric.score == 0.0
+    assert isinstance(metric.data["score"], float)
+    assert 0.0 <= metric.data["score"] <= 1.0

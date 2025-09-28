@@ -24,63 +24,57 @@ def test_get_data():
 
     metric = PerformanceClaimsMetric(url)
     metric.run()
-    downloadCheck = metric.data["Downloads"]
-    likeCheck = metric.data["Likes"]
+    downloadCheck = metric.data["downloads"]
+    likeCheck = metric.data["likes"]
     assert likeCheck > 0
     assert downloadCheck > 0
 
 
 def test_level_5_PC():
     metric = PerformanceClaimsMetric(dummy_url)
-    metric.set_data({"Downloads": "100", "Likes" : "80"})
+    metric.set_data({"downloads": 100, "likes" : 80})
     metric.run()
     assert metric.score == 1
 
 
 def test_level_4_PC():
     metric = PerformanceClaimsMetric(dummy_url)
-    metric.set_data({"Downloads": "1000", "Likes" : "600"})
+    metric.set_data({"downloads": 1000, "likes" : 600})
     metric.run()
     assert metric.score == 0.8
 
 
 def test_level_3_PC():
     metric = PerformanceClaimsMetric(dummy_url)
-    metric.set_data({"Downloads": "10000", "Likes" : "3500"})
+    metric.set_data({"downloads": 10000, "likes" : 3500})
     metric.run()
     assert metric.score == 0.6
 
 
 def test_level_2_PC():
     metric = PerformanceClaimsMetric(dummy_url)
-    metric.set_data({"Downloads": "100", "Likes" : "15"})
+    metric.set_data({"downloads": 100, "likes" : 15})
     metric.run()
     assert metric.score == 0.4
 
 
 def test_level_1_PC():
     metric = PerformanceClaimsMetric(dummy_url)
-    metric.set_data({"Downloads": "100", "Likes" : "8"})
+    metric.set_data({"downloads": 100, "likes" : 8})
     metric.run()
     assert metric.score == 0.2
 
 
 def test_none_PC():
     metric = PerformanceClaimsMetric(dummy_url)
-    metric.set_data({"Downloads": None, "Likes" : None})
+    metric.set_data({"downloads": None, "likes" : None})
     metric.run()
     assert metric.score == 0.0
 
 
 def test_zero_likes_downloads():
     metric = PerformanceClaimsMetric(dummy_url)
-    metric.set_data({"Downloads": "0", "Likes" : "0"})
+    metric.set_data({"downloads": 0, "likes" : 0})
     metric.run()
     assert metric.score == 0.0
     
-    
-def test_empty_likes_downloads():
-    metric = PerformanceClaimsMetric(dummy_url)
-    metric.set_data({"Downloads": "", "Likes" : ""})
-    metric.run()
-    assert metric.score == 0.0

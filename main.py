@@ -65,23 +65,26 @@ def main(argv=None):
             code_url, dataset_url, model_url = line
 
             metrics = [
-                RampUpTimeMetric(),
+                RampUpTimeMetric(model_url),
                 BusFactorMetric(code_url, model_url),
                 PerformanceClaimsMetric(model_url),
                 LicenseMetric(model_url),
                 SizeMetric(model_url),
-                DatasetAndCodeMetric(),
-                DatasetQualityMetric(),
+                DatasetAndCodeMetric(model_url),
+                DatasetQualityMetric(dataset_url),
                 CodeQualityMetric(code_url, model_url),
             ]
 
+            output_str = ""
             # If line contains a model url, process it
             if model_url:
+                start = time.time()
                 with mp.Pool(processes=min(len(metrics), mp.cpu_count())) as pool:
                     metrics = pool.map(run_metric, metrics)
+                net_latency = int((time.time() - start) * 1000)
 
-            output_str = build_output(model_url, metrics, weights)
-            print(output_str)
+                output_str = build_output(model_url, metrics, weights, net_latency)
+                print(output_str)
 
 
 # Allows us to run with 'python3 main.py [args]'
