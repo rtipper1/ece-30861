@@ -107,7 +107,7 @@ def parse_args(argv) -> CLIArgs:
         return CLIArgs('test', None, ns.output, ns.parallelism, ns.log_file, ns.log_level)
     if ns.target is None:
         parser.error('Missing positional argument: install | test | URL_FILE')
-        
+
     if os.path.isfile(ns.target):
         return CLIArgs(
             'process',
@@ -119,13 +119,18 @@ def parse_args(argv) -> CLIArgs:
         )
 
     # Any other target is invalid per spec (must be a file)
-    parser.error('Target must be a path to a URL file. Direct URLs are not supported. Use: ./run URL_FILE')
-    
+    parser.error(
+        'Target must be a path to a URL file. Direct URLs are not supported. Use: ./run URL_FILE')
+
+
 def create_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog='run')
     p.add_argument('target', nargs='?', help='install | test | URL_FILE')
-    p.add_argument('-o','--output', default='-', help='NDJSON output path ("-" = stdout)')
-    p.add_argument('-p', '--parallelism', type=int, default=4, help='parallel workers')
+    p.add_argument('-o', '--output', default='-',
+                   help='NDJSON output path ("-" = stdout)')
+    p.add_argument('-p', '--parallelism', type=int,
+                   default=4, help='parallel workers')
     p.add_argument('--log-file', default=os.environ.get('LOG_FILE'))
-    p.add_argument('--log-level', type=int, default=int(os.environ.get('LOG_LEVEL', '0')))
+    p.add_argument('--log-level', type=int,
+                   default=int(os.environ.get('LOG_LEVEL', '0')))
     return p

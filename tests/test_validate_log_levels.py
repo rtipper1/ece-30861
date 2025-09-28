@@ -12,6 +12,7 @@ def test_missing_log_file_env(monkeypatch, capsys):
     captured = capsys.readouterr()
     assert "LOG_FILE environment variable is missing" in captured.err
 
+
 def test_nonexistent_log_file(monkeypatch):
     fake_path = "/tmp/this_file_should_not_exist_123456.log"
     # Make extra sure it doesn’t exist

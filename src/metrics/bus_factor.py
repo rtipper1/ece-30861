@@ -17,6 +17,7 @@ from typing import Dict
 from huggingface_hub import HfApi
 import requests
 
+
 def get_contributors(owner: str, repo: str, token: str = None):
     url = f"https://api.github.com/repos/{owner}/{repo}/contributors"
     headers = {"Accept": "application/vnd.github+json"}
@@ -25,6 +26,7 @@ def get_contributors(owner: str, repo: str, token: str = None):
     r = requests.get(url, headers=headers)
     r.raise_for_status()
     return [c["login"] for c in r.json()]
+
 
 class BusFactorMetric(Metric):
     def __init__(self, code_url: CodeURL, model_url: ModelURL):
@@ -47,42 +49,41 @@ class BusFactorMetric(Metric):
 
         num_contributors = 0
         if self.code_url:
-            contributors = get_contributors(self.code_url.author, self.code_url.name)
+            contributors = get_contributors(
+                self.code_url.author, self.code_url.name)
             num_contributors = len(contributors)
-        
+
         return {
             "params": params,
             "num_contributors": num_contributors,
         }
-    
 
     def calculate_score(self) -> float:
-            """
-            Calculate bus factor score based on contributors per billion parameters.
-            Normalized to [0,1].
-            """
-            params = self.data.get("params")
-            num_contributors = self.data.get("num_contributors")
+        """
+        Calculate bus factor score based on contributors per billion parameters.
+        Normalized to [0,1].
+        """
+        params = self.data.get("params")
+        num_contributors = self.data.get("num_contributors")
 
-            # Defensive: missing or invalid data
-            if not params or num_contributors is None:
-                return 0.0
+        # Defensive: missing or invalid data
+        if not params or num_contributors is None:
+            return 0.0
 
-            # Convert to billions to match rubric scale
-            params_in_billions = params / 1e9 if params > 0 else 1
-            ratio = num_contributors / params_in_billions
+        # Convert to billions to match rubric scale
+        params_in_billions = params / 1e9 if params > 0 else 1
+        ratio = num_contributors / params_in_billions
 
-            # Map rubric → raw score 1–5
-            if num_contributors == 0:
-                raw_score = 0.2
-            elif ratio < 1:
-                raw_score = .4
-            elif 1 <= ratio <= 2:
-                raw_score = 0.6
-            elif 3 <= ratio <= 9:
-                raw_score = 0.8
-            else:  # ratio >= 10
-                raw_score = 1
-                
-            return raw_score
-    
+        # Map rubric → raw score 1–5
+        if num_contributors == 0:
+            raw_score = 0.2
+        elif ratio < 1:
+            raw_score = .4
+        elif 1 <= ratio <= 2:
+            raw_score = 0.6
+        elif 3 <= ratio <= 9:
+            raw_score = 0.8
+        else:  # ratio >= 10
+            raw_score = 1
+
+        return raw_score

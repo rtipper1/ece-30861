@@ -16,6 +16,7 @@ from src.cli.url import ModelURL
 import requests
 import os
 
+
 class RampUpTimeMetric(Metric):
     def __init__(self, model_url: ModelURL):
         super().__init__("ramp_up_time")
@@ -28,7 +29,7 @@ class RampUpTimeMetric(Metric):
         api_key = os.environ.get("GEN_AI_STUDIO_API_KEY")
         if not api_key:
             raise Exception("API key not set")
-        
+
         if not self.model_url:
             return {"score": 0.0}
 
@@ -95,11 +96,6 @@ class RampUpTimeMetric(Metric):
             return {
                 "score": score,
             }
-            
 
         except (ValueError, KeyError) as e:
             print(f"Error extracting outputL {e}")
-
-
-
-    

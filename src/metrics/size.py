@@ -62,30 +62,54 @@ class SizeMetric(Metric):
             "aws_server": score_aws_server(self.data["size"]),
         }
 
+
 def score_raspberry_pi(params: int) -> float:
-    if params <= 50e6: return 1.0
-    elif params <= 100e6: return 0.8
-    elif params <= 200e6: return 0.5
-    elif params <= 500e6: return 0.2
-    else: return 0.0
+    if params <= 50e6:
+        return 1.0
+    elif params <= 100e6:
+        return 0.8
+    elif params <= 200e6:
+        return 0.5
+    elif params <= 500e6:
+        return 0.2
+    else:
+        return 0.0
+
 
 def score_jetson_nano(params: int) -> float:
-    if params <= 100e6: return 1.0
-    elif params <= 300e6: return 0.8
-    elif params <= 500e6: return 0.5
-    elif params <= 1e9: return 0.2
-    else: return 0.0
+    if params <= 100e6:
+        return 1.0
+    elif params <= 300e6:
+        return 0.8
+    elif params <= 500e6:
+        return 0.5
+    elif params <= 1e9:
+        return 0.2
+    else:
+        return 0.0
+
 
 def score_desktop_pc(params: int) -> float:
-    if params <= 3e9: return 1.0
-    elif params <= 7e9: return 0.8
-    elif params <= 13e9: return 0.5
-    elif params <= 30e9: return 0.2
-    else: return 0.0
+    if params <= 3e9:
+        return 1.0
+    elif params <= 7e9:
+        return 0.8
+    elif params <= 13e9:
+        return 0.5
+    elif params <= 30e9:
+        return 0.2
+    else:
+        return 0.0
+
 
 def score_aws_server(params: int) -> float:
-    if params <= 10e9: return 1.0
-    elif params <= 30e9: return 0.8
-    elif params <= 70e9: return 0.5
-    elif params <= 200e9: return 0.2
-    else: return 0.0
+    if params <= 10e9:
+        return 1.0
+    elif params <= 30e9:
+        return 0.8
+    elif params <= 70e9:
+        return 0.5
+    elif params <= 200e9:
+        return 0.2
+    else:
+        return 0.0

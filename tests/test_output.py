@@ -8,6 +8,7 @@ from src.cli.url import ModelURL
 
 class DummyMetric:
     """Minimal stub metric with name, score, latency, and as_dict()."""
+
     def __init__(self, name, score, latency=10):
         self.name = name
         self.score = score

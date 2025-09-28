@@ -4,6 +4,7 @@ from typing import Optional
 import re
 from abc import ABC, abstractmethod
 
+
 @dataclass
 class URL(ABC):
     raw: str
@@ -22,6 +23,7 @@ class URL(ABC):
 
 HF_MODEL_PATTERN = re.compile(r"^https?://huggingface\.co/([^/]+)/([^/]+)")
 
+
 class ModelURL(URL):
     def __init__(self, raw: str):
         super().__init__(raw, "model")
@@ -32,10 +34,12 @@ class ModelURL(URL):
 
     def validate(self) -> bool:
         return bool(HF_MODEL_PATTERN.match(self.raw))
-    
 
-HF_DATASET_PATTERN = re.compile(r"^https?://huggingface\.co/datasets/([^/]+)/([^/]+)")
+
+HF_DATASET_PATTERN = re.compile(
+    r"^https?://huggingface\.co/datasets/([^/]+)/([^/]+)")
 IMAGENET_PATTERN = re.compile(r"^https?://www\.image-net\.org/data/.*")
+
 
 class DatasetURL(URL):
     def __init__(self, raw: str):
@@ -55,7 +59,9 @@ class DatasetURL(URL):
 
 GITHUB_PATTERN = re.compile(r"^https?://github\.com/([^/]+)/([^/]+)")
 GITLAB_PATTERN = re.compile(r"^https?://gitlab\.com/([^/]+)/([^/]+)")
-HF_SPACES_PATTERN = re.compile(r"^https?://huggingface\.co/spaces/([^/]+)/([^/]+)")
+HF_SPACES_PATTERN = re.compile(
+    r"^https?://huggingface\.co/spaces/([^/]+)/([^/]+)")
+
 
 class CodeURL(URL):
     def __init__(self, raw: str):
@@ -77,7 +83,7 @@ class CodeURL(URL):
             or GITLAB_PATTERN.match(self.raw)
             or HF_SPACES_PATTERN.match(self.raw)
         )
-    
+
 
 def classify_url(raw: str) -> Optional[URL]:
     # 1. Hugging Face datasets (or ImageNet)
@@ -98,4 +104,3 @@ def classify_url(raw: str) -> Optional[URL]:
 
     # 4. Anything else → unsupported
     return None
-

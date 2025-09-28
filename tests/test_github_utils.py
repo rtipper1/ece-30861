@@ -17,6 +17,7 @@ def test_validate_github_token_missing_env(monkeypatch, capsys):
 class DummyGithub:
     def __init__(self, token):
         self.token = token
+
     def get_user(self):
         class DummyUser:
             id = 123
@@ -37,8 +38,10 @@ def test_validate_github_token_invalid(monkeypatch, capsys):
     class BadGithub:
         def __init__(self, token):
             pass
+
         def get_user(self):
-            raise BadCredentialsException(status=401, data="bad token", headers={})
+            raise BadCredentialsException(
+                status=401, data="bad token", headers={})
 
     monkeypatch.setattr(src.git, "Github", lambda token: BadGithub(token))
 

@@ -82,5 +82,3 @@ class DatasetQualityMetric(Metric):
         except (ValueError, KeyError) as e:
             print(f"Error extracting dataset quality score: {e}")
             return {"score": 0.0}
-
-    

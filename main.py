@@ -11,7 +11,6 @@ Summary
 """
 
 import sys
-import os
 import multiprocessing as mp
 import time
 
@@ -38,7 +37,7 @@ def run_metric(metric: Any) -> Any:
 
 def main(argv=None):
     log_file = validate_log_file()
-    github_token = validate_github_token()
+    validate_github_token()
 
     setup_logger(log_file)
 
@@ -82,7 +81,8 @@ def main(argv=None):
                     metrics = pool.map(run_metric, metrics)
                 net_latency = int((time.time() - start) * 1000)
 
-                output_str = build_output(model_url, metrics, weights, net_latency)
+                output_str = build_output(
+                    model_url, metrics, weights, net_latency)
                 results.append(output_str)
 
         for r in results:

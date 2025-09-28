@@ -3,6 +3,7 @@ import sys
 import logging
 from github import Github, BadCredentialsException
 
+
 def validate_github_token():
     token = os.getenv("GITHUB_TOKEN")
     if not token:
@@ -15,6 +16,3 @@ def validate_github_token():
     except BadCredentialsException:
         print("ERROR: Invalid GITHUB_TOKEN provided", file=sys.stderr)
         sys.exit(1)
-
-    return g
-

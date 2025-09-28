@@ -11,8 +11,10 @@ import pytest
 from src.metrics.bus_factor import BusFactorMetric
 from src.cli.url import CodeURL, ModelURL
 
+
 def test_get_data_contributors1():
-    model_url = ModelURL(raw="https://huggingface.co/google-bert/bert-base-uncased")
+    model_url = ModelURL(
+        raw="https://huggingface.co/google-bert/bert-base-uncased")
     code_url = CodeURL(raw="https://github.com/google-research/bert")
 
     metric = BusFactorMetric(code_url, model_url)
@@ -21,10 +23,11 @@ def test_get_data_contributors1():
 
 
 def test_get_data_contributors2():
-    model_url = ModelURL(raw="https://huggingface.co/google-bert/bert-base-uncased")
+    model_url = ModelURL(
+        raw="https://huggingface.co/google-bert/bert-base-uncased")
     code_url = CodeURL(raw="https://github.com/rtipper1/ece-30861")
     # Thats us!
-    
+
     metric = BusFactorMetric(code_url, model_url)
     metric.run()
     assert metric.data["num_contributors"] and metric.data["params"]
@@ -32,6 +35,7 @@ def test_get_data_contributors2():
 # --------------------------
 # calculate_score logic tests
 # --------------------------
+
 
 def test_calculate_score_no_data1():
     """If no params or contributors are present, score should be 0.0"""
@@ -41,6 +45,7 @@ def test_calculate_score_no_data1():
     )
     metric.data = {}  # simulate missing data
     assert metric.calculate_score() == 0.0
+
 
 def test_calculate_score_no_data2():
     """If no params or contributors are present, score should be 0.0"""

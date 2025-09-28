@@ -63,10 +63,10 @@ print(json.dumps(d))  # one line
 =====================================================================
 """
 
-import json
+from src.cli.url import ModelURL
 from typing import List, Dict
 from src.metrics.metric import Metric
-from src.cli.url import ModelURL
+
 
 def build_output(model: ModelURL, metrics: List[Metric], weights: Dict[str, float], net_latency: int) -> str:
     output = {
@@ -78,7 +78,7 @@ def build_output(model: ModelURL, metrics: List[Metric], weights: Dict[str, floa
 
     for m in metrics:
         weight = weights[m.name]
-        
+
         if m.name == "size_score":
             avg_score = (
                 m.score["raspberry_pi"]
@@ -93,8 +93,8 @@ def build_output(model: ModelURL, metrics: List[Metric], weights: Dict[str, floa
     # Use orchestrator-measured latency, not sum/max of metric latencies
     output["net_score"] = round(net_score, 2)
     output["net_score_latency"] = net_latency
-    
+
     for m in metrics:
         output.update(m.as_dict())
-        
+
     return json.dumps(output, separators=(",", ":"))

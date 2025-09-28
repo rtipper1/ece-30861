@@ -27,15 +27,16 @@ from huggingface_hub import HfApi
 from src.cli.url import ModelURL
 from typing import Dict, Optional
 
+
 class PerformanceClaimsMetric(Metric):
-    def __init__(self, model_url : ModelURL):
+    def __init__(self, model_url: ModelURL):
         super().__init__("performance_claims")
         self.model_url = model_url
 
     def get_data(self) -> Dict[str, Optional[int]]:
         api = HfApi()
         info = api.model_info(f"{self.model_url.author}/{self.model_url.name}")
-        
+
         def safe_int(value):
             try:
                 return int(value)
@@ -54,12 +55,12 @@ class PerformanceClaimsMetric(Metric):
         # If no likes or downloads, give it a 0
         if downloads is None or likes is None:
             return 0.0
-        
+
         if likes == 0 or downloads == 0:
             ratio = 0
         else:
             ratio = likes / downloads  # already ints
-        
+
         # Score metric based on categories
         if ratio > 0.75:
             return 1.0

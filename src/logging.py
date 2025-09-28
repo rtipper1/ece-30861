@@ -5,6 +5,7 @@ import logging
 import os
 import sys
 
+
 def validate_log_file():
     log_file = os.getenv("LOG_FILE")
 
@@ -23,7 +24,6 @@ def validate_log_file():
         sys.exit(1)
 
     return log_file
-
 
 
 def setup_logger(log_file, log_level_str="0"):

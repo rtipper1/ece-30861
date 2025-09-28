@@ -13,6 +13,8 @@ import pytest
 from src.metrics.metric import Metric
 
 # A simple subclass for testing
+
+
 class DummyMetric(Metric):
     def __init__(self):
         super().__init__("dummy")
