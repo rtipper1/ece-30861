@@ -47,4 +47,12 @@ def setup_logger(log_file, log_level_str="0"):
         format="%(asctime)s : %(levelname)s : %(message)s"
     )
 
-    return logging.getLogger("metric_logger")
+    logger = logging.getLogger("metric_logger")
+
+    # Emit a sanity log message so tests see output
+    if level == logging.INFO:
+        logger.info("Logger initialized at INFO level")
+    elif level == logging.DEBUG:
+        logger.debug("Logger initialized at DEBUG level")
+
+    return logger

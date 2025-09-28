@@ -26,8 +26,6 @@ from src.metrics.dataset_quality import DatasetQualityMetric
 from src.metrics.bus_factor import BusFactorMetric
 from src.metrics.performance_claims import PerformanceClaimsMetric
 from src.metrics.dataset_and_code import DatasetAndCodeMetric
-from src.cli.cli import URL
-from src.cli.url import ModelURL, DatasetURL, CodeURL
 from src.logging import validate_log_file, setup_logger
 from src.git import validate_github_token
 from typing import Any
@@ -61,6 +59,7 @@ def main(argv=None):
             "code_quality": 0.15,
         }
 
+        results = []
         for line in lines:
             code_url, dataset_url, model_url = line
 
@@ -84,7 +83,10 @@ def main(argv=None):
                 net_latency = int((time.time() - start) * 1000)
 
                 output_str = build_output(model_url, metrics, weights, net_latency)
-                print(output_str)
+                results.append(output_str)
+
+        for r in results:
+            print(r)
 
 
 # Allows us to run with 'python3 main.py [args]'

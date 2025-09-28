@@ -31,7 +31,7 @@ def test_get_data_with_missing_api_key(monkeypatch):
     """get_data should raise an Exception if API_KEY is not set."""
     dummy = DatasetURL(raw="https://huggingface.co/datasets/test/dummy")
     metric = DatasetQualityMetric(dataset_url=dummy)
-    monkeypatch.delenv("API_KEY", raising=False)
+    monkeypatch.delenv("GEN_AI_STUDIO_API_KEY", raising=False)
     with pytest.raises(Exception, match="API key not set"):
         metric.get_data()
 

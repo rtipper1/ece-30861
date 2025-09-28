@@ -88,7 +88,8 @@ def parse_url_file(path: str) -> list[list[Optional[URL]]]:
                     # Spec requires handling invalid URLs
                     # Here: append None (skip silently), or raise error
                     # Raise gives stricter compliance
-                    raise ValueError(f"Invalid or unsupported URL: {url}")
+                    new_line.append(None)
+                    # raise ValueError(f"Invalid or unsupported URL: {url}")
 
             url_lines.append(new_line)
 

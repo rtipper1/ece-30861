@@ -37,9 +37,6 @@ def test_parse_args_invalid_target_raises(tmp_path):
     with pytest.raises(SystemExit):
         parse_args(['not_a_file.txt'])  # triggers "Target must be a path..." (line ~121)
 
-# -----------------------------
-# parse_url_file coverage
-# -----------------------------
 def test_parse_url_file_empty_lines_and_comments(tmp_path):
     url_file = tmp_path / "urls.txt"
     url_file.write_text("\n# comment line\n,,https://huggingface.co/owner/model1")
@@ -54,21 +51,16 @@ def test_parse_url_file_invalid_url(tmp_path):
     url_file = tmp_path / "urls.txt"
     url_file.write_text(",,invalid_url_here")
     
-    with pytest.raises(ValueError):
-        parse_url_file(str(url_file))  # triggers "Invalid or unsupported URL" (~lines 135-138)
+    rows = parse_url_file(str(url_file))
+    assert len(rows) == 1
+    code, dataset, model = rows[0]
+    # invalid URL becomes None
+    assert code is None and dataset is None and model is None
 
 def test_parse_url_file_nonexistent_file():
     with pytest.raises(FileNotFoundError):
         parse_url_file("/tmp/this_file_does_not_exist.txt")  # triggers file not found check (~line 68)
 
-def test_parse_url_file_invalid_url_raises(tmp_path):
-    """Trigger ValueError for unsupported URLs (lines 135-138)."""
-    url_file = tmp_path / "urls.txt"
-    url_file.write_text(",,not_a_real_url")
-    
-    with pytest.raises(ValueError) as excinfo:
-        parse_url_file(str(url_file))
-    assert "Invalid or unsupported URL" in str(excinfo.value)
 
 def test_parse_url_file_valid_and_none_urls(tmp_path):
     """Trigger normal append to url_lines (lines 142-145)."""
