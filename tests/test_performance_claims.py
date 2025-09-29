@@ -75,3 +75,5 @@ def test_handles_exception(monkeypatch):
     metric.data = metric.get_data()
     assert metric.data["total"] == 0
     assert metric.calculate_score() == 0.0
+
+

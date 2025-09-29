@@ -83,6 +83,9 @@ def main(argv=None):
                 output_str = build_output(
                     model_url, metrics, weights, net_latency)
                 results.append(output_str)
+            if not model_url:
+                print(f"Skipping line (no model url): {lines}", file=sys.stderr)
+                continue
 
         for r in results:
             print(r)

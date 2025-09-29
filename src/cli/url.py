@@ -22,7 +22,15 @@ class URL(ABC):
         return f"{self.author}/{self.name}" if self.author and self.name else self.raw
 
 
-HF_MODEL_PATTERN = re.compile(r"^https?://huggingface\.co/([^/]+)/([^/]+)")
+# -----------------
+# Model URLs
+# -----------------
+# Matches either:
+#   https://huggingface.co/<author>/<model>
+#   https://huggingface.co/<model>
+HF_MODEL_PATTERN = re.compile(
+    r"^https?://huggingface\.co/(?:(?P<author>[^/]+)/)?(?P<name>[^/]+)"
+)
 
 
 class ModelURL(URL):
@@ -30,15 +38,20 @@ class ModelURL(URL):
         super().__init__(raw, "model")
         m = HF_MODEL_PATTERN.match(raw)
         if m:
-            self.author = m.group(1)
-            self.name = m.group(2)
+            # if no explicit author, default to "huggingface"
+            self.author = m.group("author") or "huggingface"
+            self.name = m.group("name")
 
     def validate(self) -> bool:
         return bool(HF_MODEL_PATTERN.match(self.raw))
 
 
+# -----------------
+# Dataset URLs
+# -----------------
 HF_DATASET_PATTERN = re.compile(
-    r"^https?://huggingface\.co/datasets/([^/]+)/([^/]+)")
+    r"^https?://huggingface\.co/datasets/([^/]+)/([^/]+)"
+)
 IMAGENET_PATTERN = re.compile(r"^https?://www\.image-net\.org/data/.*")
 
 
@@ -55,23 +68,25 @@ class DatasetURL(URL):
             self.name = "imagenet"
 
     def validate(self) -> bool:
-        return bool(HF_DATASET_PATTERN.match(self.raw) or IMAGENET_PATTERN.match(self.raw))
+        return bool(
+            HF_DATASET_PATTERN.match(self.raw) or IMAGENET_PATTERN.match(self.raw)
+        )
 
 
+# -----------------
+# Code URLs
+# -----------------
 GITHUB_PATTERN = re.compile(r"^https?://github\.com/([^/]+)/([^/]+)")
 GITLAB_PATTERN = re.compile(r"^https?://gitlab\.com/([^/]+)/([^/]+)")
 HF_SPACES_PATTERN = re.compile(
-    r"^https?://huggingface\.co/spaces/([^/]+)/([^/]+)")
+    r"^https?://huggingface\.co/spaces/([^/]+)/([^/]+)"
+)
 
 
 class CodeURL(URL):
     def __init__(self, raw: str):
         super().__init__(raw, "code")
-        for pattern, provider in [
-            (GITHUB_PATTERN, "github"),
-            (GITLAB_PATTERN, "gitlab"),
-            (HF_SPACES_PATTERN, "huggingface_spaces"),
-        ]:
+        for pattern in [GITHUB_PATTERN, GITLAB_PATTERN, HF_SPACES_PATTERN]:
             m = pattern.match(raw)
             if m:
                 self.author = m.group(1)
@@ -86,6 +101,9 @@ class CodeURL(URL):
         )
 
 
+# -----------------
+# Dispatcher
+# -----------------
 def classify_url(raw: str) -> Optional[URL]:
     # 1. Hugging Face datasets (or ImageNet)
     if HF_DATASET_PATTERN.match(raw) or IMAGENET_PATTERN.match(raw):

@@ -58,32 +58,44 @@ class Metric():
         Should return a float [0, 1]
         """
         return 0.0
-
+    
     def run(self) -> None:
         """
         Calculates metric with latency and sets fields.
-        Ensures that failures default to score = 0.0 instead of raising.
+        If anything fails, fallback score is 0 (float or dict depending on metric type).
         """
         start = time.time()
         try:
             if self.data is None:
                 self.data = self.get_data()
             self.score = self.calculate_score()
-        except Exception as e:
-            logging.exception(f"Metric {self.name} failed: {e}")
-            # Fallback: safe defaults
-            self.data = {"error": str(e)}
-            self.score = 0.0
+        except Exception:
+            # Detect if metric is supposed to return a dict (like size_score)
+            if self.name == "size_score":
+                self.score = {
+                    "raspberry_pi": 0.0,
+                    "jetson_nano": 0.0,
+                    "desktop_pc": 0.0,
+                    "aws_server": 0.0,
+                }
+            else:
+                self.score = 0.0
+            self.data = {}
         finally:
             self.latency = int((time.time() - start) * 1000)
 
+
     def as_dict(self) -> Dict[str, Any]:
         """
-        Returns metric data as a dictionary, formatted for NDJSON output.
-        self.name must reflect what the exact name should be in the NDJSON format table.
+        Returns metric data as a dictionary, supports both float and dict scores.
         """
-        return {
-            self.name: self.score,
-            f"{self.name}_latency": self.latency,
-        }
-
+        if isinstance(self.score, dict):
+            return {
+                self.name: self.score,
+                f"{self.name}_latency": self.latency,
+            }
+        else:
+            return {
+                self.name: float(self.score) if self.score is not None else 0.0,
+                f"{self.name}_latency": self.latency,
+            }
