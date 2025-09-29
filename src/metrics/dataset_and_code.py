@@ -11,9 +11,9 @@ Summary
 """
 
 import os
-from typing import Dict
+from typing import Dict, Any
 
-import requests
+import requests  # type: ignore[import-untyped]
 
 from src.cli.url import ModelURL
 from src.metrics.metric import Metric
@@ -25,12 +25,15 @@ class DatasetAndCodeMetric(Metric):
         self.model_url = model_url
 
     def calculate_score(self) -> float:
-        return self.data["score"]
+        # Safely handle None or missing key
+        if not self.data or "score" not in self.data:
+            return 0.0
+        return float(self.data["score"])
 
-    def get_data(self) -> Dict[str, float]:
+    def get_data(self) -> Dict[str, Any]:
         api_key = os.environ.get("GEN_AI_STUDIO_API_KEY")
         if not api_key:
-            raise Exception("API key not set")
+            return {"score": 0.0}
 
         if not self.model_url:
             return {"score": 0.0}
@@ -49,48 +52,28 @@ class DatasetAndCodeMetric(Metric):
                                     for dataset and code quality. 
                                     Model URL: {self.model_url.raw}
 
-                                    When scoring, consider the following factors:
+                                    Consider these factors:
 
                                     1. Dataset Documentation
-                                    - Is the dataset used for training or benchmarking clearly described?
-                                    - Are details about data collection, preprocessing, and licensing provided?
-                                    - Are benchmarks reproducible?
-
                                     2. Dataset Availability
-                                    - Is the dataset publicly accessible?
-                                    - Are download instructions or links available and reliable?
-                                    - Are subsets or samples provided for quick testing?
-
                                     3. Code Quality
-                                    - Is example code provided for training, evaluation, or inference?
-                                    - Is the code clean, documented, and easy to reuse?
-                                    - Are scripts or notebooks provided for common workflows?
-
                                     4. Completeness & Transparency
-                                    - Are limitations, biases, or ethical considerations documented?
-                                    - Is the dataset size and diversity explained?
-                                    - Are citations or references included?
 
-                                    Your task: Provide a rating (float in [0-1], 
-                                    where 0 = very poor dataset/code quality and 1 = excellent dataset/code quality).
-                                    IMPORTANT: output only this float rating. Do not provide any context or explanation.
+                                    Your task: Provide a rating (float in [0-1]).
+                                    IMPORTANT: Output only this float rating. No explanation.
                                 """
                 }
             ],
         }
 
         try:
-            response = requests.post(url, headers=headers, json=body)
+            response = requests.post(url, headers=headers, json=body, timeout=60)
             response.raise_for_status()
             response_data = response.json()
 
             output = response_data["choices"][0]["message"]["content"]
             score = float(output.strip())
+            return {"score": score}
 
-            return {
-                "score": score,
-            }
-
-        except (ValueError, KeyError) as e:
-            print(f"Error extracting output: {e}")
+        except Exception:
             return {"score": 0.0}

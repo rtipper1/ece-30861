@@ -11,9 +11,9 @@ Summary
 """
 
 import os
-from typing import Dict
+from typing import Dict, Any
 
-import requests
+import requests  # type: ignore[import-untyped]
 
 from src.cli.url import ModelURL
 from src.metrics.metric import Metric
@@ -25,12 +25,16 @@ class RampUpTimeMetric(Metric):
         self.model_url = model_url
 
     def calculate_score(self) -> float:
-        return self.data["score"]
+        # Ensure data exists and has "score"
+        if not self.data or "score" not in self.data:
+            return 0.0
+        return float(self.data["score"])
 
-    def get_data(self) -> Dict[str, float]:
+    def get_data(self) -> Dict[str, Any]:
         api_key = os.environ.get("GEN_AI_STUDIO_API_KEY")
         if not api_key:
-            raise Exception("API key not set")
+            # Fall back gracefully instead of raising an error
+            return {"score": 0.0}
 
         if not self.model_url:
             return {"score": 0.0}
@@ -54,32 +58,11 @@ class RampUpTimeMetric(Metric):
                                     When scoring, consider the following factors:  
 
                                     1. Installation & Setup Clarity  
-                                    - Are installation instructions provided (e.g., pip install or environment setup)?  
-                                    - Are dependencies clearly listed and easy to install?  
-                                    - Is there a requirements file or environment specification?  
-
                                     2. Quickstart Examples  
-                                    - Is there a clear code snippet showing how to load the model and run inference?  
-                                    - Does the example work out of the box, or does it require significant modification?  
-                                    - Are both minimal and more advanced usage examples included?  
-
                                     3. Documentation Quality  
-                                    - Are input formats and output formats described (e.g., tensor shapes, text formats, preprocessing steps)?  
-                                    - Are common pitfalls or errors addressed?  
-                                    - Is there guidance on fine-tuning, customization, or integration?  
-
                                     4. Resource Requirements  
-                                    - Does the README mention hardware or software requirements (e.g., GPU, memory)?  
-                                    - Are there lightweight alternatives or guidance for limited environments?  
-
                                     5. Supporting Materials  
-                                    - Are links to tutorials, demos, or notebooks provided?  
-                                    - Are external references (e.g., related papers or blog posts) linked to help users understand context?  
-
                                     6. Completeness & Accessibility  
-                                    - Is the README self-contained enough for a motivated user to get started quickly?  
-                                    - Is the language clear, free of heavy jargon, and beginner-friendly?  
-                                    - Are key steps or commands missing that would slow a user down?  
 
                                     Your task: Provide a rating (float([0-1]), where 0 = very high ramp-up difficulty and 1 = very easy ramp-up).
                                     IMPORTANT: output only this float rating. Do not provide any context or thought process.
@@ -89,15 +72,14 @@ class RampUpTimeMetric(Metric):
         }
 
         try:
-            response = requests.post(url, headers=headers, json=body)
+            response = requests.post(url, headers=headers, json=body, timeout=60)
             response.raise_for_status()
             response_data = response.json()
 
             output = response_data["choices"][0]["message"]["content"]
             score = float(output)
-            return {
-                "score": score,
-            }
+            return {"score": score}
 
-        except (ValueError, KeyError) as e:
-            print(f"Error extracting outputL {e}")
+        except Exception:
+            # On any failure, fallback score is 0.0
+            return {"score": 0.0}

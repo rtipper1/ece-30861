@@ -59,11 +59,11 @@ def parse_url_file(path: str) -> list[list[Optional[URL]]]:
     """
     url_lines: list[list[Optional[URL]]] = []
 
-    path = Path(path)
-    if not path.exists():
+    path_obj = Path(path)  # use a new variable
+    if not path_obj.exists():
         raise FileNotFoundError(f"URL file not found: {path}")
 
-    with path.open("r", encoding="utf-8") as f:
+    with path_obj.open("r", encoding="utf-8") as f:
         for line in f:
             line = line.strip()
             if not line or line.startswith("#"):
@@ -81,11 +81,7 @@ def parse_url_file(path: str) -> list[list[Optional[URL]]]:
                 if parsed and parsed.validate():
                     new_line.append(parsed)
                 else:
-                    # Spec requires handling invalid URLs
-                    # Here: append None (skip silently), or raise error
-                    # Raise gives stricter compliance
                     new_line.append(None)
-                    # raise ValueError(f"Invalid or unsupported URL: {url}")
 
             url_lines.append(new_line)
 

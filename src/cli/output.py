@@ -64,14 +64,14 @@ print(json.dumps(d))  # one line
 """
 
 import json
+from typing import Dict, List, Union, cast
+
 from src.metrics.metric import Metric
-from typing import Dict, List
 from src.cli.url import ModelURL
 
-
 def build_output(model: ModelURL, metrics: List[Metric], weights: Dict[str, float], net_latency: int) -> str:
-    output = {
-        "name": model.name,
+    output: Dict[str, str | float | int | dict] = {
+        "name": model.name or "",   # ensure str, never None
         "category": "MODEL",
     }
 
@@ -80,7 +80,7 @@ def build_output(model: ModelURL, metrics: List[Metric], weights: Dict[str, floa
     for m in metrics:
         weight = weights[m.name]
 
-        if m.name == "size_score":
+        if m.name == "size_score" and isinstance(m.score, dict):
             avg_score = (
                 m.score["raspberry_pi"]
                 + m.score["jetson_nano"]
@@ -88,10 +88,13 @@ def build_output(model: ModelURL, metrics: List[Metric], weights: Dict[str, floa
                 + m.score["aws_server"]
             ) / 4
             net_score += weight * avg_score
-        else:
+        elif isinstance(m.score, float):
             net_score += weight * m.score
+        else:
+            # Defensive: in case a metric fails and score is None
+            net_score += 0.0
 
-    # Use orchestrator-measured latency, not sum/max of metric latencies
+    # Use orchestrator-measured latency
     output["net_score"] = round(net_score, 2)
     output["net_score_latency"] = net_latency
 

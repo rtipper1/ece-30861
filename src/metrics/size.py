@@ -16,10 +16,9 @@ Score:
 }
 
 NOTES: potentially upgrade in future to infer number of parameters from model name or use parse README with AI
-
 """
 
-from typing import Dict, Optional
+from typing import Dict, Optional, Any
 
 from huggingface_hub import HfApi
 
@@ -34,7 +33,7 @@ class SizeMetric(Metric):
 
     def get_data(self) -> Dict[str, Optional[int]]:
         """
-            Gets number of parameters from model_info.safetensors or cardData "params"
+        Gets number of parameters from model_info.safetensors or cardData "params".
         """
         api = HfApi()
         info = api.model_info(f"{self.model_url.author}/{self.model_url.name}")
@@ -44,24 +43,31 @@ class SizeMetric(Metric):
 
         return {"size": None}
 
-    def calculate_score(self) -> float:
+    def calculate_score(self) -> Dict[str, float]:
         """
         Calculate the size score based on parameter count.
-        Expects self.data to include {"params": <int>} where params is the total parameter count.
+        Returns a dictionary mapping hardware targets to normalized scores.
         """
-        if not self.data["size"]:
+        # Ensure self.data exists and contains "size"
+        params: Optional[int] = None
+        if self.data is not None:
+            raw_size: Any = self.data.get("size")
+            if isinstance(raw_size, int):
+                params = raw_size
+
+        if not params:
             return {
-                "raspberry_pi": 0,
-                "jetson_nano": 0,
-                "desktop_pc": 0,
-                "aws_server": 0
+                "raspberry_pi": 0.0,
+                "jetson_nano": 0.0,
+                "desktop_pc": 0.0,
+                "aws_server": 0.0,
             }
 
         return {
-            "raspberry_pi": score_raspberry_pi(self.data["size"]),
-            "jetson_nano": score_jetson_nano(self.data["size"]),
-            "desktop_pc": score_desktop_pc(self.data["size"]),
-            "aws_server": score_aws_server(self.data["size"]),
+            "raspberry_pi": score_raspberry_pi(params),
+            "jetson_nano": score_jetson_nano(params),
+            "desktop_pc": score_desktop_pc(params),
+            "aws_server": score_aws_server(params),
         }
 
 

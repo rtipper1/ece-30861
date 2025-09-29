@@ -32,13 +32,15 @@ def test_calculate_score_reads_from_data():
 
 
 def test_get_data_with_missing_api_key(monkeypatch):
-    """get_data should raise an Exception if API_KEY is not set."""
     dummy = DatasetURL(raw="https://huggingface.co/datasets/test/dummy")
     metric = DatasetQualityMetric(dataset_url=dummy)
-    monkeypatch.delenv("GEN_AI_STUDIO_API_KEY", raising=False)
-    with pytest.raises(Exception, match="API key not set"):
-        metric.get_data()
 
+    monkeypatch.delenv("GEN_AI_STUDIO_API_KEY", raising=False)
+
+    data = metric.get_data()
+    assert isinstance(data, dict)
+    assert "score" in data
+    assert data["score"] == 0.0
 
 def test_dataset_quality_prompt():
     """Integration test: run end-to-end and check score is float in [0,1]."""

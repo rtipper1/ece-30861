@@ -23,13 +23,15 @@ def test_calculate_score_reads_from_data():
 
 
 def test_get_data_with_missing_api_key(monkeypatch):
-    """get_data should raise an Exception if API_KEY is not set."""
     dummy_url = ModelURL(raw="https://huggingface.co/test/model")
     metric = RampUpTimeMetric(dummy_url)
-    # ensure API_KEY is missing
+
     monkeypatch.delenv("GEN_AI_STUDIO_API_KEY", raising=False)
-    with pytest.raises(Exception, match="API key not set"):
-        metric.get_data()
+
+    data = metric.get_data()
+    assert isinstance(data, dict)
+    assert "score" in data
+    assert data["score"] == 0.0
 
 
 def test_ramp_up_time_prompt():
