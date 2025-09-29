@@ -18,6 +18,7 @@ To add a new metric:
 """
 
 import time
+import logging
 from typing import Any, Dict, Optional
 
 
@@ -56,24 +57,33 @@ class Metric():
         Must be implemented by subclasses.
         Should return a float [0, 1]
         """
-        return 0
+        return 0.0
 
     def run(self) -> None:
         """
-        Calculates metric with latency and sets fields
+        Calculates metric with latency and sets fields.
+        Ensures that failures default to score = 0.0 instead of raising.
         """
         start = time.time()
-        if self.data is None:
-            self.data = self.get_data()
-        self.score = self.calculate_score()
-        self.latency = int((time.time() - start) * 1000)
+        try:
+            if self.data is None:
+                self.data = self.get_data()
+            self.score = self.calculate_score()
+        except Exception as e:
+            logging.exception(f"Metric {self.name} failed: {e}")
+            # Fallback: safe defaults
+            self.data = {"error": str(e)}
+            self.score = 0.0
+        finally:
+            self.latency = int((time.time() - start) * 1000)
 
     def as_dict(self) -> Dict[str, Any]:
         """
-        Returns metric data as a dictionary, may change to NDJSON format, not sure yet
-        self.name must reflect what the exact name should be in the NDJSON format table
+        Returns metric data as a dictionary, formatted for NDJSON output.
+        self.name must reflect what the exact name should be in the NDJSON format table.
         """
         return {
             self.name: self.score,
             f"{self.name}_latency": self.latency,
         }
+
