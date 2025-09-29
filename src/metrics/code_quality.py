@@ -34,6 +34,8 @@ temp_dir.cleanup()
 '''
 
 import tempfile
+import contextlib
+import io
 from typing import Dict, Optional
 
 from flake8.api import legacy as flake8
@@ -52,57 +54,57 @@ class CodeQualityMetric(Metric):
     def get_data(self) -> Dict[str, Optional[int]]:
         temp_dir = tempfile.TemporaryDirectory()
 
-        # Full model name
         full_name = f"{self.model_url.author}/{self.model_url.name}"
         api = HfApi()
         info = api.model_info(full_name)
-        style_guide = flake8.get_style_guide()
+
         fileList: list = []
         LoC = 0  # lines of code
-        # info.siblings is a list of all files in the repo, each file is a RepoSibling
-        sibs = info.siblings
-        for sib in sibs:
-            file = sib.rfilename
-            if '.py' in file:
-                # Repo Contains a pytohn file
-                path = self.SingleFileDownload(
-                    full_name=full_name, filename=file, landingPath=temp_dir.name)
+
+        # Collect Python files
+        for sib in info.siblings:
+            if sib.rfilename.endswith(".py"):
+                path = self.SingleFileDownload(full_name, sib.rfilename, temp_dir.name)
                 fileList.append(path)
-                # Count number of lines in python file
-                f = open(path, "r")
-                length = len(f.readlines())
-                LoC += length
+                with open(path, "r") as f:
+                    LoC += len(f.readlines())
 
-        # If fileList is empty, check the base model for python files
-        if fileList == []:
-            base_model = info.cardData.get(
-                'base_model') if info.cardData else None
+        # If no .py files, try the base model
+        if not fileList and info.cardData:
+            base_model = info.cardData.get("base_model")
             if base_model:
-                print("FULL NAME: " + full_name)
                 full_name = base_model
-                info = api.model_info(full_name)  # Reset API endpoint
-                # info.siblings is a list of all files in the repo, each file is a RepoSibling
-                sibs = info.siblings
-                for sib in sibs:
-                    file = sib.rfilename
-                    if '.py' in file:
-                        # Repo Contains a pytohn file
-                        path = self.SingleFileDownload(
-                            full_name=full_name, filename=file, landingPath=temp_dir.name)
+                info = api.model_info(full_name)
+                for sib in info.siblings:
+                    if sib.rfilename.endswith(".py"):
+                        path = self.SingleFileDownload(full_name, sib.rfilename, temp_dir.name)
                         fileList.append(path)
-                        # Count number of lines in python file
-                        f = open(path, "r")
-                        length = len(f.readlines())
-                        LoC += length
+                        with open(path, "r") as f:
+                            LoC += len(f.readlines())
 
-        if fileList != []:
-            report = style_guide.check_files([fileList])
+        # Run flake8 silently
+        if fileList:
+            import os
+            from flake8.api import legacy as flake8
+
+            with open(os.devnull, "w") as devnull:
+                style_guide = flake8.get_style_guide(
+                    output_file=devnull,
+                    quiet=2,
+                    show_source=False,
+                    statistics=False,
+                )
+                report = style_guide.check_files(fileList)
             errors = report.total_errors
         else:
-            errors = -1
-            LoC = -1
+            errors, LoC = -1, -1
+
         temp_dir.cleanup()
         return {"Issues": errors, "Lines of Code": LoC}
+
+
+
+
 
     def SingleFileDownload(self, full_name: str, filename: str, landingPath: str):
         # full_name = model_owner + "/" + model_name # Full model name
