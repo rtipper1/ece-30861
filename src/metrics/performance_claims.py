@@ -18,7 +18,7 @@ Rubric:
 """
 
 import re
-from typing import Dict, Optional
+from typing import Dict, Any
 import contextlib
 import io
 
@@ -31,15 +31,15 @@ from src.metrics.metric import Metric
 KEY_TERMS: Dict[str, list[str]] = {
     "benchmarks": [
         "GLUE", "SuperGLUE", "SQuAD", "ImageNet", "COCO", "LibriSpeech",
-        "MNIST", "CIFAR", "WMT", "WikiText", "MS MARCO"
+        "MNIST", "CIFAR", "WMT", "WikiText", "MS MARCO",
     ],
     "metrics": [
         "accuracy", "f1", "precision", "recall", "bleu", "rouge",
-        "wer", "perplexity", "auc", "exact match", "loss"
+        "wer", "perplexity", "auc", "exact match", "loss",
     ],
     "comparisons": [
         "state-of-the-art", "sota", "outperform", "better than",
-        "surpasses", "beats baseline", "competitive with"
+        "surpasses", "beats baseline", "competitive with",
     ],
     "numbers": ["%", "percent", "score", "results"],
 }
@@ -58,9 +58,12 @@ class PerformanceClaimsMetric(Metric):
         super().__init__("performance_claims")
         self.model_url = model_url
 
-    def get_data(self) -> Dict[str, Optional[int]]:
+    def get_data(self) -> Dict[str, Any]:
         """
         Fetch README and count performance-related terms.
+        Returns a dict with:
+          - "matches": dict of category → count
+          - "total": int total matches
         """
         repo_id = f"{self.model_url.author}/{self.model_url.name}"
         readme = ""
@@ -71,16 +74,22 @@ class PerformanceClaimsMetric(Metric):
             except Exception:
                 readme = ""
 
-        matches = {cat: count_matches(readme, terms) for cat, terms in KEY_TERMS.items()}
+        matches: Dict[str, int] = {
+            cat: count_matches(readme, terms) for cat, terms in KEY_TERMS.items()
+        }
         total_matches = sum(matches.values())
         return {"matches": matches, "total": total_matches}
-
 
     def calculate_score(self) -> float:
         """
         Map total matches to rubric score.
         """
-        total = self.data.get("total", 0) or 0
+        if not self.data:
+            return 0.0
+
+        total = self.data.get("total", 0)
+        if not isinstance(total, int):
+            return 0.0
 
         if total > 20:
             return 1.0

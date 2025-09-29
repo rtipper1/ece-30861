@@ -24,14 +24,37 @@ Rubric:
 NOTE: May investigate other ways to find license for case when it is not included in metadata
 
 """
+"""
+license.py
+------------
+License Metric.
 
+Summary:
+
+- Class for storage and calculation of license metric. 
+- Inherits from metric.py 
+- Constructed with model URL
+- Uses api.model_info.cardData to get license
+
+
+Rubric:
+
+- 1.0 = fully open (Apache-2.0, MIT, BSD)
+- 0.8 = open but with some restrictions (e.g., LGPL, CC-BY)
+- 0.6 = research/evaluation-only or non-commercial
+- 0.4 = fallback when license string exists but is unknown
+- 0.2 = proprietary/closed
+
+- 0.0 = no license listed
+
+"""
 from typing import Dict, Optional
-
 from huggingface_hub import HfApi
 
 from src.cli.url import ModelURL
 from src.metrics.metric import Metric
 
+# License levels
 level_5_licenses = ["apache-2.0", "mit", "bsd", "bsd-2-clause", "bsd-3-clause",
                     "bsd-3-clause-clear", "isc", "zlib", "unlicense", "cc0-1.0",
                     "wtfpl", "postgresql", "ncsa", "afl-3.0", "artistic-2.0",
@@ -65,42 +88,40 @@ class LicenseMetric(Metric):
 
     def get_data(self) -> Dict[str, Optional[str]]:
         """
-            Gets license stored under either license or license_name, 
-            changes from model to model so we need to check both
+        Gets license stored under either license or license_name,
+        changes from model to model so we need to check both.
         """
         api = HfApi()
         info = api.model_info(f"{self.model_url.author}/{self.model_url.name}")
 
-        license = None
+        license_str: Optional[str] = None
         if info.cardData:
-            license = info.cardData.get(
-                "license_name") or info.cardData.get("license")
+            license_str = info.cardData.get("license_name") or info.cardData.get("license")
 
-        return {"license": license}
+        return {"license": license_str}
 
     def calculate_score(self) -> float:
-        # If license does not exist give it 0 score
-        if not self.data["license"]:
+        """
+        Map license string into a score in [0,1] using predefined categories.
+        """
+        if not self.data:
             return 0.0
 
-        # Retrieve license from metric data
-        license = self.data["license"].lower().strip()
+        license_str = self.data.get("license")
+        if not license_str:
+            return 0.0
 
-        # Score metric based on categories
-        if license in level_5_licenses:
-            return 1
+        license_str = license_str.lower().strip()
 
-        elif license in level_4_licenses:
+        if license_str in level_5_licenses:
+            return 1.0
+        elif license_str in level_4_licenses:
             return 0.8
-
-        elif license in level_3_licenses:
+        elif license_str in level_3_licenses:
             return 0.6
-
-        elif license in level_2_licenses:
+        elif license_str in level_2_licenses:
             return 0.4
-
-        elif license in level_1_licenses:
+        elif license_str in level_1_licenses:
             return 0.2
-
         else:
             return 0.0

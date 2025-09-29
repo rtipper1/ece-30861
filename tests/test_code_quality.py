@@ -51,5 +51,5 @@ def test_get_data_handles_no_python_files(monkeypatch):
     metric.model_url = ModelURL(raw="https://huggingface.co/dummy/model")
 
     result = metric.get_data()
-    assert result["Issues"] == -1
-    assert result["Lines of Code"] == -1
+    assert result["Issues"] is None
+    assert result["Lines of Code"] is None

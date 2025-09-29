@@ -9,7 +9,7 @@ Summary:
 - Runs independently of Hugging Face API, fulfilling non-API metric requirement.
 
 - Input: path to a local clone/snapshot of the model repo
-- Process: 
+- Process:
   1. Collect all .py files
   2. Count total lines of code
   3. Run Flake8, count style issues
@@ -24,21 +24,10 @@ Rubric:
 - 1 = 0–5 issues per 1000 LOC
 """
 
-'''
-
-
-temp_dir = tempfile.TemporaryDirectory()
-print(temp_dir.name)
-# use temp_dir, and when done:
-temp_dir.cleanup()
-'''
-
 import tempfile
-import contextlib
-import io
 from typing import Dict, Optional
 
-from flake8.api import legacy as flake8
+from flake8.api import legacy as flake8  # type: ignore
 from huggingface_hub import HfApi, hf_hub_download
 
 from src.cli.url import CodeURL, ModelURL
@@ -52,91 +41,93 @@ class CodeQualityMetric(Metric):
         self.model_url = model_url
 
     def get_data(self) -> Dict[str, Optional[int]]:
+        """
+        Collects Python files from Hugging Face repo (or base model fallback),
+        counts lines of code, and runs Flake8 to measure issues.
+        """
         temp_dir = tempfile.TemporaryDirectory()
 
         full_name = f"{self.model_url.author}/{self.model_url.name}"
         api = HfApi()
         info = api.model_info(full_name)
 
-        fileList: list = []
-        LoC = 0  # lines of code
+        file_list: list[str] = []
+        errors: Optional[int] = None
+        loc: Optional[int] = 0  # start counting lines, may be reset to None
 
-        # Collect Python files
-        for sib in info.siblings:
-            if sib.rfilename.endswith(".py"):
-                path = self.SingleFileDownload(full_name, sib.rfilename, temp_dir.name)
-                fileList.append(path)
-                with open(path, "r") as f:
-                    LoC += len(f.readlines())
+        # Collect Python files if available
+        if info.siblings:
+            for sib in info.siblings:
+                if sib.rfilename.endswith(".py"):
+                    path = self.SingleFileDownload(full_name, sib.rfilename, temp_dir.name)
+                    file_list.append(path)
+                    with open(path, "r", encoding="utf-8") as f:
+                        file_loc = len(f.readlines())
+                        if loc is not None:
+                            loc += file_loc
 
-        # If no .py files, try the base model
-        if not fileList and info.cardData:
+        # If no .py files, try the base model if available
+        if not file_list and info.cardData:
             base_model = info.cardData.get("base_model")
             if base_model:
                 full_name = base_model
                 info = api.model_info(full_name)
-                for sib in info.siblings:
-                    if sib.rfilename.endswith(".py"):
-                        path = self.SingleFileDownload(full_name, sib.rfilename, temp_dir.name)
-                        fileList.append(path)
-                        with open(path, "r") as f:
-                            LoC += len(f.readlines())
+                if info.siblings:
+                    for sib in info.siblings:
+                        if sib.rfilename.endswith(".py"):
+                            path = self.SingleFileDownload(full_name, sib.rfilename, temp_dir.name)
+                            file_list.append(path)
+                            with open(path, "r", encoding="utf-8") as f:
+                                file_loc = len(f.readlines())
+                                if loc is not None:
+                                    loc += file_loc
 
-        # Run flake8 silently
-        if fileList:
-            import os
-            from flake8.api import legacy as flake8
-
-            with open(os.devnull, "w") as devnull:
-                style_guide = flake8.get_style_guide(
-                    output_file=devnull,
-                    quiet=2,
-                    show_source=False,
-                    statistics=False,
-                )
-                report = style_guide.check_files(fileList)
+        # Run flake8 silently if we found files
+        if file_list:
+            style_guide = flake8.get_style_guide(
+                quiet=2, show_source=False, statistics=False
+            )
+            report = style_guide.check_files(file_list)
             errors = report.total_errors
         else:
-            errors, LoC = -1, -1
+            errors, loc = None, None
 
         temp_dir.cleanup()
-        return {"Issues": errors, "Lines of Code": LoC}
+        return {"Issues": errors, "Lines of Code": loc}
 
-
-
-
-
-    def SingleFileDownload(self, full_name: str, filename: str, landingPath: str):
-        # full_name = model_owner + "/" + model_name # Full model name
+    def SingleFileDownload(self, full_name: str, filename: str, landing_path: str) -> str:
+        """
+        Download a single file from Hugging Face Hub into a temp directory.
+        """
         model_path = hf_hub_download(
-            repo_id=full_name, filename=filename, local_dir=landingPath)
-        # print(f"File downloaded to: {model_path}")
-
+            repo_id=full_name, filename=filename, local_dir=landing_path
+        )
         return model_path
 
     def calculate_score(self) -> float:
-        if self.data["Issues"] == None or self.data["Lines of Code"] == None:
+        """
+        Compute score based on Flake8 issues per line of code.
+        Maps issue density into rubric-based 0–1 score.
+        """
+        if not self.data:
             return 0.0
 
-        # Retrieve license from metric data
-        issues = self.data["Issues"]
-        loc = self.data["Lines of Code"]
+        issues: Optional[int] = self.data.get("Issues")
+        loc: Optional[int] = self.data.get("Lines of Code")
+
+        if issues is None or loc is None or loc <= 0:
+            return 0.0
+
         ratio = issues / loc
-        # Score metric based on categories
-        if ratio >= 0 and ratio <= .005:
-            return 1
 
-        elif ratio >= .006 and ratio <= .015:
+        if 0 <= ratio <= 0.005:
+            return 1.0
+        elif 0.006 <= ratio <= 0.015:
             return 0.8
-
-        elif ratio >= .016 and ratio < .03:
+        elif 0.016 <= ratio < 0.03:
             return 0.6
-
-        elif ratio >= .03 and ratio <= .06:
+        elif 0.03 <= ratio <= 0.06:
             return 0.4
-
-        elif ratio > .06:
+        elif ratio > 0.06:
             return 0.2
-
-        else:
-            return 0.0
+        return 0.0

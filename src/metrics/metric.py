@@ -18,8 +18,7 @@ To add a new metric:
 """
 
 import time
-import logging
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union
 
 
 class Metric():
@@ -39,7 +38,7 @@ class Metric():
     def __init__(self, name: str):
         self.name = name
         self.data: Optional[Dict[str, Any]] = None
-        self.score: Optional[float] = None
+        self.score: Optional[Union[float, Dict[str, float]]] = None
         self.latency: Optional[int] = None
 
     def get_data(self) -> Dict[str, Any]:
@@ -50,7 +49,7 @@ class Metric():
         """Attach metadata needed to calculate metric."""
         self.data = data
 
-    def calculate_score(self) -> float:
+    def calculate_score(self) -> Union[float, Dict[str, float]]:
         """
         Compute the metric score.
 
