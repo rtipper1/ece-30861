@@ -12,114 +12,66 @@ Tests cover:
 """
 
 import pytest
+from types import SimpleNamespace
 
-from src.cli.url import ModelURL
 from src.metrics.performance_claims import PerformanceClaimsMetric
-
-# Dummy empty url to pass into test cases in which we just set the data manually
-dummy_url = ModelURL(
-    raw="https://huggingface.co/Alibaba-NLP/Tongyi-DeepResearch-30B-A3B")
-
-
-# def test_get_data():
-#     url = ModelURL(
-#         raw="https://huggingface.co/Alibaba-NLP/Tongyi-DeepResearch-30B-A3B")
-
-#     metric = PerformanceClaimsMetric(url)
-#     metric.run()
-#     downloadCheck = metric.data["downloads"]
-#     likeCheck = metric.data["likes"]
-#     assert likeCheck > 0
-#     assert downloadCheck > 0
-
-
-def test_level_5_PC():
-    metric = PerformanceClaimsMetric(dummy_url)
-    metric.set_data({"downloads": 100, "likes": 80})
-    metric.run()
-    assert metric.score == 1
-
-
-def test_level_4_PC():
-    metric = PerformanceClaimsMetric(dummy_url)
-    metric.set_data({"downloads": 1000, "likes": 600})
-    metric.run()
-    assert metric.score == 0.8
-
-
-def test_level_3_PC():
-    metric = PerformanceClaimsMetric(dummy_url)
-    metric.set_data({"downloads": 10000, "likes": 3500})
-    metric.run()
-    assert metric.score == 0.6
-
-
-def test_level_2_PC():
-    metric = PerformanceClaimsMetric(dummy_url)
-    metric.set_data({"downloads": 100, "likes": 15})
-    metric.run()
-    assert metric.score == 0.4
-
-
-def test_level_1_PC():
-    metric = PerformanceClaimsMetric(dummy_url)
-    metric.set_data({"downloads": 100, "likes": 8})
-    metric.run()
-    assert metric.score == 0.2
-
-
-def test_none_PC():
-    metric = PerformanceClaimsMetric(dummy_url)
-    metric.set_data({"downloads": None, "likes": None})
-    metric.run()
-    assert metric.score == 0.0
-
-
-def test_zero_likes_downloads():
-    metric = PerformanceClaimsMetric(dummy_url)
-    metric.set_data({"downloads": 0, "likes": 0})
-    metric.run()
-    assert metric.score == 0.0
-
-import pytest
-from huggingface_hub import HfApi
-
 from src.cli.url import ModelURL
-from src.metrics.performance_claims import PerformanceClaimsMetric
 
 
-# def test_hf_api_returns_likes_and_downloads():
-#     """Direct API test: Make sure HuggingFace Hub gives likes and downloads."""
-#     api = HfApi()
-#     info = api.model_info("bert-base-uncased")  # well-known model
-#     assert hasattr(info, "likes")
-#     assert hasattr(info, "downloads")
-#     assert isinstance(info.likes, int)
-#     assert isinstance(info.downloads, int)
-#     assert info.likes > 0  # this repo is very popular
-#     assert info.downloads > 0
+class DummyCard:
+    def __init__(self, text):
+        self.text = text
 
 
-# def test_performance_claims_metric_data():
-#     """Make sure PerformanceClaimsMetric pulls likes and downloads correctly."""
-#     model_url = ModelURL(raw="https://huggingface.co/bert-base-uncased")
-#     metric = PerformanceClaimsMetric(model_url)
-#     data = metric.get_data()
-#     assert "likes" in data
-#     assert "downloads" in data
-#     assert isinstance(data["likes"], int)
-#     assert isinstance(data["downloads"], int)
-#     assert data["likes"] > 0
-#     assert data["downloads"] > 0
+@pytest.mark.parametrize(
+    "readme_text, expected_total, expected_score",
+    [
+        # No claims
+        ("This is a model card with no benchmarks.", 0, 0.0),
+
+        # Only "accuracy" matches (not "%")
+        ("We achieved 95% accuracy on our dataset.", 1, 0.2),
+
+        # Matches: "state-of-the-art", "GLUE", "score" → 3
+        ("State-of-the-art results on GLUE. F1 score: 90. BLEU also improved.", 6, 0.6),
+
+        # Matches: "SOTA", "GLUE", "SuperGLUE", "SQuAD", "accuracy", "BLEU", "ROUGE" → 7
+        ("SOTA results on GLUE, SuperGLUE, and SQuAD with accuracy, F1, BLEU, ROUGE.", 9, 0.6),
+
+        # Matches: "beats baseline", "accuracy", "SOTA", "ImageNet", "surpasses",
+        # "better than", "competitive with", "results" → 8
+        ("This model beats baseline. Accuracy 95%. F1=90. BLEU=30. ROUGE=25. "
+         "SOTA on ImageNet. Surpasses prior models. Better than others. "
+         "Competitive with large-scale baselines. Results improved.", 11, 0.8),
+    ],
+)
+def test_calculate_score(monkeypatch, readme_text, expected_total, expected_score):
+    from src.metrics import performance_claims
+
+    monkeypatch.setattr(
+        performance_claims.ModelCard,
+        "load",
+        lambda repo_id: DummyCard(readme_text),
+    )
+
+    metric = PerformanceClaimsMetric(ModelURL(raw="https://huggingface.co/dummy/model"))
+    metric.data = metric.get_data()
+    assert metric.data["total"] == expected_total
+    assert metric.calculate_score() == expected_score
 
 
-# def test_performance_claims_calculate_score():
-#     """Run the metric fully and check that score is > 0 for popular models."""
-#     model_url = ModelURL(raw="https://huggingface.co/bert-base-uncased")
-#     metric = PerformanceClaimsMetric(model_url)
-#     metric.run()
-#     score = metric.score
-#     assert isinstance(score, float)
-#     assert 0.0 <= score <= 1.0
-#     # bert-base-uncased is popular, so score should not be 0
-#     assert score > 0.0
+
+def test_handles_exception(monkeypatch):
+    # Simulate ModelCard.load raising
+    from src.metrics import performance_claims
+
+    monkeypatch.setattr(
+        performance_claims.ModelCard,
+        "load",
+        lambda repo_id: (_ for _ in ()).throw(RuntimeError("boom")),
+    )
+
+    metric = PerformanceClaimsMetric(ModelURL(raw="https://huggingface.co/dummy/model"))
+    metric.data = metric.get_data()
+    assert metric.data["total"] == 0
+    assert metric.calculate_score() == 0.0

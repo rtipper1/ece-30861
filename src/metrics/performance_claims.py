@@ -4,30 +4,53 @@ performance_claims.py
 Performance Claims Metric
 
 Summary:
-
-- Class for storage and calculation of Performance Claims Data and Metrics
-- Metric scores based on number of likes and downloads for a model
-- Score will be calculated as a percentage of likes/downloads
-- The resulting score will be the higher of the metrics the calculation falls between
-
+- Parses a model's README to detect performance claims.
+- Searches for benchmark names, evaluation metrics, and "SOTA"-style language.
+- Scores models based on density of detected claims.
 
 Rubric:
-
-- 1.0 = likes / downloads = < .75 (75%)
-- 0.8 = likes / downloads = < .50 (50%)
-- 0.6 = likes / downloads = < .20 (20%)
-- 0.4 = likes / downloads = < .10 (10%)
-- 0.2 = likes / downloads = < .01 (1%)
-
-- 0.0 = 0 likes or downloads
+- 1.0 = >20 claims
+- 0.8 = 10–20 claims
+- 0.6 = 5–9 claims
+- 0.4 = 2–4 claims
+- 0.2 = 1 claim
+- 0.0 = 0 claims
 """
 
+import re
 from typing import Dict, Optional
+import contextlib
+import io
 
-from huggingface_hub import HfApi
-
+from huggingface_hub import ModelCard
 from src.cli.url import ModelURL
 from src.metrics.metric import Metric
+
+
+# Key terms that signal performance-related claims
+KEY_TERMS: Dict[str, list[str]] = {
+    "benchmarks": [
+        "GLUE", "SuperGLUE", "SQuAD", "ImageNet", "COCO", "LibriSpeech",
+        "MNIST", "CIFAR", "WMT", "WikiText", "MS MARCO"
+    ],
+    "metrics": [
+        "accuracy", "f1", "precision", "recall", "bleu", "rouge",
+        "wer", "perplexity", "auc", "exact match", "loss"
+    ],
+    "comparisons": [
+        "state-of-the-art", "sota", "outperform", "better than",
+        "surpasses", "beats baseline", "competitive with"
+    ],
+    "numbers": ["%", "percent", "score", "results"],
+}
+
+
+def count_matches(text: str, terms: list[str]) -> int:
+    """Count case-insensitive matches of each term in text."""
+    total = 0
+    for term in terms:
+        total += len(re.findall(rf"\b{re.escape(term)}\b", text, flags=re.IGNORECASE))
+    return total
 
 
 class PerformanceClaimsMetric(Metric):
@@ -36,49 +59,38 @@ class PerformanceClaimsMetric(Metric):
         self.model_url = model_url
 
     def get_data(self) -> Dict[str, Optional[int]]:
-        api = HfApi()
-        info = api.model_info(f"{self.model_url.author}/{self.model_url.name}")
-
-        def safe_int(value):
+        """
+        Fetch README and count performance-related terms.
+        """
+        repo_id = f"{self.model_url.author}/{self.model_url.name}"
+        readme = ""
+        with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
             try:
-                return int(value)
-            except (ValueError, TypeError):
-                return None
+                card = ModelCard.load(repo_id)
+                readme = card.text or ""
+            except Exception:
+                readme = ""
 
-        downloads = None
-        likes = None
-
-        # HuggingFace often stores these in cardData
-        if info.cardData:
-            downloads = safe_int(info.cardData.get("downloads"))
-            likes = safe_int(info.cardData.get("likes"))
-
-        return {"downloads": downloads, "likes": likes}
+        matches = {cat: count_matches(readme, terms) for cat, terms in KEY_TERMS.items()}
+        total_matches = sum(matches.values())
+        return {"matches": matches, "total": total_matches}
 
 
     def calculate_score(self) -> float:
-        downloads = self.data.get("downloads")
-        likes = self.data.get("likes")
+        """
+        Map total matches to rubric score.
+        """
+        total = self.data.get("total", 0) or 0
 
-        # If no likes or downloads, give it a 0
-        if downloads is None or likes is None:
-            return 0.0
-
-        if likes == 0 or downloads == 0:
-            ratio = 0
-        else:
-            ratio = likes / downloads  # already ints
-
-        # Score metric based on categories
-        if ratio > 0.75:
+        if total > 20:
             return 1.0
-        elif ratio >= 0.5:
+        elif total >= 10:
             return 0.8
-        elif ratio >= 0.2:
+        elif total >= 5:
             return 0.6
-        elif ratio >= 0.1:
+        elif total >= 2:
             return 0.4
-        elif ratio >= 0.01:
+        elif total >= 1:
             return 0.2
         else:
             return 0.0
