@@ -1,0 +1,78 @@
+\chapter{Workflow }
+\hypertarget{md__r_e_a_d_m_e}{}\label{md__r_e_a_d_m_e}\index{Workflow@{Workflow}}
+\label{md__r_e_a_d_m_e_autotoc_md0}%
+\Hypertarget{md__r_e_a_d_m_e_autotoc_md0}%
+
+
+This guide explains how we will use Git\+Hub Issues, Branches, Pull Requests, and the Project Board to manage our work.\hypertarget{md__r_e_a_d_m_e_autotoc_md1}{}\doxysubsection{\texorpdfstring{Project Board}{Project Board}}\label{md__r_e_a_d_m_e_autotoc_md1}
+The Git\+Hub Project board has 4 columns
+\begin{DoxyItemize}
+\item {\bfseries{To Do}} -\/ tasks we haven\textquotesingle{}t started yet.
+\item {\bfseries{In Progress}} -\/ tasks someone is currently working on
+\item {\bfseries{In Review}} -\/ tasks with an open pull requests
+\item {\bfseries{Done}} -\/ merged and finished tasks
+\end{DoxyItemize}
+
+Each issue is linked to a card on this board\hypertarget{md__r_e_a_d_m_e_autotoc_md2}{}\doxysubsection{\texorpdfstring{Workflow for Each Task}{Workflow for Each Task}}\label{md__r_e_a_d_m_e_autotoc_md2}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md3}{}\doxysubsubsection{\texorpdfstring{1. Open an Issue}{1. Open an Issue}}\label{md__r_e_a_d_m_e_autotoc_md3}
+If you want to take on an issue on the To\+Do list, assign yourself and go to step 2.
+
+If you want to creat a new issue, use the following guidelines
+\begin{DoxyItemize}
+\item From the repo home page click issues to open the page of all of the issues.
+\item Click New Issue.
+\item Write a short title leading with feat\+: bug\+: or fix\+: depending on the type of issue.
+\item Write a short description with relevant details for the issue.
+\item On the right hand side make sure to link to the project board and assign someone if you want to.
+\item Click create issue and the issue should be linked to the project board.
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md4}{}\doxysubsubsection{\texorpdfstring{2. Create a Branch}{2. Create a Branch}}\label{md__r_e_a_d_m_e_autotoc_md4}
+Each time you write code to work on an issue. You should create a branch to write code in.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{git\ checkout\ -\/b\ issue-\/<number>-\/short-\/description}
+
+\end{DoxyCode}
+ For example 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{git\ checkout\ -\/b\ issue-\/23-\/license-\/metric}
+
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md5}{}\doxysubsubsection{\texorpdfstring{3. Do the Work}{3. Do the Work}}\label{md__r_e_a_d_m_e_autotoc_md5}
+
+\begin{DoxyItemize}
+\item Commit the changes regularly with meaningful commit messages 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{git\ commit\ -\/m\ "{}commit\ message"{}}
+
+\end{DoxyCode}
+
+\item Push you branch to github to save your work in the cloud 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{git\ push\ -\/u\ origin\ issue-\/<number>-\/short-\/description}
+
+\end{DoxyCode}
+
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md6}{}\doxysubsubsection{\texorpdfstring{4. Open a Pull Request (PR)}{4. Open a Pull Request (PR)}}\label{md__r_e_a_d_m_e_autotoc_md6}
+
+\begin{DoxyItemize}
+\item In the PR description, include "{}\+Fixes \#$<$issue number$>$"{} so the issue closes automatically after merge.
+\end{DoxyItemize}
+
+Example PR title 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{Fixes\ \#23:\ Implement\ LicenseMetric}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyItemize}
+\item Move the task card to In Review
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md7}{}\doxysubsubsection{\texorpdfstring{5. Merge and Close}{5. Merge and Close}}\label{md__r_e_a_d_m_e_autotoc_md7}
+
+\begin{DoxyItemize}
+\item Once the Pull Request is reviewed merge the PR into main.
+\item The linked issue will close automatically.
+\item The card will move to done on the project board. 
+\end{DoxyItemize}
