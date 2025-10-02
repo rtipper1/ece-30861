@@ -1,0 +1,122 @@
+\doxysection{src.\+metrics.\+license Namespace Reference}
+\hypertarget{namespacesrc_1_1metrics_1_1license}{}\label{namespacesrc_1_1metrics_1_1license}\index{src.metrics.license@{src.metrics.license}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classsrc_1_1metrics_1_1license_1_1_license_metric}{License\+Metric}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+list \mbox{\hyperlink{namespacesrc_1_1metrics_1_1license_a389feb430f64235127eaf4ee5cc1de65}{level\+\_\+5\+\_\+licenses}}
+\item 
+list \mbox{\hyperlink{namespacesrc_1_1metrics_1_1license_ae8c51f06217c6ee8193aeb9bec1ec4b0}{level\+\_\+4\+\_\+licenses}}
+\item 
+list \mbox{\hyperlink{namespacesrc_1_1metrics_1_1license_a0cf87fcaaf7a765819ecf6e6f42a9cc9}{level\+\_\+3\+\_\+licenses}}
+\item 
+list \mbox{\hyperlink{namespacesrc_1_1metrics_1_1license_a25887c155d9e4c18b0c9eea22446fcb6}{level\+\_\+2\+\_\+licenses}}
+\item 
+list \mbox{\hyperlink{namespacesrc_1_1metrics_1_1license_adcdfc3a7d071a5f0480680da6731777a}{level\+\_\+1\+\_\+licenses}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb}license.py
+------------
+License Metric.
+
+Summary:
+
+- Class for storage and calculation of license metric. 
+- Inherits from metric.py 
+- Constructed with model URL
+- Uses api.model_info.cardData to get license
+
+
+Rubric:
+
+- 1.0 = fully open (Apache-2.0, MIT, BSD)
+- 0.8 = open but with some restrictions (e.g., LGPL, CC-BY)
+- 0.6 = research/evaluation-only or non-commercial
+- 0.4 = fallback when license string exists but is unknown
+- 0.2 = proprietary/closed
+
+- 0.0 = no license listed
+
+NOTE: May investigate other ways to find license for case when it is not included in metadata
+\end{DoxyVerb}
+ 
+
+\label{doc-var-members}
+\Hypertarget{namespacesrc_1_1metrics_1_1license_doc-var-members}
+\doxysubsection{Variable Documentation}
+\Hypertarget{namespacesrc_1_1metrics_1_1license_adcdfc3a7d071a5f0480680da6731777a}\index{src.metrics.license@{src.metrics.license}!level\_1\_licenses@{level\_1\_licenses}}
+\index{level\_1\_licenses@{level\_1\_licenses}!src.metrics.license@{src.metrics.license}}
+\doxysubsubsection{\texorpdfstring{level\_1\_licenses}{level\_1\_licenses}}
+{\footnotesize\ttfamily \label{namespacesrc_1_1metrics_1_1license_adcdfc3a7d071a5f0480680da6731777a} 
+list src.\+metrics.\+license.\+level\+\_\+1\+\_\+licenses}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ =\ \ [\textcolor{stringliteral}{"{}llama2"{}},\ \textcolor{stringliteral}{"{}llama3"{}},\ \textcolor{stringliteral}{"{}llama3.1"{}},\ \textcolor{stringliteral}{"{}llama3.2"{}},\ \textcolor{stringliteral}{"{}llama3.3"{}},}
+\DoxyCodeLine{00002\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}llama4"{}},\ \textcolor{stringliteral}{"{}gemma"{}}]}
+
+\end{DoxyCode}
+\Hypertarget{namespacesrc_1_1metrics_1_1license_a25887c155d9e4c18b0c9eea22446fcb6}\index{src.metrics.license@{src.metrics.license}!level\_2\_licenses@{level\_2\_licenses}}
+\index{level\_2\_licenses@{level\_2\_licenses}!src.metrics.license@{src.metrics.license}}
+\doxysubsubsection{\texorpdfstring{level\_2\_licenses}{level\_2\_licenses}}
+{\footnotesize\ttfamily \label{namespacesrc_1_1metrics_1_1license_a25887c155d9e4c18b0c9eea22446fcb6} 
+list src.\+metrics.\+license.\+level\+\_\+2\+\_\+licenses}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ =\ \ [\textcolor{stringliteral}{"{}openrail"{}},\ \textcolor{stringliteral}{"{}openrail++"{}},\ \textcolor{stringliteral}{"{}creativeml-\/openrail-\/m"{}},\ \textcolor{stringliteral}{"{}bigscience-\/bloom-\/rail-\/1.0"{}},}
+\DoxyCodeLine{00002\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}bigscience-\/openrail-\/m"{}},\ \textcolor{stringliteral}{"{}bigcode-\/openrail-\/m"{}},\ \textcolor{stringliteral}{"{}deepfloyd-\/if-\/license"{}},}
+\DoxyCodeLine{00003\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}apple-\/amlr"{}},\ \textcolor{stringliteral}{"{}apple-\/ascl"{}},\ \textcolor{stringliteral}{"{}lgpl-\/lr"{}},\ \textcolor{stringliteral}{"{}open-\/mdw"{}},\ \textcolor{stringliteral}{"{}c-\/uda"{}}]}
+
+\end{DoxyCode}
+\Hypertarget{namespacesrc_1_1metrics_1_1license_a0cf87fcaaf7a765819ecf6e6f42a9cc9}\index{src.metrics.license@{src.metrics.license}!level\_3\_licenses@{level\_3\_licenses}}
+\index{level\_3\_licenses@{level\_3\_licenses}!src.metrics.license@{src.metrics.license}}
+\doxysubsubsection{\texorpdfstring{level\_3\_licenses}{level\_3\_licenses}}
+{\footnotesize\ttfamily \label{namespacesrc_1_1metrics_1_1license_a0cf87fcaaf7a765819ecf6e6f42a9cc9} 
+list src.\+metrics.\+license.\+level\+\_\+3\+\_\+licenses}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ =\ \ [\textcolor{stringliteral}{"{}cc-\/by-\/nc-\/4.0"{}},\ \textcolor{stringliteral}{"{}cc-\/by-\/nc-\/3.0"{}},\ \textcolor{stringliteral}{"{}cc-\/by-\/nc-\/2.0"{}},\ \textcolor{stringliteral}{"{}cc-\/by-\/nc-\/sa-\/4.0"{}},}
+\DoxyCodeLine{00002\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}cc-\/by-\/nc-\/sa-\/3.0"{}},\ \textcolor{stringliteral}{"{}cc-\/by-\/nc-\/sa-\/2.0"{}},\ \textcolor{stringliteral}{"{}cc-\/by-\/nc-\/nd-\/4.0"{}},}
+\DoxyCodeLine{00003\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}cc-\/by-\/nc-\/nd-\/3.0"{}},\ \textcolor{stringliteral}{"{}fair-\/noncommercial-\/research-\/license"{}},}
+\DoxyCodeLine{00004\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}intel-\/research"{}},\ \textcolor{stringliteral}{"{}h-\/research"{}}]}
+
+\end{DoxyCode}
+\Hypertarget{namespacesrc_1_1metrics_1_1license_ae8c51f06217c6ee8193aeb9bec1ec4b0}\index{src.metrics.license@{src.metrics.license}!level\_4\_licenses@{level\_4\_licenses}}
+\index{level\_4\_licenses@{level\_4\_licenses}!src.metrics.license@{src.metrics.license}}
+\doxysubsubsection{\texorpdfstring{level\_4\_licenses}{level\_4\_licenses}}
+{\footnotesize\ttfamily \label{namespacesrc_1_1metrics_1_1license_ae8c51f06217c6ee8193aeb9bec1ec4b0} 
+list src.\+metrics.\+license.\+level\+\_\+4\+\_\+licenses}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ =\ \ [\textcolor{stringliteral}{"{}lgpl"{}},\ \textcolor{stringliteral}{"{}lgpl-\/2.1"{}},\ \textcolor{stringliteral}{"{}lgpl-\/3.0"{}},\ \textcolor{stringliteral}{"{}cc-\/by-\/4.0"{}},\ \textcolor{stringliteral}{"{}cc-\/by-\/3.0"{}},}
+\DoxyCodeLine{00002\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}cc-\/by-\/2.0"{}},\ \textcolor{stringliteral}{"{}cc-\/by-\/2.5"{}},\ \textcolor{stringliteral}{"{}cc-\/by-\/sa-\/4.0"{}},\ \textcolor{stringliteral}{"{}cc-\/by-\/sa-\/3.0"{}},}
+\DoxyCodeLine{00003\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}cc"{}},\ \textcolor{stringliteral}{"{}osl-\/3.0"{}},\ \textcolor{stringliteral}{"{}bsl-\/1.0"{}},\ \textcolor{stringliteral}{"{}gpl"{}},\ \textcolor{stringliteral}{"{}gpl-\/2.0"{}},\ \textcolor{stringliteral}{"{}gpl-\/3.0"{}},}
+\DoxyCodeLine{00004\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}agpl-\/3.0"{}},\ \textcolor{stringliteral}{"{}gfdl"{}}]}
+
+\end{DoxyCode}
+\Hypertarget{namespacesrc_1_1metrics_1_1license_a389feb430f64235127eaf4ee5cc1de65}\index{src.metrics.license@{src.metrics.license}!level\_5\_licenses@{level\_5\_licenses}}
+\index{level\_5\_licenses@{level\_5\_licenses}!src.metrics.license@{src.metrics.license}}
+\doxysubsubsection{\texorpdfstring{level\_5\_licenses}{level\_5\_licenses}}
+{\footnotesize\ttfamily \label{namespacesrc_1_1metrics_1_1license_a389feb430f64235127eaf4ee5cc1de65} 
+list src.\+metrics.\+license.\+level\+\_\+5\+\_\+licenses}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ =\ \ [\textcolor{stringliteral}{"{}apache-\/2.0"{}},\ \textcolor{stringliteral}{"{}mit"{}},\ \textcolor{stringliteral}{"{}bsd"{}},\ \textcolor{stringliteral}{"{}bsd-\/2-\/clause"{}},\ \textcolor{stringliteral}{"{}bsd-\/3-\/clause"{}},}
+\DoxyCodeLine{00002\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}bsd-\/3-\/clause-\/clear"{}},\ \textcolor{stringliteral}{"{}isc"{}},\ \textcolor{stringliteral}{"{}zlib"{}},\ \textcolor{stringliteral}{"{}unlicense"{}},\ \textcolor{stringliteral}{"{}cc0-\/1.0"{}},}
+\DoxyCodeLine{00003\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}wtfpl"{}},\ \textcolor{stringliteral}{"{}postgresql"{}},\ \textcolor{stringliteral}{"{}ncsa"{}},\ \textcolor{stringliteral}{"{}afl-\/3.0"{}},\ \textcolor{stringliteral}{"{}artistic-\/2.0"{}},}
+\DoxyCodeLine{00004\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}ecl-\/2.0"{}},\ \textcolor{stringliteral}{"{}mpl-\/2.0"{}},\ \textcolor{stringliteral}{"{}ms-\/pl"{}},\ \textcolor{stringliteral}{"{}etalab-\/2.0"{}},\ \textcolor{stringliteral}{"{}odc-\/by"{}},}
+\DoxyCodeLine{00005\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}odbl"{}},\ \textcolor{stringliteral}{"{}eupl-\/1.1"{}},\ \textcolor{stringliteral}{"{}eupl-\/1.2"{}},\ \textcolor{stringliteral}{"{}epl-\/1.0"{}},\ \textcolor{stringliteral}{"{}epl-\/2.0"{}},}
+\DoxyCodeLine{00006\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}lppl-\/1.3c"{}},\ \textcolor{stringliteral}{"{}ofl-\/1.1"{}},\ \textcolor{stringliteral}{"{}pddl"{}},\ \textcolor{stringliteral}{"{}cdla-\/permissive-\/1.0"{}},}
+\DoxyCodeLine{00007\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}cdla-\/permissive-\/2.0"{}},\ \textcolor{stringliteral}{"{}cdla-\/sharing-\/1.0"{}}]}
+
+\end{DoxyCode}

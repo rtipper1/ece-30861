@@ -1,0 +1,113 @@
+\doxysection{src.\+metrics.\+metric.\+Metric Class Reference}
+\hypertarget{classsrc_1_1metrics_1_1metric_1_1_metric}{}\label{classsrc_1_1metrics_1_1metric_1_1_metric}\index{src.metrics.metric.Metric@{src.metrics.metric.Metric}}
+Inheritance diagram for src.\+metrics.\+metric.\+Metric\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=7.200000cm]{classsrc_1_1metrics_1_1metric_1_1_metric}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classsrc_1_1metrics_1_1metric_1_1_metric_a1df46b2a837d2614fc0054834b41688b}\label{classsrc_1_1metrics_1_1metric_1_1_metric_a1df46b2a837d2614fc0054834b41688b} 
+{\bfseries \+\_\+\+\_\+init\+\_\+\+\_\+} (self, str name)
+\item 
+Dict\mbox{[}str, Any\mbox{]} \mbox{\hyperlink{classsrc_1_1metrics_1_1metric_1_1_metric_aa99ee5a4aef1c8730401b61c479bd268}{get\+\_\+data}} (self)
+\item 
+None \mbox{\hyperlink{classsrc_1_1metrics_1_1metric_1_1_metric_a033dde9b28c0b3a21076a1433c0b804d}{set\+\_\+data}} (self, Dict\mbox{[}str, Any\mbox{]} data)
+\item 
+Union\mbox{[}float, Dict\mbox{[}str, float\mbox{]}\mbox{]} \mbox{\hyperlink{classsrc_1_1metrics_1_1metric_1_1_metric_af34ea44b8c286b57235a4817e72edac2}{calculate\+\_\+score}} (self)
+\item 
+None \mbox{\hyperlink{classsrc_1_1metrics_1_1metric_1_1_metric_ad564c805ca202438897bed6a1fdc081d}{run}} (self)
+\item 
+Dict\mbox{[}str, Any\mbox{]} \mbox{\hyperlink{classsrc_1_1metrics_1_1metric_1_1_metric_ad56f9cfc9c309fcd1fe1ebefa41b55d6}{as\+\_\+dict}} (self)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classsrc_1_1metrics_1_1metric_1_1_metric_ab7cf92923b0a19cc4997d9964562f92c}\label{classsrc_1_1metrics_1_1metric_1_1_metric_ab7cf92923b0a19cc4997d9964562f92c} 
+str {\bfseries name} = name
+\item 
+\Hypertarget{classsrc_1_1metrics_1_1metric_1_1_metric_a20d161e8aa56971158556ba22001ef9d}\label{classsrc_1_1metrics_1_1metric_1_1_metric_a20d161e8aa56971158556ba22001ef9d} 
+Optional\mbox{[}Dict\mbox{[}str, Any\mbox{]}\mbox{]} {\bfseries data} = None
+\item 
+\Hypertarget{classsrc_1_1metrics_1_1metric_1_1_metric_a5b4fa8e6e7a618faf0d3dfe14312670d}\label{classsrc_1_1metrics_1_1metric_1_1_metric_a5b4fa8e6e7a618faf0d3dfe14312670d} 
+Optional\mbox{[}Union\mbox{[}float, Dict\mbox{[}str, float\mbox{]}\mbox{]}\mbox{]} {\bfseries score} = None
+\item 
+\Hypertarget{classsrc_1_1metrics_1_1metric_1_1_metric_a7821d70d136e66eee2ddb82b528847ea}\label{classsrc_1_1metrics_1_1metric_1_1_metric_a7821d70d136e66eee2ddb82b528847ea} 
+Optional\mbox{[}int\mbox{]} {\bfseries latency} = None
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb}Base class for all metrics.
+
+Attributes:
+    name (str): Unique identifier for the metric.
+    data (dict): Parsed metadata required for scoring.
+    score (float): Computed score in [0,1].
+    latency (int): Computation time in milliseconds.
+
+Subclasses must implement:
+    calculate_score(self) -> float
+\end{DoxyVerb}
+ 
+
+\label{doc-func-members}
+\Hypertarget{classsrc_1_1metrics_1_1metric_1_1_metric_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classsrc_1_1metrics_1_1metric_1_1_metric_ad56f9cfc9c309fcd1fe1ebefa41b55d6}\index{src.metrics.metric.Metric@{src.metrics.metric.Metric}!as\_dict@{as\_dict}}
+\index{as\_dict@{as\_dict}!src.metrics.metric.Metric@{src.metrics.metric.Metric}}
+\doxysubsubsection{\texorpdfstring{as\_dict()}{as\_dict()}}
+{\footnotesize\ttfamily \label{classsrc_1_1metrics_1_1metric_1_1_metric_ad56f9cfc9c309fcd1fe1ebefa41b55d6} 
+ Dict\mbox{[}str, Any\mbox{]} src.\+metrics.\+metric.\+Metric.\+as\+\_\+dict (\begin{DoxyParamCaption}\item[{}]{self}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Returns metric data as a dictionary, supports both float and dict scores.
+\end{DoxyVerb}
+ \Hypertarget{classsrc_1_1metrics_1_1metric_1_1_metric_af34ea44b8c286b57235a4817e72edac2}\index{src.metrics.metric.Metric@{src.metrics.metric.Metric}!calculate\_score@{calculate\_score}}
+\index{calculate\_score@{calculate\_score}!src.metrics.metric.Metric@{src.metrics.metric.Metric}}
+\doxysubsubsection{\texorpdfstring{calculate\_score()}{calculate\_score()}}
+{\footnotesize\ttfamily \label{classsrc_1_1metrics_1_1metric_1_1_metric_af34ea44b8c286b57235a4817e72edac2} 
+ Union\mbox{[}float, Dict\mbox{[}str, float\mbox{]}\mbox{]} src.\+metrics.\+metric.\+Metric.\+calculate\+\_\+score (\begin{DoxyParamCaption}\item[{}]{self}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Compute the metric score.
+
+Must be implemented by subclasses.
+Should return a float [0, 1]
+\end{DoxyVerb}
+ 
+
+Reimplemented in \mbox{\hyperlink{classsrc_1_1metrics_1_1bus__factor_1_1_bus_factor_metric_a62904ae08f0d8b659a8e06a92832e600}{src.\+metrics.\+bus\+\_\+factor.\+Bus\+Factor\+Metric}}, \mbox{\hyperlink{classsrc_1_1metrics_1_1code__quality_1_1_code_quality_metric_acdac52d228bff065846d94b379f48979}{src.\+metrics.\+code\+\_\+quality.\+Code\+Quality\+Metric}}, \mbox{\hyperlink{classsrc_1_1metrics_1_1dataset__and__code_1_1_dataset_and_code_metric_ad474fa949e9f01099967a23ecdb71f3d}{src.\+metrics.\+dataset\+\_\+and\+\_\+code.\+Dataset\+And\+Code\+Metric}}, \mbox{\hyperlink{classsrc_1_1metrics_1_1dataset__quality_1_1_dataset_quality_metric_ac263ba2e2053906880a3209b23349646}{src.\+metrics.\+dataset\+\_\+quality.\+Dataset\+Quality\+Metric}}, \mbox{\hyperlink{classsrc_1_1metrics_1_1license_1_1_license_metric_a1668bbddaee28d531e56de51a047964c}{src.\+metrics.\+license.\+License\+Metric}}, \mbox{\hyperlink{classsrc_1_1metrics_1_1performance__claims_1_1_performance_claims_metric_a79377834706b0bb9d1b97ade50dae1c3}{src.\+metrics.\+performance\+\_\+claims.\+Performance\+Claims\+Metric}}, \mbox{\hyperlink{classsrc_1_1metrics_1_1ramp__up__time_1_1_ramp_up_time_metric_a01504d62c6a37d371615c268c0765db1}{src.\+metrics.\+ramp\+\_\+up\+\_\+time.\+Ramp\+Up\+Time\+Metric}}, and \mbox{\hyperlink{classsrc_1_1metrics_1_1size_1_1_size_metric_ae13ea30353e0afab24216fee3a7cb3df}{src.\+metrics.\+size.\+Size\+Metric}}.
+
+\Hypertarget{classsrc_1_1metrics_1_1metric_1_1_metric_aa99ee5a4aef1c8730401b61c479bd268}\index{src.metrics.metric.Metric@{src.metrics.metric.Metric}!get\_data@{get\_data}}
+\index{get\_data@{get\_data}!src.metrics.metric.Metric@{src.metrics.metric.Metric}}
+\doxysubsubsection{\texorpdfstring{get\_data()}{get\_data()}}
+{\footnotesize\ttfamily \label{classsrc_1_1metrics_1_1metric_1_1_metric_aa99ee5a4aef1c8730401b61c479bd268} 
+ Dict\mbox{[}str, Any\mbox{]} src.\+metrics.\+metric.\+Metric.\+get\+\_\+data (\begin{DoxyParamCaption}\item[{}]{self}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Optionally fetch data. Default is empty dict.\end{DoxyVerb}
+ 
+
+Reimplemented in \mbox{\hyperlink{classsrc_1_1metrics_1_1bus__factor_1_1_bus_factor_metric_aede3371557b7c0c80e220be6b29e0e27}{src.\+metrics.\+bus\+\_\+factor.\+Bus\+Factor\+Metric}}, \mbox{\hyperlink{classsrc_1_1metrics_1_1code__quality_1_1_code_quality_metric_a1afe2ca264d7d04bb827f0086d021d9d}{src.\+metrics.\+code\+\_\+quality.\+Code\+Quality\+Metric}}, \mbox{\hyperlink{classsrc_1_1metrics_1_1dataset__and__code_1_1_dataset_and_code_metric_ad3c3705ed2ee9f0fb18e8b1891277b56}{src.\+metrics.\+dataset\+\_\+and\+\_\+code.\+Dataset\+And\+Code\+Metric}}, \mbox{\hyperlink{classsrc_1_1metrics_1_1dataset__quality_1_1_dataset_quality_metric_a0d0693b25317c74212b078394249cfcc}{src.\+metrics.\+dataset\+\_\+quality.\+Dataset\+Quality\+Metric}}, \mbox{\hyperlink{classsrc_1_1metrics_1_1license_1_1_license_metric_a9d716c61491b25bc6a08b48af2b79fe2}{src.\+metrics.\+license.\+License\+Metric}}, \mbox{\hyperlink{classsrc_1_1metrics_1_1performance__claims_1_1_performance_claims_metric_a8cc44a321bf2644450f2132699898125}{src.\+metrics.\+performance\+\_\+claims.\+Performance\+Claims\+Metric}}, \mbox{\hyperlink{classsrc_1_1metrics_1_1ramp__up__time_1_1_ramp_up_time_metric_a3bdb8242c2c0ff18738d33a0247cfb09}{src.\+metrics.\+ramp\+\_\+up\+\_\+time.\+Ramp\+Up\+Time\+Metric}}, and \mbox{\hyperlink{classsrc_1_1metrics_1_1size_1_1_size_metric_a8b5a3bff07ce838be0badfb6a28649b3}{src.\+metrics.\+size.\+Size\+Metric}}.
+
+\Hypertarget{classsrc_1_1metrics_1_1metric_1_1_metric_ad564c805ca202438897bed6a1fdc081d}\index{src.metrics.metric.Metric@{src.metrics.metric.Metric}!run@{run}}
+\index{run@{run}!src.metrics.metric.Metric@{src.metrics.metric.Metric}}
+\doxysubsubsection{\texorpdfstring{run()}{run()}}
+{\footnotesize\ttfamily \label{classsrc_1_1metrics_1_1metric_1_1_metric_ad564c805ca202438897bed6a1fdc081d} 
+ None src.\+metrics.\+metric.\+Metric.\+run (\begin{DoxyParamCaption}\item[{}]{self}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Calculates metric with latency and sets fields.
+If anything fails, fallback score is 0 (float or dict depending on metric type).
+\end{DoxyVerb}
+ \Hypertarget{classsrc_1_1metrics_1_1metric_1_1_metric_a033dde9b28c0b3a21076a1433c0b804d}\index{src.metrics.metric.Metric@{src.metrics.metric.Metric}!set\_data@{set\_data}}
+\index{set\_data@{set\_data}!src.metrics.metric.Metric@{src.metrics.metric.Metric}}
+\doxysubsubsection{\texorpdfstring{set\_data()}{set\_data()}}
+{\footnotesize\ttfamily \label{classsrc_1_1metrics_1_1metric_1_1_metric_a033dde9b28c0b3a21076a1433c0b804d} 
+ None src.\+metrics.\+metric.\+Metric.\+set\+\_\+data (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{Dict\mbox{[}str, Any\mbox{]}}]{data}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Attach metadata needed to calculate metric.\end{DoxyVerb}
+ 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+metric.\+py\end{DoxyCompactItemize}

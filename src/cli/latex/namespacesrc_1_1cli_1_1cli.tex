@@ -1,0 +1,66 @@
+\doxysection{src.\+cli.\+cli Namespace Reference}
+\hypertarget{namespacesrc_1_1cli_1_1cli}{}\label{namespacesrc_1_1cli_1_1cli}\index{src.cli.cli@{src.cli.cli}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classsrc_1_1cli_1_1cli_1_1_c_l_i_args}{CLIArgs}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+list\mbox{[}list\mbox{[}Optional\mbox{[}\mbox{\hyperlink{classsrc_1_1cli_1_1url_1_1_u_r_l}{URL}}\mbox{]}\mbox{]}\mbox{]} \mbox{\hyperlink{namespacesrc_1_1cli_1_1cli_a089b15fc60f0edc6f51bd1ce370807dd}{parse\+\_\+url\+\_\+file}} (str path)
+\item 
+\Hypertarget{namespacesrc_1_1cli_1_1cli_a8d1451e7b7dda68d630d43b4d68a08f6}\label{namespacesrc_1_1cli_1_1cli_a8d1451e7b7dda68d630d43b4d68a08f6} 
+\mbox{\hyperlink{classsrc_1_1cli_1_1cli_1_1_c_l_i_args}{CLIArgs}} {\bfseries parse\+\_\+args} (argv)
+\item 
+\Hypertarget{namespacesrc_1_1cli_1_1cli_a6bd548ab23588a1998ad04c3b9c6e925}\label{namespacesrc_1_1cli_1_1cli_a6bd548ab23588a1998ad04c3b9c6e925} 
+argparse.\+Argument\+Parser {\bfseries create\+\_\+parser} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb}cli.py
+--------
+Command-line interface definition and argument parsing.
+
+Summary
+- Defines subcommands: install, test, process (via URL file).
+- Parses CLI arguments and forwards execution to main entrypoints.
+- Complies with the spec: only URL files are accepted for processing.
+
+Spec alignment
+- Invocation form: ./run URL_FILE
+- URL_FILE is an ASCII-encoded, newline-delimited set of URLs (our helper also
+  supports CSV rows with code,dataset,model as used by tests).
+- Direct single-URL inputs on the command line are not supported; users must
+  place URLs in a file.
+
+NOTES: Needs to be updated to handle invalid URLS, i.e. URLS in which classify URL does not catch as model, code, or dataset
+\end{DoxyVerb}
+ 
+
+\label{doc-func-members}
+\Hypertarget{namespacesrc_1_1cli_1_1cli_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{namespacesrc_1_1cli_1_1cli_a089b15fc60f0edc6f51bd1ce370807dd}\index{src.cli.cli@{src.cli.cli}!parse\_url\_file@{parse\_url\_file}}
+\index{parse\_url\_file@{parse\_url\_file}!src.cli.cli@{src.cli.cli}}
+\doxysubsubsection{\texorpdfstring{parse\_url\_file()}{parse\_url\_file()}}
+{\footnotesize\ttfamily \label{namespacesrc_1_1cli_1_1cli_a089b15fc60f0edc6f51bd1ce370807dd} 
+ list\mbox{[}list\mbox{[}Optional\mbox{[}\mbox{\hyperlink{classsrc_1_1cli_1_1url_1_1_u_r_l}{URL}}\mbox{]}\mbox{]}\mbox{]} src.\+cli.\+cli.\+parse\+\_\+url\+\_\+file (\begin{DoxyParamCaption}\item[{str}]{path}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Parse a file of comma-separated links into URL dataclasses.
+
+Input format (CSV-style):
+    <code_link>, <dataset_link>, <model_link>
+
+Each column maps to a type:
+    0 -> code
+    1 -> dataset
+    2 -> model
+
+Example:
+    https://github.com/google-research/bert, https://huggingface.co/datasets/bookcorpus/bookcorpus, https://huggingface.co/google-bert/bert-base-uncased
+    ,,https://huggingface.co/parvk11/audience_classifier_model
+    ,,https://huggingface.co/openai/whisper-tiny/tree/main
+\end{DoxyVerb}
+ 

@@ -1,0 +1,35 @@
+\doxysection{src.\+metrics.\+code\+\_\+quality Namespace Reference}
+\hypertarget{namespacesrc_1_1metrics_1_1code__quality}{}\label{namespacesrc_1_1metrics_1_1code__quality}\index{src.metrics.code\_quality@{src.metrics.code\_quality}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classsrc_1_1metrics_1_1code__quality_1_1_code_quality_metric}{Code\+Quality\+Metric}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb}code_quality.py
+-----------------
+Code Quality Metric.
+
+Summary:
+- Performs static analysis on repository source code (e.g., Flake8).
+- Scores maintainability and style consistency based on issues per 1,000 LOC.
+- Runs independently of Hugging Face API, fulfilling non-API metric requirement.
+
+- Input: path to a local clone/snapshot of the model repo
+- Process:
+  1. Collect all .py files
+  2. Count total lines of code
+  3. Run Flake8, count style issues
+  4. Compute issues per 1000 LOC
+  5. Map to 0 - 1 score per rubric
+
+Rubric:
+- 0.2 = >60 issues per 1000 LOC
+- 0.4 = 31–60 issues per 1000 LOC
+- 0.6 = 16–30 issues per 1000 LOC
+- 0.8 = 6–15 issues per 1000 LOC
+- 1 = 0–5 issues per 1000 LOC
+\end{DoxyVerb}
+ 

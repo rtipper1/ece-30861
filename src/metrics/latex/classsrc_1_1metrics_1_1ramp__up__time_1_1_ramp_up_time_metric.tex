@@ -1,0 +1,82 @@
+\doxysection{src.\+metrics.\+ramp\+\_\+up\+\_\+time.\+Ramp\+Up\+Time\+Metric Class Reference}
+\hypertarget{classsrc_1_1metrics_1_1ramp__up__time_1_1_ramp_up_time_metric}{}\label{classsrc_1_1metrics_1_1ramp__up__time_1_1_ramp_up_time_metric}\index{src.metrics.ramp\_up\_time.RampUpTimeMetric@{src.metrics.ramp\_up\_time.RampUpTimeMetric}}
+Inheritance diagram for src.\+metrics.\+ramp\+\_\+up\+\_\+time.\+Ramp\+Up\+Time\+Metric\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classsrc_1_1metrics_1_1ramp__up__time_1_1_ramp_up_time_metric}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classsrc_1_1metrics_1_1ramp__up__time_1_1_ramp_up_time_metric_ac5973dd2aa43624023fd74b4d4e0c878}\label{classsrc_1_1metrics_1_1ramp__up__time_1_1_ramp_up_time_metric_ac5973dd2aa43624023fd74b4d4e0c878} 
+{\bfseries \+\_\+\+\_\+init\+\_\+\+\_\+} (self, Model\+URL model\+\_\+url)
+\item 
+float \mbox{\hyperlink{classsrc_1_1metrics_1_1ramp__up__time_1_1_ramp_up_time_metric_a01504d62c6a37d371615c268c0765db1}{calculate\+\_\+score}} (self)
+\item 
+Dict\mbox{[}str, Any\mbox{]} \mbox{\hyperlink{classsrc_1_1metrics_1_1ramp__up__time_1_1_ramp_up_time_metric_a3bdb8242c2c0ff18738d33a0247cfb09}{get\+\_\+data}} (self)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classsrc_1_1metrics_1_1metric_1_1_metric}{src.\+metrics.\+metric.\+Metric}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries \+\_\+\+\_\+init\+\_\+\+\_\+} (self, str name)
+\item 
+None \mbox{\hyperlink{classsrc_1_1metrics_1_1metric_1_1_metric_a033dde9b28c0b3a21076a1433c0b804d}{set\+\_\+data}} (self, Dict\mbox{[}str, Any\mbox{]} data)
+\item 
+None \mbox{\hyperlink{classsrc_1_1metrics_1_1metric_1_1_metric_ad564c805ca202438897bed6a1fdc081d}{run}} (self)
+\item 
+Dict\mbox{[}str, Any\mbox{]} \mbox{\hyperlink{classsrc_1_1metrics_1_1metric_1_1_metric_ad56f9cfc9c309fcd1fe1ebefa41b55d6}{as\+\_\+dict}} (self)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classsrc_1_1metrics_1_1ramp__up__time_1_1_ramp_up_time_metric_a19637d493a7ebe44568e9a4fb99925c3}\label{classsrc_1_1metrics_1_1ramp__up__time_1_1_ramp_up_time_metric_a19637d493a7ebe44568e9a4fb99925c3} 
+{\bfseries model\+\_\+url} = model\+\_\+url
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes inherited from \mbox{\hyperlink{classsrc_1_1metrics_1_1metric_1_1_metric}{src.\+metrics.\+metric.\+Metric}}}
+\begin{DoxyCompactItemize}
+\item 
+str {\bfseries name} = name
+\item 
+Optional\mbox{[}Dict\mbox{[}str, Any\mbox{]}\mbox{]} {\bfseries data} = None
+\item 
+Optional\mbox{[}Union\mbox{[}float, Dict\mbox{[}str, float\mbox{]}\mbox{]}\mbox{]} {\bfseries score} = None
+\item 
+Optional\mbox{[}int\mbox{]} {\bfseries latency} = None
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{classsrc_1_1metrics_1_1ramp__up__time_1_1_ramp_up_time_metric_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classsrc_1_1metrics_1_1ramp__up__time_1_1_ramp_up_time_metric_a01504d62c6a37d371615c268c0765db1}\index{src.metrics.ramp\_up\_time.RampUpTimeMetric@{src.metrics.ramp\_up\_time.RampUpTimeMetric}!calculate\_score@{calculate\_score}}
+\index{calculate\_score@{calculate\_score}!src.metrics.ramp\_up\_time.RampUpTimeMetric@{src.metrics.ramp\_up\_time.RampUpTimeMetric}}
+\doxysubsubsection{\texorpdfstring{calculate\_score()}{calculate\_score()}}
+{\footnotesize\ttfamily \label{classsrc_1_1metrics_1_1ramp__up__time_1_1_ramp_up_time_metric_a01504d62c6a37d371615c268c0765db1} 
+ float src.\+metrics.\+ramp\+\_\+up\+\_\+time.\+Ramp\+Up\+Time\+Metric.\+calculate\+\_\+score (\begin{DoxyParamCaption}\item[{}]{self}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Compute the metric score.
+
+Must be implemented by subclasses.
+Should return a float [0, 1]
+\end{DoxyVerb}
+ 
+
+Reimplemented from \mbox{\hyperlink{classsrc_1_1metrics_1_1metric_1_1_metric_af34ea44b8c286b57235a4817e72edac2}{src.\+metrics.\+metric.\+Metric}}.
+
+\Hypertarget{classsrc_1_1metrics_1_1ramp__up__time_1_1_ramp_up_time_metric_a3bdb8242c2c0ff18738d33a0247cfb09}\index{src.metrics.ramp\_up\_time.RampUpTimeMetric@{src.metrics.ramp\_up\_time.RampUpTimeMetric}!get\_data@{get\_data}}
+\index{get\_data@{get\_data}!src.metrics.ramp\_up\_time.RampUpTimeMetric@{src.metrics.ramp\_up\_time.RampUpTimeMetric}}
+\doxysubsubsection{\texorpdfstring{get\_data()}{get\_data()}}
+{\footnotesize\ttfamily \label{classsrc_1_1metrics_1_1ramp__up__time_1_1_ramp_up_time_metric_a3bdb8242c2c0ff18738d33a0247cfb09} 
+ Dict\mbox{[}str, Any\mbox{]} src.\+metrics.\+ramp\+\_\+up\+\_\+time.\+Ramp\+Up\+Time\+Metric.\+get\+\_\+data (\begin{DoxyParamCaption}\item[{}]{self}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Optionally fetch data. Default is empty dict.\end{DoxyVerb}
+ 
+
+Reimplemented from \mbox{\hyperlink{classsrc_1_1metrics_1_1metric_1_1_metric_aa99ee5a4aef1c8730401b61c479bd268}{src.\+metrics.\+metric.\+Metric}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+ramp\+\_\+up\+\_\+time.\+py\end{DoxyCompactItemize}

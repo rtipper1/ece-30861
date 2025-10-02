@@ -1,0 +1,79 @@
+\doxysection{src.\+metrics.\+performance\+\_\+claims Namespace Reference}
+\hypertarget{namespacesrc_1_1metrics_1_1performance__claims}{}\label{namespacesrc_1_1metrics_1_1performance__claims}\index{src.metrics.performance\_claims@{src.metrics.performance\_claims}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classsrc_1_1metrics_1_1performance__claims_1_1_performance_claims_metric}{Performance\+Claims\+Metric}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{namespacesrc_1_1metrics_1_1performance__claims_abcdd469b1e33fb0b60a6cca494a4084b}{count\+\_\+matches}} (str text, list\mbox{[}str\mbox{]} terms)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+dict \mbox{\hyperlink{namespacesrc_1_1metrics_1_1performance__claims_aea91f6d0d0c1034ebc2a0d95b0caa865}{KEY\+\_\+\+TERMS}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb}performance_claims.py
+-----------------------
+Performance Claims Metric
+
+Summary:
+- Parses a model's README to detect performance claims.
+- Searches for benchmark names, evaluation metrics, and "SOTA"-style language.
+- Scores models based on density of detected claims.
+
+Rubric:
+- 1.0 = >20 claims
+- 0.8 = 10–20 claims
+- 0.6 = 5–9 claims
+- 0.4 = 2–4 claims
+- 0.2 = 1 claim
+- 0.0 = 0 claims
+\end{DoxyVerb}
+ 
+
+\label{doc-func-members}
+\Hypertarget{namespacesrc_1_1metrics_1_1performance__claims_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{namespacesrc_1_1metrics_1_1performance__claims_abcdd469b1e33fb0b60a6cca494a4084b}\index{src.metrics.performance\_claims@{src.metrics.performance\_claims}!count\_matches@{count\_matches}}
+\index{count\_matches@{count\_matches}!src.metrics.performance\_claims@{src.metrics.performance\_claims}}
+\doxysubsubsection{\texorpdfstring{count\_matches()}{count\_matches()}}
+{\footnotesize\ttfamily \label{namespacesrc_1_1metrics_1_1performance__claims_abcdd469b1e33fb0b60a6cca494a4084b} 
+ int src.\+metrics.\+performance\+\_\+claims.\+count\+\_\+matches (\begin{DoxyParamCaption}\item[{str}]{text}{, }\item[{list\mbox{[}str\mbox{]}}]{terms}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Count case-insensitive matches of each term in text.\end{DoxyVerb}
+ 
+
+\label{doc-var-members}
+\Hypertarget{namespacesrc_1_1metrics_1_1performance__claims_doc-var-members}
+\doxysubsection{Variable Documentation}
+\Hypertarget{namespacesrc_1_1metrics_1_1performance__claims_aea91f6d0d0c1034ebc2a0d95b0caa865}\index{src.metrics.performance\_claims@{src.metrics.performance\_claims}!KEY\_TERMS@{KEY\_TERMS}}
+\index{KEY\_TERMS@{KEY\_TERMS}!src.metrics.performance\_claims@{src.metrics.performance\_claims}}
+\doxysubsubsection{\texorpdfstring{KEY\_TERMS}{KEY\_TERMS}}
+{\footnotesize\ttfamily \label{namespacesrc_1_1metrics_1_1performance__claims_aea91f6d0d0c1034ebc2a0d95b0caa865} 
+dict src.\+metrics.\+performance\+\_\+claims.\+KEY\+\_\+\+TERMS}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ =\ \ \{}
+\DoxyCodeLine{00002\ \ \ \ \ \textcolor{stringliteral}{"{}benchmarks"{}}:\ [}
+\DoxyCodeLine{00003\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}GLUE"{}},\ \textcolor{stringliteral}{"{}SuperGLUE"{}},\ \textcolor{stringliteral}{"{}SQuAD"{}},\ \textcolor{stringliteral}{"{}ImageNet"{}},\ \textcolor{stringliteral}{"{}COCO"{}},\ \textcolor{stringliteral}{"{}LibriSpeech"{}},}
+\DoxyCodeLine{00004\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}MNIST"{}},\ \textcolor{stringliteral}{"{}CIFAR"{}},\ \textcolor{stringliteral}{"{}WMT"{}},\ \textcolor{stringliteral}{"{}WikiText"{}},\ \textcolor{stringliteral}{"{}MS\ MARCO"{}},}
+\DoxyCodeLine{00005\ \ \ \ \ ],}
+\DoxyCodeLine{00006\ \ \ \ \ \textcolor{stringliteral}{"{}metrics"{}}:\ [}
+\DoxyCodeLine{00007\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}accuracy"{}},\ \textcolor{stringliteral}{"{}f1"{}},\ \textcolor{stringliteral}{"{}precision"{}},\ \textcolor{stringliteral}{"{}recall"{}},\ \textcolor{stringliteral}{"{}bleu"{}},\ \textcolor{stringliteral}{"{}rouge"{}},}
+\DoxyCodeLine{00008\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}wer"{}},\ \textcolor{stringliteral}{"{}perplexity"{}},\ \textcolor{stringliteral}{"{}auc"{}},\ \textcolor{stringliteral}{"{}exact\ match"{}},\ \textcolor{stringliteral}{"{}loss"{}},}
+\DoxyCodeLine{00009\ \ \ \ \ ],}
+\DoxyCodeLine{00010\ \ \ \ \ \textcolor{stringliteral}{"{}comparisons"{}}:\ [}
+\DoxyCodeLine{00011\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}state-\/of-\/the-\/art"{}},\ \textcolor{stringliteral}{"{}sota"{}},\ \textcolor{stringliteral}{"{}outperform"{}},\ \textcolor{stringliteral}{"{}better\ than"{}},}
+\DoxyCodeLine{00012\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}surpasses"{}},\ \textcolor{stringliteral}{"{}beats\ baseline"{}},\ \textcolor{stringliteral}{"{}competitive\ with"{}},}
+\DoxyCodeLine{00013\ \ \ \ \ ],}
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{stringliteral}{"{}numbers"{}}:\ [\textcolor{stringliteral}{"{}\%"{}},\ \textcolor{stringliteral}{"{}percent"{}},\ \textcolor{stringliteral}{"{}score"{}},\ \textcolor{stringliteral}{"{}results"{}}],}
+\DoxyCodeLine{00015\ \}}
+
+\end{DoxyCode}

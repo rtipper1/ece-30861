@@ -1,0 +1,44 @@
+\doxysection{src.\+metrics.\+size Namespace Reference}
+\hypertarget{namespacesrc_1_1metrics_1_1size}{}\label{namespacesrc_1_1metrics_1_1size}\index{src.metrics.size@{src.metrics.size}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classsrc_1_1metrics_1_1size_1_1_size_metric}{Size\+Metric}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{namespacesrc_1_1metrics_1_1size_a83a5cc85cfb64448a1493287ae842861}\label{namespacesrc_1_1metrics_1_1size_a83a5cc85cfb64448a1493287ae842861} 
+float {\bfseries score\+\_\+raspberry\+\_\+pi} (int params)
+\item 
+\Hypertarget{namespacesrc_1_1metrics_1_1size_a988d88ab2a9732346f5c08738d9c4423}\label{namespacesrc_1_1metrics_1_1size_a988d88ab2a9732346f5c08738d9c4423} 
+float {\bfseries score\+\_\+jetson\+\_\+nano} (int params)
+\item 
+\Hypertarget{namespacesrc_1_1metrics_1_1size_aecfc96aead14765054c6073e834cbe21}\label{namespacesrc_1_1metrics_1_1size_aecfc96aead14765054c6073e834cbe21} 
+float {\bfseries score\+\_\+desktop\+\_\+pc} (int params)
+\item 
+\Hypertarget{namespacesrc_1_1metrics_1_1size_a98175bcb8f61e6b7fa93fff9652e63cf}\label{namespacesrc_1_1metrics_1_1size_a98175bcb8f61e6b7fa93fff9652e63cf} 
+float {\bfseries score\+\_\+aws\+\_\+server} (int params)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb}size.py
+-------
+Model Size Metric.
+
+Summary
+- Scores model size based on parameter count and deployability.
+- Uses Hugging Face API metadata to fetch number of parameters
+
+Score:
+{
+    "raspberry_pi": float([0-1]),
+    "jetson_nano": float([0-1]),
+    "desktop_pc": float([0-1]),
+    "aws_server": float([0-1])
+}
+
+NOTES: potentially upgrade in future to infer number of parameters from model name or use parse README with AI
+\end{DoxyVerb}
+ 

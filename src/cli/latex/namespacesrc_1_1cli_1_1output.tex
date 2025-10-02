@@ -1,0 +1,28 @@
+\doxysection{src.\+cli.\+output Namespace Reference}
+\hypertarget{namespacesrc_1_1cli_1_1output}{}\label{namespacesrc_1_1cli_1_1output}\index{src.cli.output@{src.cli.output}}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{namespacesrc_1_1cli_1_1output_a750e750f8cf10d0db85f77f2085065fe}\label{namespacesrc_1_1cli_1_1output_a750e750f8cf10d0db85f77f2085065fe} 
+str {\bfseries build\+\_\+output} (\mbox{\hyperlink{classsrc_1_1cli_1_1url_1_1_model_u_r_l}{Model\+URL}} model, List\mbox{[}Metric\mbox{]} metrics, Dict\mbox{[}str, float\mbox{]} weights, int net\+\_\+latency)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb}output.py
+-----------
+Responsible for building and formatting output in NDJSON.
+
+Summary
+- Collects per-metric results.
+- Computes weighted NetScore and accumulates latencies.
+- Produces single-line JSON objects suitable for auto-grader validation.
+
+Notes
+import json
+
+# single dict → NDJSON line
+d = {"name":"bert-base-uncased","category":"MODEL","net_score": 0.95}
+print(json.dumps(d))  # one line
+\end{DoxyVerb}
+ 

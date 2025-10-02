@@ -1,0 +1,28 @@
+\doxysection{src.\+metrics.\+metric Namespace Reference}
+\hypertarget{namespacesrc_1_1metrics_1_1metric}{}\label{namespacesrc_1_1metrics_1_1metric}\index{src.metrics.metric@{src.metrics.metric}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classsrc_1_1metrics_1_1metric_1_1_metric}{Metric}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb}metric.py
+---------------
+Abstract base class for project metrics.
+
+Summary
+Each metric:
+- Has a unique name.
+- Stores the raw data it needs for calculation.
+- Computes a score in the range [0,1].
+- Records its own computation latency (milliseconds).
+- Exports results in a dict format for NDJSON output.
+
+To add a new metric:
+1. Subclass Metric.
+2. Implement calculate_score(self) using self.data.
+3. Optionally override __init__ to set a default name.
+\end{DoxyVerb}
+ 

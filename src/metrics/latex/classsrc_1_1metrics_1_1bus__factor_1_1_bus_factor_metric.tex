@@ -1,0 +1,85 @@
+\doxysection{src.\+metrics.\+bus\+\_\+factor.\+Bus\+Factor\+Metric Class Reference}
+\hypertarget{classsrc_1_1metrics_1_1bus__factor_1_1_bus_factor_metric}{}\label{classsrc_1_1metrics_1_1bus__factor_1_1_bus_factor_metric}\index{src.metrics.bus\_factor.BusFactorMetric@{src.metrics.bus\_factor.BusFactorMetric}}
+Inheritance diagram for src.\+metrics.\+bus\+\_\+factor.\+Bus\+Factor\+Metric\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classsrc_1_1metrics_1_1bus__factor_1_1_bus_factor_metric}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classsrc_1_1metrics_1_1bus__factor_1_1_bus_factor_metric_a739629a1b23820014e7671703602d96b}\label{classsrc_1_1metrics_1_1bus__factor_1_1_bus_factor_metric_a739629a1b23820014e7671703602d96b} 
+{\bfseries \+\_\+\+\_\+init\+\_\+\+\_\+} (self, Code\+URL code\+\_\+url, Model\+URL model\+\_\+url)
+\item 
+Dict\mbox{[}str, Optional\mbox{[}int\mbox{]}\mbox{]} \mbox{\hyperlink{classsrc_1_1metrics_1_1bus__factor_1_1_bus_factor_metric_aede3371557b7c0c80e220be6b29e0e27}{get\+\_\+data}} (self)
+\item 
+float \mbox{\hyperlink{classsrc_1_1metrics_1_1bus__factor_1_1_bus_factor_metric_a62904ae08f0d8b659a8e06a92832e600}{calculate\+\_\+score}} (self)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classsrc_1_1metrics_1_1metric_1_1_metric}{src.\+metrics.\+metric.\+Metric}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries \+\_\+\+\_\+init\+\_\+\+\_\+} (self, str name)
+\item 
+None \mbox{\hyperlink{classsrc_1_1metrics_1_1metric_1_1_metric_a033dde9b28c0b3a21076a1433c0b804d}{set\+\_\+data}} (self, Dict\mbox{[}str, Any\mbox{]} data)
+\item 
+None \mbox{\hyperlink{classsrc_1_1metrics_1_1metric_1_1_metric_ad564c805ca202438897bed6a1fdc081d}{run}} (self)
+\item 
+Dict\mbox{[}str, Any\mbox{]} \mbox{\hyperlink{classsrc_1_1metrics_1_1metric_1_1_metric_ad56f9cfc9c309fcd1fe1ebefa41b55d6}{as\+\_\+dict}} (self)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classsrc_1_1metrics_1_1bus__factor_1_1_bus_factor_metric_a6cf57023d0fd377b1031bd6165fc1efd}\label{classsrc_1_1metrics_1_1bus__factor_1_1_bus_factor_metric_a6cf57023d0fd377b1031bd6165fc1efd} 
+{\bfseries model\+\_\+url} = model\+\_\+url
+\item 
+\Hypertarget{classsrc_1_1metrics_1_1bus__factor_1_1_bus_factor_metric_ac104ccd33565f37bc373c353e0ca2913}\label{classsrc_1_1metrics_1_1bus__factor_1_1_bus_factor_metric_ac104ccd33565f37bc373c353e0ca2913} 
+{\bfseries code\+\_\+url} = code\+\_\+url
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes inherited from \mbox{\hyperlink{classsrc_1_1metrics_1_1metric_1_1_metric}{src.\+metrics.\+metric.\+Metric}}}
+\begin{DoxyCompactItemize}
+\item 
+str {\bfseries name} = name
+\item 
+Optional\mbox{[}Dict\mbox{[}str, Any\mbox{]}\mbox{]} {\bfseries data} = None
+\item 
+Optional\mbox{[}Union\mbox{[}float, Dict\mbox{[}str, float\mbox{]}\mbox{]}\mbox{]} {\bfseries score} = None
+\item 
+Optional\mbox{[}int\mbox{]} {\bfseries latency} = None
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{classsrc_1_1metrics_1_1bus__factor_1_1_bus_factor_metric_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classsrc_1_1metrics_1_1bus__factor_1_1_bus_factor_metric_a62904ae08f0d8b659a8e06a92832e600}\index{src.metrics.bus\_factor.BusFactorMetric@{src.metrics.bus\_factor.BusFactorMetric}!calculate\_score@{calculate\_score}}
+\index{calculate\_score@{calculate\_score}!src.metrics.bus\_factor.BusFactorMetric@{src.metrics.bus\_factor.BusFactorMetric}}
+\doxysubsubsection{\texorpdfstring{calculate\_score()}{calculate\_score()}}
+{\footnotesize\ttfamily \label{classsrc_1_1metrics_1_1bus__factor_1_1_bus_factor_metric_a62904ae08f0d8b659a8e06a92832e600} 
+ float src.\+metrics.\+bus\+\_\+factor.\+Bus\+Factor\+Metric.\+calculate\+\_\+score (\begin{DoxyParamCaption}\item[{}]{self}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Calculate bus factor score based on contributors per billion parameters.
+Normalized to [0,1].
+\end{DoxyVerb}
+ 
+
+Reimplemented from \mbox{\hyperlink{classsrc_1_1metrics_1_1metric_1_1_metric_af34ea44b8c286b57235a4817e72edac2}{src.\+metrics.\+metric.\+Metric}}.
+
+\Hypertarget{classsrc_1_1metrics_1_1bus__factor_1_1_bus_factor_metric_aede3371557b7c0c80e220be6b29e0e27}\index{src.metrics.bus\_factor.BusFactorMetric@{src.metrics.bus\_factor.BusFactorMetric}!get\_data@{get\_data}}
+\index{get\_data@{get\_data}!src.metrics.bus\_factor.BusFactorMetric@{src.metrics.bus\_factor.BusFactorMetric}}
+\doxysubsubsection{\texorpdfstring{get\_data()}{get\_data()}}
+{\footnotesize\ttfamily \label{classsrc_1_1metrics_1_1bus__factor_1_1_bus_factor_metric_aede3371557b7c0c80e220be6b29e0e27} 
+ Dict\mbox{[}str, Optional\mbox{[}int\mbox{]}\mbox{]} src.\+metrics.\+bus\+\_\+factor.\+Bus\+Factor\+Metric.\+get\+\_\+data (\begin{DoxyParamCaption}\item[{}]{self}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Gets number of parameters from Hugging Face model_info.
+Gets contributors from GitHub API.
+\end{DoxyVerb}
+ 
+
+Reimplemented from \mbox{\hyperlink{classsrc_1_1metrics_1_1metric_1_1_metric_aa99ee5a4aef1c8730401b61c479bd268}{src.\+metrics.\+metric.\+Metric}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+bus\+\_\+factor.\+py\end{DoxyCompactItemize}

@@ -1,0 +1,95 @@
+\doxysection{src.\+metrics.\+code\+\_\+quality.\+Code\+Quality\+Metric Class Reference}
+\hypertarget{classsrc_1_1metrics_1_1code__quality_1_1_code_quality_metric}{}\label{classsrc_1_1metrics_1_1code__quality_1_1_code_quality_metric}\index{src.metrics.code\_quality.CodeQualityMetric@{src.metrics.code\_quality.CodeQualityMetric}}
+Inheritance diagram for src.\+metrics.\+code\+\_\+quality.\+Code\+Quality\+Metric\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classsrc_1_1metrics_1_1code__quality_1_1_code_quality_metric}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classsrc_1_1metrics_1_1code__quality_1_1_code_quality_metric_a29af5e6cf516dd99926adfb075c4c50a}\label{classsrc_1_1metrics_1_1code__quality_1_1_code_quality_metric_a29af5e6cf516dd99926adfb075c4c50a} 
+{\bfseries \+\_\+\+\_\+init\+\_\+\+\_\+} (self, Code\+URL code\+\_\+url, Model\+URL model\+\_\+url)
+\item 
+Dict\mbox{[}str, Optional\mbox{[}int\mbox{]}\mbox{]} \mbox{\hyperlink{classsrc_1_1metrics_1_1code__quality_1_1_code_quality_metric_a1afe2ca264d7d04bb827f0086d021d9d}{get\+\_\+data}} (self)
+\item 
+str \mbox{\hyperlink{classsrc_1_1metrics_1_1code__quality_1_1_code_quality_metric_adca978527b8aa60d8d51e8d2ee2c4cc1}{Single\+File\+Download}} (self, str full\+\_\+name, str filename, str landing\+\_\+path)
+\item 
+float \mbox{\hyperlink{classsrc_1_1metrics_1_1code__quality_1_1_code_quality_metric_acdac52d228bff065846d94b379f48979}{calculate\+\_\+score}} (self)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classsrc_1_1metrics_1_1metric_1_1_metric}{src.\+metrics.\+metric.\+Metric}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries \+\_\+\+\_\+init\+\_\+\+\_\+} (self, str name)
+\item 
+None \mbox{\hyperlink{classsrc_1_1metrics_1_1metric_1_1_metric_a033dde9b28c0b3a21076a1433c0b804d}{set\+\_\+data}} (self, Dict\mbox{[}str, Any\mbox{]} data)
+\item 
+None \mbox{\hyperlink{classsrc_1_1metrics_1_1metric_1_1_metric_ad564c805ca202438897bed6a1fdc081d}{run}} (self)
+\item 
+Dict\mbox{[}str, Any\mbox{]} \mbox{\hyperlink{classsrc_1_1metrics_1_1metric_1_1_metric_ad56f9cfc9c309fcd1fe1ebefa41b55d6}{as\+\_\+dict}} (self)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classsrc_1_1metrics_1_1code__quality_1_1_code_quality_metric_a51782d66f0d29388be90ec688bdf2dfe}\label{classsrc_1_1metrics_1_1code__quality_1_1_code_quality_metric_a51782d66f0d29388be90ec688bdf2dfe} 
+{\bfseries code\+\_\+url} = code\+\_\+url
+\item 
+\Hypertarget{classsrc_1_1metrics_1_1code__quality_1_1_code_quality_metric_a1b6f5910aa45bdadd428ab04708e093f}\label{classsrc_1_1metrics_1_1code__quality_1_1_code_quality_metric_a1b6f5910aa45bdadd428ab04708e093f} 
+{\bfseries model\+\_\+url} = model\+\_\+url
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes inherited from \mbox{\hyperlink{classsrc_1_1metrics_1_1metric_1_1_metric}{src.\+metrics.\+metric.\+Metric}}}
+\begin{DoxyCompactItemize}
+\item 
+str {\bfseries name} = name
+\item 
+Optional\mbox{[}Dict\mbox{[}str, Any\mbox{]}\mbox{]} {\bfseries data} = None
+\item 
+Optional\mbox{[}Union\mbox{[}float, Dict\mbox{[}str, float\mbox{]}\mbox{]}\mbox{]} {\bfseries score} = None
+\item 
+Optional\mbox{[}int\mbox{]} {\bfseries latency} = None
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{classsrc_1_1metrics_1_1code__quality_1_1_code_quality_metric_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classsrc_1_1metrics_1_1code__quality_1_1_code_quality_metric_acdac52d228bff065846d94b379f48979}\index{src.metrics.code\_quality.CodeQualityMetric@{src.metrics.code\_quality.CodeQualityMetric}!calculate\_score@{calculate\_score}}
+\index{calculate\_score@{calculate\_score}!src.metrics.code\_quality.CodeQualityMetric@{src.metrics.code\_quality.CodeQualityMetric}}
+\doxysubsubsection{\texorpdfstring{calculate\_score()}{calculate\_score()}}
+{\footnotesize\ttfamily \label{classsrc_1_1metrics_1_1code__quality_1_1_code_quality_metric_acdac52d228bff065846d94b379f48979} 
+ float src.\+metrics.\+code\+\_\+quality.\+Code\+Quality\+Metric.\+calculate\+\_\+score (\begin{DoxyParamCaption}\item[{}]{self}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Compute score based on Flake8 issues per line of code.
+Maps issue density into rubric-based 0–1 score.
+\end{DoxyVerb}
+ 
+
+Reimplemented from \mbox{\hyperlink{classsrc_1_1metrics_1_1metric_1_1_metric_af34ea44b8c286b57235a4817e72edac2}{src.\+metrics.\+metric.\+Metric}}.
+
+\Hypertarget{classsrc_1_1metrics_1_1code__quality_1_1_code_quality_metric_a1afe2ca264d7d04bb827f0086d021d9d}\index{src.metrics.code\_quality.CodeQualityMetric@{src.metrics.code\_quality.CodeQualityMetric}!get\_data@{get\_data}}
+\index{get\_data@{get\_data}!src.metrics.code\_quality.CodeQualityMetric@{src.metrics.code\_quality.CodeQualityMetric}}
+\doxysubsubsection{\texorpdfstring{get\_data()}{get\_data()}}
+{\footnotesize\ttfamily \label{classsrc_1_1metrics_1_1code__quality_1_1_code_quality_metric_a1afe2ca264d7d04bb827f0086d021d9d} 
+ Dict\mbox{[}str, Optional\mbox{[}int\mbox{]}\mbox{]} src.\+metrics.\+code\+\_\+quality.\+Code\+Quality\+Metric.\+get\+\_\+data (\begin{DoxyParamCaption}\item[{}]{self}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Collects Python files from Hugging Face repo (or base model fallback),
+counts lines of code, and runs Flake8 to measure issues.
+\end{DoxyVerb}
+ 
+
+Reimplemented from \mbox{\hyperlink{classsrc_1_1metrics_1_1metric_1_1_metric_aa99ee5a4aef1c8730401b61c479bd268}{src.\+metrics.\+metric.\+Metric}}.
+
+\Hypertarget{classsrc_1_1metrics_1_1code__quality_1_1_code_quality_metric_adca978527b8aa60d8d51e8d2ee2c4cc1}\index{src.metrics.code\_quality.CodeQualityMetric@{src.metrics.code\_quality.CodeQualityMetric}!SingleFileDownload@{SingleFileDownload}}
+\index{SingleFileDownload@{SingleFileDownload}!src.metrics.code\_quality.CodeQualityMetric@{src.metrics.code\_quality.CodeQualityMetric}}
+\doxysubsubsection{\texorpdfstring{SingleFileDownload()}{SingleFileDownload()}}
+{\footnotesize\ttfamily \label{classsrc_1_1metrics_1_1code__quality_1_1_code_quality_metric_adca978527b8aa60d8d51e8d2ee2c4cc1} 
+ str src.\+metrics.\+code\+\_\+quality.\+Code\+Quality\+Metric.\+Single\+File\+Download (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{str}]{full\+\_\+name}{, }\item[{str}]{filename}{, }\item[{str}]{landing\+\_\+path}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Download a single file from Hugging Face Hub into a temp directory.
+\end{DoxyVerb}
+ 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+code\+\_\+quality.\+py\end{DoxyCompactItemize}

@@ -1,0 +1,39 @@
+\doxysection{src.\+metrics.\+bus\+\_\+factor Namespace Reference}
+\hypertarget{namespacesrc_1_1metrics_1_1bus__factor}{}\label{namespacesrc_1_1metrics_1_1bus__factor}\index{src.metrics.bus\_factor@{src.metrics.bus\_factor}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classsrc_1_1metrics_1_1bus__factor_1_1_bus_factor_metric}{Bus\+Factor\+Metric}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+list\mbox{[}str\mbox{]} \mbox{\hyperlink{namespacesrc_1_1metrics_1_1bus__factor_a9507977b77e4cd243271393cb7b7cc95}{get\+\_\+contributors}} (str owner, str repo)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb}bus_factor.py
+---------------
+Bus Factor Metric.
+
+Summary
+- Calculates contributor redundancy relative to project size.
+- Uses number of contributors per parameter scale as described in the rubric.
+- Gets number of parameters from model_info.safetensors
+- Gets contributors from GitHub API using validated token
+\end{DoxyVerb}
+ 
+
+\label{doc-func-members}
+\Hypertarget{namespacesrc_1_1metrics_1_1bus__factor_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{namespacesrc_1_1metrics_1_1bus__factor_a9507977b77e4cd243271393cb7b7cc95}\index{src.metrics.bus\_factor@{src.metrics.bus\_factor}!get\_contributors@{get\_contributors}}
+\index{get\_contributors@{get\_contributors}!src.metrics.bus\_factor@{src.metrics.bus\_factor}}
+\doxysubsubsection{\texorpdfstring{get\_contributors()}{get\_contributors()}}
+{\footnotesize\ttfamily \label{namespacesrc_1_1metrics_1_1bus__factor_a9507977b77e4cd243271393cb7b7cc95} 
+ list\mbox{[}str\mbox{]} src.\+metrics.\+bus\+\_\+factor.\+get\+\_\+contributors (\begin{DoxyParamCaption}\item[{str}]{owner}{, }\item[{str}]{repo}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Fetch contributors for a repo using the authenticated GitHub client.
+\end{DoxyVerb}
+ 

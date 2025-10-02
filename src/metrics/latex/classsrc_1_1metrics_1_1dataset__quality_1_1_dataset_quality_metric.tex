@@ -1,0 +1,82 @@
+\doxysection{src.\+metrics.\+dataset\+\_\+quality.\+Dataset\+Quality\+Metric Class Reference}
+\hypertarget{classsrc_1_1metrics_1_1dataset__quality_1_1_dataset_quality_metric}{}\label{classsrc_1_1metrics_1_1dataset__quality_1_1_dataset_quality_metric}\index{src.metrics.dataset\_quality.DatasetQualityMetric@{src.metrics.dataset\_quality.DatasetQualityMetric}}
+Inheritance diagram for src.\+metrics.\+dataset\+\_\+quality.\+Dataset\+Quality\+Metric\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classsrc_1_1metrics_1_1dataset__quality_1_1_dataset_quality_metric}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classsrc_1_1metrics_1_1dataset__quality_1_1_dataset_quality_metric_a0468ed45be14a6ee8f1df89b3c86d2a7}\label{classsrc_1_1metrics_1_1dataset__quality_1_1_dataset_quality_metric_a0468ed45be14a6ee8f1df89b3c86d2a7} 
+{\bfseries \+\_\+\+\_\+init\+\_\+\+\_\+} (self, Dataset\+URL dataset\+\_\+url)
+\item 
+float \mbox{\hyperlink{classsrc_1_1metrics_1_1dataset__quality_1_1_dataset_quality_metric_ac263ba2e2053906880a3209b23349646}{calculate\+\_\+score}} (self)
+\item 
+Dict\mbox{[}str, Any\mbox{]} \mbox{\hyperlink{classsrc_1_1metrics_1_1dataset__quality_1_1_dataset_quality_metric_a0d0693b25317c74212b078394249cfcc}{get\+\_\+data}} (self)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classsrc_1_1metrics_1_1metric_1_1_metric}{src.\+metrics.\+metric.\+Metric}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries \+\_\+\+\_\+init\+\_\+\+\_\+} (self, str name)
+\item 
+None \mbox{\hyperlink{classsrc_1_1metrics_1_1metric_1_1_metric_a033dde9b28c0b3a21076a1433c0b804d}{set\+\_\+data}} (self, Dict\mbox{[}str, Any\mbox{]} data)
+\item 
+None \mbox{\hyperlink{classsrc_1_1metrics_1_1metric_1_1_metric_ad564c805ca202438897bed6a1fdc081d}{run}} (self)
+\item 
+Dict\mbox{[}str, Any\mbox{]} \mbox{\hyperlink{classsrc_1_1metrics_1_1metric_1_1_metric_ad56f9cfc9c309fcd1fe1ebefa41b55d6}{as\+\_\+dict}} (self)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classsrc_1_1metrics_1_1dataset__quality_1_1_dataset_quality_metric_a38e5c274f9aa3745f14ff033b0f7fadc}\label{classsrc_1_1metrics_1_1dataset__quality_1_1_dataset_quality_metric_a38e5c274f9aa3745f14ff033b0f7fadc} 
+{\bfseries dataset\+\_\+url} = dataset\+\_\+url
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes inherited from \mbox{\hyperlink{classsrc_1_1metrics_1_1metric_1_1_metric}{src.\+metrics.\+metric.\+Metric}}}
+\begin{DoxyCompactItemize}
+\item 
+str {\bfseries name} = name
+\item 
+Optional\mbox{[}Dict\mbox{[}str, Any\mbox{]}\mbox{]} {\bfseries data} = None
+\item 
+Optional\mbox{[}Union\mbox{[}float, Dict\mbox{[}str, float\mbox{]}\mbox{]}\mbox{]} {\bfseries score} = None
+\item 
+Optional\mbox{[}int\mbox{]} {\bfseries latency} = None
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{classsrc_1_1metrics_1_1dataset__quality_1_1_dataset_quality_metric_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classsrc_1_1metrics_1_1dataset__quality_1_1_dataset_quality_metric_ac263ba2e2053906880a3209b23349646}\index{src.metrics.dataset\_quality.DatasetQualityMetric@{src.metrics.dataset\_quality.DatasetQualityMetric}!calculate\_score@{calculate\_score}}
+\index{calculate\_score@{calculate\_score}!src.metrics.dataset\_quality.DatasetQualityMetric@{src.metrics.dataset\_quality.DatasetQualityMetric}}
+\doxysubsubsection{\texorpdfstring{calculate\_score()}{calculate\_score()}}
+{\footnotesize\ttfamily \label{classsrc_1_1metrics_1_1dataset__quality_1_1_dataset_quality_metric_ac263ba2e2053906880a3209b23349646} 
+ float src.\+metrics.\+dataset\+\_\+quality.\+Dataset\+Quality\+Metric.\+calculate\+\_\+score (\begin{DoxyParamCaption}\item[{}]{self}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Compute the metric score.
+
+Must be implemented by subclasses.
+Should return a float [0, 1]
+\end{DoxyVerb}
+ 
+
+Reimplemented from \mbox{\hyperlink{classsrc_1_1metrics_1_1metric_1_1_metric_af34ea44b8c286b57235a4817e72edac2}{src.\+metrics.\+metric.\+Metric}}.
+
+\Hypertarget{classsrc_1_1metrics_1_1dataset__quality_1_1_dataset_quality_metric_a0d0693b25317c74212b078394249cfcc}\index{src.metrics.dataset\_quality.DatasetQualityMetric@{src.metrics.dataset\_quality.DatasetQualityMetric}!get\_data@{get\_data}}
+\index{get\_data@{get\_data}!src.metrics.dataset\_quality.DatasetQualityMetric@{src.metrics.dataset\_quality.DatasetQualityMetric}}
+\doxysubsubsection{\texorpdfstring{get\_data()}{get\_data()}}
+{\footnotesize\ttfamily \label{classsrc_1_1metrics_1_1dataset__quality_1_1_dataset_quality_metric_a0d0693b25317c74212b078394249cfcc} 
+ Dict\mbox{[}str, Any\mbox{]} src.\+metrics.\+dataset\+\_\+quality.\+Dataset\+Quality\+Metric.\+get\+\_\+data (\begin{DoxyParamCaption}\item[{}]{self}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Optionally fetch data. Default is empty dict.\end{DoxyVerb}
+ 
+
+Reimplemented from \mbox{\hyperlink{classsrc_1_1metrics_1_1metric_1_1_metric_aa99ee5a4aef1c8730401b61c479bd268}{src.\+metrics.\+metric.\+Metric}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+dataset\+\_\+quality.\+py\end{DoxyCompactItemize}
